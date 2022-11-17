@@ -9,8 +9,10 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
+use App\Models\EditionModel;
+
 /**
- * Class BaseController
+ * Class AdminController
  *
  * BaseController provides a convenient place for loading components
  * and performing functions that are needed by all your controllers.
@@ -19,7 +21,7 @@ use Psr\Log\LoggerInterface;
  *
  * For security be sure to declare any new methods as protected or private.
  */
-abstract class BaseController extends Controller
+abstract class AdminController extends Controller
 {
     /**
      * Instance of the main Request object.
@@ -45,12 +47,16 @@ abstract class BaseController extends Controller
     {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
-        // global edition model        
-        $this->edition_model = model(EditionModel::class);
+
         // set data_to_views as empty array
         $this->data_to_views = [];
+        // global edition model
+        $this->edition_model = model(EditionModel::class);
         // create session
         $this->session = \Config\Services::session();
+
+        // $this->data_to_views['crumbs'] = $this->set_crumbs();
+        // $this->data_to_views['menu_array'] = $this->set_admin_menu_array();    
+
     }
-    
 }

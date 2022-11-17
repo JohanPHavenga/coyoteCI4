@@ -12,6 +12,7 @@
     <meta name="apple-mobile-web-app-title" content="RoadRunningZA">
     <meta name="application-name" content="RoadRunningZA">
     <meta name="theme-color" content="#ffffff">
+    <?= $this->renderSection('pageStyles') ?>
 </head>
 
 <body>
@@ -31,3 +32,16 @@
             </ul>
         </nav>
     </header>
+
+    <main role="main" class="container">
+        <?= $this->renderSection('main') ?>
+    </main><!-- /.container -->
+
+    <p>&nbsp;</p>
+    <footer>
+        Coyote &copy; <?= date("Y"); ?>
+    </footer>
+    <?= $this->renderSection('pageScripts') ?>
+</body>
+
+</html>

@@ -125,3 +125,8 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
+#-------------------------
+# RR CUSTOM
+#-------------------------
+/scripts/
+

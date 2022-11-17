@@ -6,6 +6,11 @@ class Home extends BaseController
 {
     public function index()
     {
+        $this->data_to_views['all_editions_count'] = $this->edition_model->record_count();
+        $this->data_to_views['last_updated'] = $this->edition_model->last_updated(5);
+
+        // dd($this->data_to_views['last_updated']);
+
         return view('templates/header', $this->data_to_views)
             . view('home')
             . view('templates/footer');

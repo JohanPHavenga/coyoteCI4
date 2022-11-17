@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Coyote CI4</title>
+    <title>ADMIN | Coyote CI4</title>
 
     <link rel="apple-touch-icon" sizes="152x152" href="<?= base_url('assets/favicon/apple-touch-icon.png'); ?>">
     <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('assets/favicon/favicon-32x32.png') ?>">
@@ -18,16 +18,9 @@
     <header>
         <nav>
             <ul>
-                <li><a href="<?= base_url(); ?>">Home</a></li>
-                <li><a href="<?= base_url('about'); ?>">About</a></li>
-                <li><a href="<?= base_url('contact'); ?>">Contact</a></li>
-                <?php
-                if (logged_in()) {
-                    echo "<li><a href='" . base_url('logout') . "'>Logout</a></li>";
-                } else {
-                    echo "<li><a href='" . base_url('login') . "'>Login</a></li>";
-                }
-                ?>
+                <li><a href="<?= base_url('/admin'); ?>">Dashboard</a></li>
+                <li><a href="<?= base_url('/admin'); ?>">List</a></li>
+                <li><a href="<?= base_url('/logout'); ?>">Logout</a></li>
             </ul>
         </nav>
     </header>
