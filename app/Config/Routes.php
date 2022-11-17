@@ -36,8 +36,14 @@ $routes->setAutoRoute(false);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->get('/about', 'Home::about');
-$routes->get('/contact', 'Contact::index');
+$routes->get('about', 'Home::about');
+$routes->get('contact', 'Contact::index');
+
+
+$routes->get('race/(:segment)', 'Race::$1');
+$routes->get('race', 'Race::upcoming');
+
+$routes->get('event/(:any)', 'Event::detail/$1');
 
 $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'role:admin'], function ($routes) {
     $routes->get('/', 'Dashboard::index');

@@ -35,7 +35,7 @@ abstract class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = ['session', 'form', 'formulate', 'filesystem', 'auth'];
+    protected $helpers = ['session', 'form', 'formulate', 'filesystem', 'auth', 'text_format'];
     protected $edition_model;
 
     /**
