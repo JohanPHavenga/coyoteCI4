@@ -13,13 +13,24 @@ class Event extends BaseController
 
     public function detail($edition_slug)
     {
-        $edition_id=$this->edition_model->get_edition_id_from_slug($edition_slug);
-        $this->data_to_views['edition'] = $this->edition_model->get_edition_detail($edition_id);
-        $this->data_to_views['race_list'] = $this->race_model->get_race_list($edition_id);
+        $edition_id = $this->edition_model->get_edition_id_from_slug($edition_slug);
 
+        if ($edition_id) {
+            $this->data_to_views['edition'] = $this->edition_model->get_edition_detail($edition_id);
+            $this->data_to_views['race_list'] = $this->race_model->get_race_list($edition_id);
 
+            return view('templates/header', $this->data_to_views)
+                . view('event/detail')
+                . view('templates/footer');
+        } else {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('The race could not be matched to a record int he database');
+        }
+    }
+
+    public function add()
+    {
         return view('templates/header', $this->data_to_views)
-            . view('event/detail')
+            . view('event/add')
             . view('templates/footer');
     }
 }

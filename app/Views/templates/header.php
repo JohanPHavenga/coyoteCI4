@@ -18,17 +18,28 @@
     <header>
         <nav>
             <ul>
-                <li><a href="<?= base_url(); ?>">Home</a></li>
-                <li><a href="<?= base_url('race/upcoming'); ?>">Races</a></li>
-                <li><a href="<?= base_url('about'); ?>">About</a></li>
-                <li><a href="<?= base_url('contact'); ?>">Contact</a></li>
                 <?php
-                if (logged_in()) {
-                    echo "<li><a href='" . base_url('logout') . "'>Logout</a></li>";
-                } else {
-                    echo "<li><a href='" . base_url('login') . "'>Login</a></li>";
-                }
+                // main menu
+                // foreach ($menus['main_menu'] as $menu_item) {
+                //     echo "<li><a href='" . $menu_item['loc'] . "'>" . $menu_item['display'] . "</a>";
+                //     if (isset($menu_item['sub-menu'])) {
+                //         echo "<ul>";
+                //         foreach ($menu_item['sub-menu'] as $sub_menu_item) {
+                //             echo "<li><a href='" . $sub_menu_item['loc'] . "'>" . $sub_menu_item['display'] . "</a>";
+                //         }
+                //         echo "</ul>";
+                //     }
+                //     echo "</li>";
+                // }
+                // if (logged_in()) {
+                //     echo "<li><a href='" . base_url('logout') . "'>Logout</a></li>";
+                // } else {
+                //     echo "<li><a href='" . base_url('login') . "'>Login</a></li>";
+                // }
                 ?>
             </ul>
         </nav>
     </header>
+    <?php
+    
+        // d($menus['main_menu']);
