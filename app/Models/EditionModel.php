@@ -46,7 +46,7 @@ class EditionModel extends Model
         return $data;
     }
 
-    public function get_edition_detail($id)
+    public function detail($id)
     {
         $builder = $this->db->table($this->table);
 
@@ -71,7 +71,7 @@ class EditionModel extends Model
         }
     }
 
-    public function get_edition_list($from = false)
+    public function list($from = false)
     {
         $builder = $this->db->table($this->table);
 

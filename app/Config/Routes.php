@@ -56,8 +56,8 @@ $routes->get('event/(:segment)', 'Event::detail/$1');
 $routes->get('search', 'Race::search');
 $routes->get('race/most-viewed', 'Race::most_viewed');
 $routes->get('race/(:segment)', 'Race::$1');
-$routes->get('calendar', 'Race::upcoming');
-$routes->get('calendar/(:any)', 'Race::upcoming/$1');
+$routes->get('calendar', 'Race::list');
+$routes->get('calendar/(:any)', 'Race::list/$1');
 
 $routes->get('results', 'Results::list');
 $routes->get('my-results', 'Results::my_results');

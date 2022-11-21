@@ -11,6 +11,19 @@ class Race extends BaseController
         $this->search_model = model(SearchModel::class);
     }
 
+    public function list($year=null, $month=null, $day=null)
+    {
+        $this->data_to_views['edition_list'] = $this->search_model->list($year, $month, $day);
+
+        $this->data_to_views['year']=$year;
+        $this->data_to_views['month']=$month;
+        $this->data_to_views['day']=$day;
+
+        return view('templates/header', $this->data_to_views)
+            . view('race/race_list')
+            . view('templates/footer');
+    }
+
     public function search()
     {
         $this->data_to_views['edition_list'] = $this->search_model->upcoming("1 week");
@@ -22,13 +35,9 @@ class Race extends BaseController
             . view('templates/footer');
     }
 
-    public function upcoming($year=null, $month=null, $day=null)
+    public function upcoming()
     {
         $this->data_to_views['edition_list'] = $this->search_model->upcoming();
-
-        $this->data_to_views['year']=$year;
-        $this->data_to_views['month']=$month;
-        $this->data_to_views['day']=$day;
 
         return view('templates/header', $this->data_to_views)
             . view('race/race_list')

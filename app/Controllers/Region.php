@@ -4,9 +4,11 @@ namespace App\Controllers;
 
 class Region extends BaseController
 {
+    protected $region_model;
 
     public function __construct()
     {
+        $this->region_model = model(RegionModel::class);
     }
 
     public function list($region_name = null)

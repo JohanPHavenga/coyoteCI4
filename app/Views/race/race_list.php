@@ -1,15 +1,3 @@
-<?php
-if (isset($year)) {
-    echo "Year: " . $year;
-}
-if (isset($month)) {
-    echo "<br>Month: " . $month;
-}
-if (isset($day)) {
-    echo "<br>Day: " . $day;
-}
-?>
-
 <ul>
     <?php
     foreach ($edition_list as $edition_id => $edition) {
