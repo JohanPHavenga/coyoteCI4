@@ -13,6 +13,7 @@ class User extends BaseController
 
     public function dashboard()
     {
+        $this->data_to_views['user_list'] = $this->user_model->list(100);
         return view('templates/header', $this->data_to_views)
             . view('user/dashboard')
             . view('templates/footer');

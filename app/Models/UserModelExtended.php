@@ -42,7 +42,7 @@ class UserModelExtended extends Model
             $data[$user['user_id']]['phone']=$user['user_contact'];
             $data[$user['user_id']]['picture']=$user['user_picture'];
             $data[$user['user_id']]['profile_link']=$user['user_link'];
-            $data[$user['user_id']]['created_at']=time();
+            $data[$user['user_id']]['created_at']=date("Y-m-d H:i:s");
         }
 
         $builder = $this->db->table($this->table);

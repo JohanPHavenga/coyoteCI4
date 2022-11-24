@@ -1,2 +1,2 @@
 <?php
-    echo "dashboard";
+    d($user_list);
