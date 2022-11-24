@@ -1,10 +1,3 @@
-<?php
-    if (!isset($edition_list)) {
-        echo "<p>No races found</p>";
-    } elseif (empty($edition_list)) {
-        echo "<p>No races to show</p>";
-    }
-?>
 <ul>
     <?php
     foreach ($edition_list as $edition_id => $edition) {
@@ -12,6 +5,3 @@
     }
     ?>
 </ul>
-
-<?php
-    d($edition_list);

@@ -8,7 +8,7 @@ class User extends BaseController
 
     public function __construct()
     {
-        $this->user_model = model(RaceModel::class);
+        $this->user_model = model(UserModelExtended::class);
     }
 
     public function dashboard()
@@ -43,5 +43,14 @@ class User extends BaseController
         return view('templates/header', $this->data_to_views)
             . view('user/newsletter')
             . view('templates/footer');
+    }
+
+    public function port_users() {
+        // empty user table
+        $this->user_model->empty_table();
+        // get full list of current users
+        $user_list=$this->user_model->list();
+        // update new user table (use ID if you can)
+        $this->user_model->bulk_update($user_list);
     }
 }

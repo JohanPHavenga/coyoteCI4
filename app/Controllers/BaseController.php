@@ -35,7 +35,7 @@ abstract class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = ['session', 'form', 'formulate', 'filesystem', 'auth', 'text_format'];
+    protected $helpers = ['session', 'form', 'formulate', 'filesystem', 'auth', 'url', 'text_format'];
     protected $edition_model;
 
     /**
@@ -48,14 +48,27 @@ abstract class BaseController extends Controller
         // global edition model        
         $this->edition_model = model(EditionModel::class);
         // set data_to_views as empty array
-        $this->data_to_views['menus']=$this->get_menus();;
+        $this->data_to_views['menus'] = $this->get_menus();;
         // create session
         $this->session = \Config\Services::session();
+
+        // set province dropdown        
+        $province_model = model(ProvinceModel::class);
+        // $this->data_to_views['province_list']=$province_model->list();
+
+        $this->data_to_views['province_options'][0]="All";
+        foreach ($province_model->list() as $province) {
+            $this->data_to_views['province_options'][$province['province_id']]=$province['province_name'];
+        }
+        if (!isset($_SESSION['site_province'])) {
+            $_SESSION['site_province']=0;
+        }
     }
 
 
-    public function get_menus() {
-        $menus['static_pages']=$this->get_static_pages();    
+    public function get_menus()
+    {
+        $menus['static_pages'] = $this->get_static_pages();
         $remove = ['switch-region', 'featured-regions', 'login', 'add-listing', 'search', 'sitemap', 'terms', 'disclaimer'];
         $menus['main_menu'] = array_diff_key($menus['static_pages'], array_flip($remove));
         return $menus;
@@ -77,7 +90,7 @@ abstract class BaseController extends Controller
                 "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                 "priority" => 1,
                 "changefreq" => "daily",
-                "sub-menu" => [                    
+                "sub-menu" => [
                     "upcoming" => [
                         "display" => "Upcoming",
                         "loc" => base_url("race/upcoming"), //calendar
@@ -101,23 +114,23 @@ abstract class BaseController extends Controller
                         "priority" => 1,
                         "changefreq" => "daily",
                     ],
-                    "top10" => [
-                        "display" => "Top 10 most viewed",
-                        "loc" => base_url("race/most-viewed"),
-                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
-                        "priority" => 1,
-                        "changefreq" => "daily",
-                    ],
-                    "history" => [
-                        "display" => "History",
-                        "loc" => base_url("race/history"), //calendar/past
-                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
-                        "priority" => 0.8,
-                        "changefreq" => "daily",
-                    ],
+                    // "top10" => [
+                    //     "display" => "Top 10 most viewed",
+                    //     "loc" => base_url("race/most-viewed"),
+                    //     "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
+                    //     "priority" => 1,
+                    //     "changefreq" => "daily",
+                    // ],
+                    // "history" => [
+                    //     "display" => "History",
+                    //     "loc" => base_url("race/history"), //calendar/past
+                    //     "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
+                    //     "priority" => 0.8,
+                    //     "changefreq" => "daily",
+                    // ],
                     "province" => [
                         "display" => "Per Province",
-                        "loc" => base_url("province/list"), //calendar/past
+                        "loc" => base_url("province"), //calendar/past
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 0.8,
                         "changefreq" => "daily",
@@ -320,5 +333,4 @@ abstract class BaseController extends Controller
             ],
         ];
     }
-    
 }

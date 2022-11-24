@@ -45,7 +45,10 @@ $routes->get('terms-conditions', 'Home::terms_conditions');
 $routes->get('disclaimer', 'Home::disclaimer');
 $routes->get('privacy-policy', 'Home::privacy_policy');
 $routes->get('newsletter', 'User::newsletter');
+
 $routes->get('contact', 'Contact::index');
+$routes->post('contact', 'Contact::index');
+$routes->post('contact/(:segment)', 'Contact::index/$1');
 
 $routes->get('sitemap', 'Sitemap::index');
 $routes->get('sitemap/xml', 'Sitemap::xml');
@@ -66,14 +69,17 @@ $routes->get('user', 'User::dashboard');
 $routes->get('user/profile', 'User::profile');
 $routes->get('user/my-subscriptions', 'User::subscriptions');
 $routes->get('user/dontate', 'User::donate');
+// temp route
+$routes->get('user/port_users', 'User::port_users');
 
 $routes->get('region', 'Region::list');
 $routes->get('region/switch', 'Region::switch');
 $routes->get('region/(:segment)', 'Region::list/$1');
 
-$routes->get('province', 'Province::list');
-$routes->get('province/list', 'Province::list');
-$routes->get('province/(:segment)', 'Province::list/$1');
+$routes->get('province', 'Province::index');
+$routes->get('province/list', 'Province::index');
+$routes->post('province/switch', 'Province::switch');
+$routes->get('province/(:segment)', 'Province::races/$1');
 
 $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'role:admin'], function ($routes) {
     $routes->get('/', 'Dashboard::index');

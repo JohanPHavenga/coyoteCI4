@@ -26,6 +26,7 @@ class Validation extends BaseConfig
         FileRules::class,
         CreditCardRules::class,
         \Myth\Auth\Authentication\Passwords\ValidationRules::class,
+        \Denis303\ReCaptcha\Validation\ReCaptchaRules::class
     ];
 
     /**

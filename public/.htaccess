@@ -30,8 +30,7 @@ Options All -Indexes
 	# such as an image or css document, if this isn't true it sends the
 	# request to the front controller, index.php
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	
+	RewriteCond %{REQUEST_FILENAME} !-d	
 	RewriteRule ^(.*)$ index.php/$1 [L]
 	#RewriteRule ^([\s\S]*)$ index.php/$1 [L,NC,QSA]
 

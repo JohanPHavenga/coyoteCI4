@@ -12,7 +12,7 @@ class EditionModel extends Model
     {
         $builder = $this->db->table($this->table);
         return $builder->countAll();
-    }
+    }    
 
     public function last_updated($count = 1)
     {
@@ -76,9 +76,9 @@ class EditionModel extends Model
         $builder = $this->db->table($this->table);
 
         $builder->select('edition_id, edition_name, edition_slug, edition_date, updated_date')
-                ->where('edition_status !=', 2)
-                ->orderBy('edition_date', "DESC");
-        
+            ->where('edition_status !=', 2)
+            ->orderBy('edition_date', "DESC");
+
         if ($from) {
             $builder->where('edition_date > ', date("Y-m-d 00:00", strtotime($from)));
         }
