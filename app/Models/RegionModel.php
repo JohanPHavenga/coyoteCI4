@@ -43,4 +43,21 @@ class RegionModel extends Model
 
         return $data;
     }
+
+    public function slug_list()
+    {
+        $builder = $this->db->table($this->table);
+
+        $builder->select('region_id, region_name, region_slug, province_id')
+            ->where('region_status !=', 2)
+            ->orderBy('region_name', "ASC");
+        
+        $query = $builder->get();
+       
+        foreach ($query->getResultArray() as $row) {
+            $data[strtolower($row['region_slug'])] = $row;
+        }
+
+        return $data;
+    }
 }

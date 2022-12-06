@@ -1,2 +1,2 @@
 <?php
-    d($user_list);
+    d($result_list);

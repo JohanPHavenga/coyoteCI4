@@ -71,6 +71,28 @@ class EditionModel extends Model
         }
     }
 
+    public function from_id($id_array=[])
+    {
+        $data=[];
+        if (empty($id_array)) {
+            return $data;
+        }
+        $builder = $this->db->table($this->table);
+
+        $builder->select('edition_id, edition_name, edition_slug, edition_date, updated_date')
+            ->where('edition_status !=', 2)
+            ->whereIn('edition_id',$id_array)
+            ->orderBy('edition_date', "DESC");
+        
+        $query = $builder->get();
+
+        foreach ($query->getResultArray() as $row) {
+            $data[$row['edition_id']] = $row;
+        }
+
+        return $data;
+    }
+
     public function list($from = false)
     {
         $builder = $this->db->table($this->table);

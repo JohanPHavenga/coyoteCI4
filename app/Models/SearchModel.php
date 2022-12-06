@@ -53,6 +53,7 @@ class SearchModel extends Model
 
         $builder->where('edition_date <= ', date("Y-m-d 00:00"))
             ->where('edition_date > ', date("Y-m-d 00:00", strtotime($time)))
+            ->where('edition_info_status', 11)
             ->orderBy('edition_date', "DESC");
         if ($_SESSION['site_province'] > 0) {
             $builder->where('province_id', $_SESSION['site_province']);
@@ -67,6 +68,7 @@ class SearchModel extends Model
 
     public function upcoming($time = "3 months")
     {
+        $data = [];
         $builder = $this->db->table($this->table);
 
         $builder->where('edition_date >= ', date("Y-m-d 00:00"))
@@ -84,8 +86,9 @@ class SearchModel extends Model
         return $data;
     }
 
-    public function region($region_id_arr=[])
+    public function region($region_id_arr = [])
     {
+        $data = [];
         $builder = $this->db->table($this->table);
 
         $builder->where('edition_date >= ', date("Y-m-d 00:00"))
@@ -136,10 +139,9 @@ class SearchModel extends Model
         return $data;
     }
 
-    public function search($att)
+    public function search($att, $in_past = false)
     {
         $ss = $att['s'];
-        $date = date('Y-m-d 23:59', strtotime('+' . $att['t'] . ' months'));
         $data = [];
         $builder = $this->db->table($this->table);
         $builder->groupStart()
@@ -151,10 +153,18 @@ class SearchModel extends Model
             ->orLike('race_name', $ss)
             ->orWhere('province_abbr', $ss)
             ->groupEnd()
-            ->where('edition_date >', date("Y-m-d 00:00", strtotime('-3 weeks')))
-            ->where('edition_date <', $date)
-            ->orderBy('edition_date', 'DESC')
             ->limit(100);
+
+        if ($in_past) {
+            $builder->where('edition_date <', date("Y-m-d 23:59"))
+                ->orderBy('edition_date', 'DESC');
+        } else {
+            $date = date('Y-m-d 23:59', strtotime('+' . $att['t'] . ' months'));
+            $builder->where('edition_date >', date("Y-m-d 00:00", strtotime('-3 weeks')))
+                ->where('edition_date <', $date)
+                ->orderBy('edition_date', 'ASC');
+        }
+        // dd($builder->getCompiledSelect());
 
         if ($_SESSION['site_province'] > 0) {
             $builder->where('province_id', $_SESSION['site_province']);
@@ -163,6 +173,30 @@ class SearchModel extends Model
 
         foreach ($query->getResultArray() as $row) {
             $data[$row['edition_id']] = $row;
+        }
+        return $data;
+    }
+
+    public function my_result_search($ss, $has_results=1)
+    {        
+        $data = [];
+        $builder = $this->db->table($this->table);
+        $builder->groupStart()
+            ->like('edition_name', $ss)
+            ->orLike('event_name', $ss)
+            ->orLike('race_name', $ss)
+            ->groupEnd()
+            ->where('edition_status', 1)
+            ->where('edition_date <', date("Y-m-d 23:59"))
+            ->where('has_local_results', $has_results)
+            ->orderBy('edition_date', 'DESC')
+            ->limit(100);
+        
+        // dd($builder->getCompiledSelect());
+        $query = $builder->get();
+
+        foreach ($query->getResultArray() as $row) {
+            $data[$row['race_id']] = $row;
         }
         return $data;
     }

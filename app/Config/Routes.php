@@ -64,22 +64,37 @@ $routes->get('calendar/(:any)', 'Race::list/$1');
 
 $routes->get('results', 'Results::list');
 $routes->get('my-results', 'Results::my_results');
+$routes->get('result/search', 'Results::search', ['filter' => 'role:user']);
+$routes->get('result/claim/(:any)', 'Results::claim/$1', ['filter' => 'role:user']);
 
-$routes->get('user', 'User::dashboard');
-$routes->get('user/profile', 'User::profile');
-$routes->get('user/my-subscriptions', 'User::subscriptions');
-$routes->get('user/dontate', 'User::donate');
+
 // temp route
 $routes->get('user/port_users', 'User::port_users');
 
 $routes->get('region', 'Region::list');
 $routes->get('region/switch', 'Region::switch');
-$routes->get('region/(:segment)', 'Region::list/$1');
+$routes->get('region/(:any)', 'Region::list/$1');
 
 $routes->get('province', 'Province::index');
 $routes->get('province/list', 'Province::index');
 $routes->post('province/switch', 'Province::switch');
 $routes->get('province/(:segment)', 'Province::races/$1');
+
+$routes->group('user', ['filter' => 'role:user'], function ($routes) {
+    $routes->get('/', 'User::dashboard');
+    $routes->get('dashboard', 'User::dashboard');
+    $routes->get('profile', 'User::profile');
+    $routes->post('profile', 'User::profile');
+    $routes->get('success', 'User::success');
+    $routes->get('my-subscriptions', 'User::subscriptions');
+    $routes->get('donate', 'User::donate');
+    $routes->post('subscribe/(:segment)', 'User::subscribe/$1');
+});
+
+$routes->get('unsubscribe/(:segment)', 'User::unsubscribe/$1');
+$routes->get('unsub_success/(:segment)', 'User::unsub_success/$1');
+$routes->post('favourite/add_fav', 'Favourite::add_fav', ['filter' => 'role:user']);
+$routes->post('favourite/remove_fav', 'Favourite::remove_fav', ['filter' => 'role:user']);
 
 $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'role:admin'], function ($routes) {
     $routes->get('/', 'Dashboard::index');

@@ -41,5 +41,7 @@
         </nav>
     </header>
     <?php
-    
+        if (isset($alert)) {
+            echo "<blockquote>".$alert['alert_msg']."</blockquote>";            
+        }
         // d($menus['main_menu']);

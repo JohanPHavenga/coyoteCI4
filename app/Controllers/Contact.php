@@ -11,6 +11,7 @@ class Contact extends BaseController
         $this->data_to_views['validation'] =  \Config\Services::validation();
         $this->data_to_views['scripts_to_load'] = [
             "https://www.google.com/recaptcha/api.js",
+            "contact.js"
         ];
 
         // validation rules
