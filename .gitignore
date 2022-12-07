@@ -129,4 +129,5 @@ nb-configuration.xml
 # RR CUSTOM
 #-------------------------
 /scripts/
+/public/uploads
 

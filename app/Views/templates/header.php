@@ -1,10 +1,23 @@
+<?php
+if (!isset($page_title)) {
+    $page_title = "RoadRunning.co.za - Run without being chased";
+}
+if (!isset($meta_description)) {
+    $meta_description = "Listing Road Running races all over South Africa, presented in a modern, uniform manner";
+}
+if (!isset($meta_robots)) {
+    $meta_robots = "index";
+}
+?>
 <!doctype html>
 <html lang="en">
 
 <head>
-    <title>Coyote CI4</title>
+    <title><?= $page_title; ?></title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="<?= $meta_description; ?>">
+    <meta name="robots" content="<?= $meta_robots; ?>" />
 
     <link rel="apple-touch-icon" sizes="152x152" href="<?= base_url('assets/favicon/apple-touch-icon.png'); ?>">
     <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('assets/favicon/favicon-32x32.png') ?>">
@@ -106,9 +119,9 @@
 
                                         <ul class="user-menu-small-nav">
                                             <?php
-                                             foreach ($menus['user_menu'] as $menu_item) {
-                                                echo "<li><a href='" . $menu_item['loc'] . "'><i class='".$menu_item['icon']."'></i> " . $menu_item['display'] . "</a>";
-                                             }
+                                            foreach ($menus['user_menu'] as $menu_item) {
+                                                echo "<li><a href='" . $menu_item['loc'] . "'><i class='" . $menu_item['icon'] . "'></i> " . $menu_item['display'] . "</a>";
+                                            }
                                             ?>
                                         </ul>
                                     <?php
@@ -155,5 +168,3 @@
         </header>
         <div class="clearfix"></div>
         <!-- Header Container / End -->
-
-        

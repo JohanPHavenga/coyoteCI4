@@ -27,3 +27,80 @@
     margin-left: 10px;
     transition: 0.3s;
   }
+
+  .salary-box .salary-type {
+    /* text-align: right;
+    margin-bottom: 0; */
+  }
+
+  .single-page-header .right-side {
+    max-width: 25%;
+  }
+
+  .single-page-header .header-image {
+    padding: 0;
+  }
+
+  mark.color {
+    background-color: #febe42;
+  }
+
+  /* Long Verified Badge */
+.badge-with-title {
+	position: relative;
+	height: 26px;
+	display: flex;
+	top: -1px;
+	color: #fff;
+	font-weight: 500;
+	font-size: 14px;
+	text-align: center;
+	z-index: 10;
+	font-weight: 500;
+	border-radius: 4px;
+	padding: 0 8px 0 0;
+	margin: 0;
+	overflow: hidden;
+	padding-left: 34px;
+	line-height: 27px;
+}
+
+.badge-with-title.verified {
+    background-color: #30ab4a;
+}
+.badge-with-title.confirmed {
+    background-color: #2a41e8;
+}
+.badge-with-title.unverified {
+    background-color: #333;
+}
+
+.badge-with-title:before {
+	content: "\e92b";
+	font-family: "Feather-Icons";
+	font-size: 16px;
+	color: #fff;
+	position: absolute;
+	top: 0;
+	left: 0;
+	line-height: 26px;
+	height: 26px;
+	width: 26px;
+	display: inline-block;
+}
+
+.badge-with-title.verified:before {
+	content: "\e92b";
+	font-family: "Feather-Icons";
+	background-color: #38b653;
+}
+.badge-with-title.confirmed:before {
+	content: "\e9c5";
+	font-family: "Feather-Icons";
+	background-color: #334bf5;
+}
+.badge-with-title.unverified:before {
+	content: "\e9d0";
+	font-family: "Feather-Icons";
+	background-color: #444;
+}

@@ -60,6 +60,7 @@ $routes->get('search', 'Race::search');
 $routes->get('race/most-viewed', 'Race::most_viewed');
 $routes->get('race/(:segment)', 'Race::$1');
 $routes->get('calendar', 'Race::list');
+$routes->get('race-calendar', 'Race::list');
 $routes->get('calendar/(:any)', 'Race::list/$1');
 
 $routes->get('results', 'Results::list');
@@ -67,6 +68,7 @@ $routes->get('my-results', 'Results::my_results');
 $routes->get('result/search', 'Results::search', ['filter' => 'role:user']);
 $routes->get('result/claim/(:any)', 'Results::claim/$1', ['filter' => 'role:user']);
 
+$routes->get('file/(:any)', 'File::handler/$1');
 
 // temp route
 $routes->get('user/port_users', 'User::port_users');

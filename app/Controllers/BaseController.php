@@ -486,4 +486,14 @@ abstract class BaseController extends Controller
             ]);
         }
     }
+
+    public function get_img_url($slug, $file_list)
+    {
+        if (isset($file_list[1])) {
+            return base_url("file/edition/" . $slug . "/logo/" . $file_list[1][0]['file_name']);
+        } else {           
+            return base_url("assets/images/company-logo-05.png");
+        }
+    }
+
 }

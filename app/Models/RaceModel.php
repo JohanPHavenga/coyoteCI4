@@ -14,7 +14,19 @@ class RaceModel extends Model
         return $builder->countAll();
     }
 
-    public function get_race_list($edition_id)
+    public function exists($id)
+    {
+        $builder = $this->db->table($this->table);
+        $query = $builder->select('race_id')->where("race_id", $id);
+        if ($builder->countAllResults() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function list($edition_id)
     {
         $builder = $this->db->table($this->table);
 
@@ -24,6 +36,18 @@ class RaceModel extends Model
             $data[$row['race_id']] = $row;
         }
         return $data;
+    }
+
+    public function detail($id)
+    {
+        if (!($id)) {
+            return false;
+        } else {
+            $builder = $this->db->table($this->table);
+            $query = $builder->where("race_id", $id)->get();
+            // dd($builder->getCompiledSelect());
+            return $query->getRowArray();
+        }
     }
     
 }
