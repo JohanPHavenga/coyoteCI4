@@ -5,6 +5,7 @@ namespace App\Controllers;
 class User extends BaseController
 {
     protected $user_model;
+    public $breadcrumb;
 
     public function __construct()
     {
@@ -15,14 +16,14 @@ class User extends BaseController
     {
         // $this->data_to_views['user_list'] = $this->user_model->list(100);
         $result_model = model(ResultModel::class);
-        $this->data_to_views['result_list'] = $result_model->list(['user_id'=>user()->id]);
+        $this->data_to_views['result_list'] = $result_model->list(['user_id' => user()->id]);
         return view('templates/header', $this->data_to_views)
             . view('user/dashboard')
             . view('templates/footer');
     }
 
     public function profile()
-    {        
+    {
         $this->data_to_views['validation'] =  \Config\Services::validation();
 
         // validation rules
@@ -40,8 +41,8 @@ class User extends BaseController
                     . view('user/profile')
                     . view('templates/footer');
             } else {
-                $update=$this->user_model->set_user($this->request->getPost(), user()->id);
-                $this->data_to_views['success_msg']="Your details has been updated";
+                $update = $this->user_model->set_user($this->request->getPost(), user()->id);
+                $this->data_to_views['success_msg'] = "Your details has been updated";
                 return view('templates/header', $this->data_to_views)
                     . view('success')
                     . view('templates/footer');
@@ -51,7 +52,6 @@ class User extends BaseController
                 . view('user/profile')
                 . view('templates/footer');
         }
-    
     }
     public function success()
     {
@@ -59,14 +59,17 @@ class User extends BaseController
             . view('user/success')
             . view('templates/footer');
     }
-    
+
     public function subscriptions()
     {
         helper('encrypt');
+
         $usersubscription_model = model(UserSubscriptionModel::class);
-        $this->data_to_views['edition_subs']=$usersubscription_model->list(user()->id,"edition");
-        $this->data_to_views['newsletter_subs']=$usersubscription_model->list(user()->id,"newsletter");
+        $this->data_to_views['edition_subs'] = $usersubscription_model->list(user()->id, "edition");
+        $this->data_to_views['newsletter_subs'] = $usersubscription_model->list(user()->id, "newsletter");
+
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('user/subscriptions')
             . view('templates/footer');
     }
@@ -85,32 +88,34 @@ class User extends BaseController
             . view('templates/footer');
     }
 
-    public function port_users() {
+    public function port_users()
+    {
         // empty user table
         $this->user_model->empty_table();
         // get full list of current users
-        $user_list=$this->user_model->list();
+        $user_list = $this->user_model->list();
         // update new user table (use ID if you can)
         $this->user_model->bulk_update($user_list);
     }
 
-    public function subscribe($type, $email=null, $id=null) {
-        $allowed_types=['edition','newsletter'];
+    public function subscribe($type, $email = null, $id = null)
+    {
+        $allowed_types = ['edition', 'newsletter'];
         if (!in_array($type, $allowed_types)) {
             return false;
         }
         if (!$email) {
-            $email=$this->request->getPost('email_sub');
+            $email = $this->request->getPost('email_sub');
         }
         if (!$id) {
-            if ($type=='edition') {
-                $id=$this->request->getPost('edition_id_sub');
+            if ($type == 'edition') {
+                $id = $this->request->getPost('edition_id_sub');
             } else {
-                $id=0;
+                $id = 0;
             }
         }
 
-        $this->subscribe_user(["email"=>$email],$type,$id);
+        $this->subscribe_user(["email" => $email], $type, $id);
         return redirect()->back();
     }
 
@@ -150,7 +155,7 @@ class User extends BaseController
 
             // check if logged in, then redirect to my-subscriptions, else, go to edition that is being unsubscribed from, or newsletter page
             if (!logged_in()) {
-                if ($linked_to == "edition") {                    
+                if ($linked_to == "edition") {
                     return redirect()->to(base_url("unsub_success/" . $crypt));
                 } else {
                     return redirect()->to(base_url("newsletter"));
@@ -183,5 +188,4 @@ class User extends BaseController
             . view('success')
             . view('templates/footer');
     }
-
 }

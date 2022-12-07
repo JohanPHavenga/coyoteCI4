@@ -47,3 +47,20 @@ function race_color($distance)
         }
         return $color;
     }
+
+    function get_date_list()
+    {
+        $dates_to_fetch = [
+            "1 month ago",
+            "today",
+            "+1 month",
+            "+2 month",
+            "+3 month",
+            "+4 month",
+            //            "+5 month",
+        ];
+        foreach ($dates_to_fetch as $strtotime) {
+            $date_list[date("Y", strtotime($strtotime))][date("m", strtotime($strtotime))] = date("F Y", strtotime($strtotime));
+        }
+        return $date_list;
+    }

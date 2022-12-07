@@ -1,0 +1,29 @@
+.inline-form {
+    display: flex;
+}
+
+.inline-form button i {
+    width: 100%;
+    line-height: 48px;
+}
+
+.inline-form input,
+.inline-form button {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.inline-form button {
+    background-color: #2a41e8;
+    border-radius: 4px;
+    height: 48px;
+    min-width: 48px;
+    max-width: 48px;
+    text-align: center;
+    line-height: 48px;
+    font-size: 18px;
+    color: #fff;
+    margin-left: 10px;
+    transition: 0.3s;
+  }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "79b91f44ee2122b0f2823637870fdd17",
+    "content-hash": "4fbaa42f42af756800d926f07b9314bd",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -113,6 +113,44 @@
                 "source": "https://github.com/denis303/codeigniter4-recaptcha/tree/master"
             },
             "time": "2020-10-24T07:07:49+00:00"
+        },
+        {
+            "name": "geeklabs/ci4-breadcrumbs",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GeekLabsUK/CI4-Breadcrumbs.git",
+                "reference": "45d5067e01ef13b270598dff5e93d804c1be2510"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GeekLabsUK/CI4-Breadcrumbs/zipball/45d5067e01ef13b270598dff5e93d804c1be2510",
+                "reference": "45d5067e01ef13b270598dff5e93d804c1be2510",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Geeklabs\\Breadcrumbs\\": "/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "description": "Simple breadcrum library for Codeigniter 4",
+            "homepage": "https://github.com/GeekLabsUK",
+            "keywords": [
+                "CI4",
+                "CodeIgniter 4",
+                "breadcrumbs",
+                "codeigniter"
+            ],
+            "support": {
+                "issues": "https://github.com/GeekLabsUK/CI4-Breadcrumbs/issues",
+                "source": "https://github.com/GeekLabsUK/CI4-Breadcrumbs/tree/v2.0.0"
+            },
+            "time": "2022-12-05T21:29:11+00:00"
         },
         {
             "name": "google/recaptcha",

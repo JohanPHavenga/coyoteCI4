@@ -1,66 +1,257 @@
- <p>&nbsp;</p>
- <footer>
-     <h4>Footer</h4>
+ <!-- Spacer -->
+ <div class="margin-top-70"></div>
+ <!-- Spacer / End-->
 
-     <?php
-        // search form
-        $attributes = ['class' => 'search', 'id' => 'footer_search', 'method' => 'get'];
-        echo form_open(base_url('search'), $attributes);
-        $data = [
-            'name'  => 's',
-            'id'    => 'search_field',
-            'value' => set_value('s', '', true),
-        ];
-        echo form_input($data);
-        $data = [
-            'id'      => 'footer_search_button',
-            'value'   => 'false',
-            'type'    => 'submit',
-            'content' => 'Search',
-        ];
-        echo form_button($data);;
-        echo form_close();
+ <!-- Footer
+================================================== -->
+ <div id="footer">
 
-        // province switch form
-        $attributes = ['class' => 'search', 'id' => 'site_version', 'method' => 'post'];
-        echo form_open(base_url('province/switch'), $attributes);
+     <!-- Footer Top Section -->
+     <div class="footer-top-section">
+         <div class="container">
+             <div class="row">
+                 <div class="col-xl-12">
 
-        $js = "onchange='this.form.submit()'";
-        echo form_dropdown('province_switch', $province_options, $_SESSION['site_province'], $js);
-        echo form_close();
-        ?>
-     <nav>
-         <ul>
-             <?php
-                // main menu
-                unset($menus['static_pages']['login']);
-                foreach ($menus['static_pages'] as $menu_item) {
-                    echo "<li><a href='" . $menu_item['loc'] . "'>" . $menu_item['display'] . "</a>";
-                    if (isset($menu_item['sub-menu'])) {
-                        echo "<ul>";
-                        foreach ($menu_item['sub-menu'] as $sub_menu_item) {
-                            echo "<li><a href='" . $sub_menu_item['loc'] . "'>" . $sub_menu_item['display'] . "</a>";
-                        }
-                        echo "</ul>";
-                    }
-                    echo "</li>";
-                }
-                if (logged_in()) {
-                    echo "<li><a href='" . base_url('user/dashboard') . "'>" . user()->name . "</a></li><ul>";
-                    foreach ($menus['user_menu'] as $menu_item) {
-                        echo "<li><a href='" . $menu_item['loc'] . "'>" . $menu_item['display'] . "</a></li>";
-                    }
-                    echo "</ul>";
-                } else {
-                    echo "<li><a href='" . base_url('login') . "'>Login</a></li>";
-                }
-                ?>
-         </ul>
-     </nav>
-     Coyote &copy; <?= date("Y"); ?>
- </footer>
+                     <!-- Footer Rows Container -->
+                     <div class="footer-rows-container">
 
- <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+                         <!-- Left Side -->
+                         <div class="footer-rows-left">
+                             <div class="footer-row">
+                                 <div class="footer-row-inner footer-logo margin-top-5">
+                                     <img src="<?= base_url('assets/images/roadrunning_logo_dark_80.svg'); ?>" alt="">
+                                 </div>
+                             </div>
+                         </div>
+
+                         <!-- Right Side -->
+                         <div class="footer-rows-right">
+
+                             <!-- Social Icons -->
+                             <div class="footer-row">
+                                 <div class="footer-row-inner">
+                                     <ul class="footer-social-links">
+                                         <li>
+                                             <a href="https://www.facebook.com/roadrunningcoza" title="Facebook" data-tippy-placement="bottom" data-tippy-theme="light">
+                                                 <i class="icon-brand-facebook-f"></i>
+                                             </a>
+                                         </li>
+                                         <li>
+                                             <a href="https://twitter.com/roadrunningcoza" title="Twitter" data-tippy-placement="bottom" data-tippy-theme="light">
+                                                 <i class="icon-brand-twitter"></i>
+                                             </a>
+                                         </li>
+                                         <li>
+                                             <a href="https://www.linkedin.com/company/roadrunningza/" title="LinkedIn" data-tippy-placement="bottom" data-tippy-theme="light">
+                                                 <i class="icon-brand-linkedin-in"></i>
+                                             </a>
+                                         </li>
+                                     </ul>
+                                     <div class="clearfix"></div>
+                                 </div>
+                             </div>
+
+                             <!-- Language Switcher -->
+                             <div class="footer-row">
+                                 <div class="footer-row-inner">
+                                     <?php
+                                        // province switch form
+                                        $attributes = ['class' => 'province_switch_footer', 'method' => 'post'];
+                                        echo form_open(base_url('province/switch'), $attributes);
+
+                                        $js = "class='selectpicker language-switcher' data-selected-text-format='count' data-size='5' onchange='this.form.submit()'";
+                                        echo form_dropdown('province_switch', $province_options, $_SESSION['site_province'], $js);
+                                        echo form_close();
+                                        ?>
+                                 </div>
+                             </div>
+                         </div>
+
+                     </div>
+                     <!-- Footer Rows Container / End -->
+                 </div>
+             </div>
+         </div>
+     </div>
+     <!-- Footer Top Section / End -->
+
+     <!-- Footer Middle Section -->
+     <div class="footer-middle-section">
+         <div class="container">
+             <div class="row">
+
+                 <!-- Links -->
+                 <div class="col-xl-2 col-lg-2 col-md-3">
+                     <div class="footer-links">
+                         <h3>Races</h3>
+                         <ul>
+                             <?php
+                                foreach ($menus['static_pages']['races']['sub-menu'] as $key => $page) {
+                                    echo "<li><a href='$page[loc]'><span>$page[display]</span></a></li>";
+                                }
+                                foreach ($menus['static_pages']['results']['sub-menu'] as $key => $page) {
+                                    echo "<li><a href='$page[loc]'><span>$page[display]</span></a></li>";
+                                }
+                                ?>
+                         </ul>
+                     </div>
+                 </div>
+
+                 <!-- Links -->
+                 <div class="col-xl-2 col-lg-2 col-md-3">
+                     <div class="footer-links">
+                         <h3>Helpful Links</h3>
+                         <ul>
+                             <li><a href="<?= $menus['static_pages']['resources']['sub-menu']['training']['loc']; ?>"><span><?= $menus['static_pages']['resources']['sub-menu']['training']['display']; ?></span></a></li>
+                             <li><a href="<?= $menus['static_pages']['resources']['sub-menu']['faq']['loc']; ?>"><span><?= $menus['static_pages']['resources']['sub-menu']['faq']['display']; ?></span></a></li>
+                             <li><a href="<?= $menus['static_pages']['contact']['sub-menu']['about']['loc']; ?>"><span><?= $menus['static_pages']['contact']['sub-menu']['about']['display']; ?></span></a></li>
+                             <li><a href="<?= $menus['static_pages']['contact']['loc']; ?>"><span><?= $menus['static_pages']['contact']['display']; ?></span></a></li>
+                             <li><a href="<?= $menus['static_pages']['contact']['sub-menu']['support']['loc']; ?>"><span><?= $menus['static_pages']['contact']['sub-menu']['support']['display']; ?></span></a></li>
+                             <li><a href="<?= $menus['static_pages']['sitemap']['loc']; ?>"><span><?= $menus['static_pages']['sitemap']['display']; ?></span></a></li>
+                             <li><a href="<?= $menus['static_pages']['terms']['loc']; ?>"><span><?= $menus['static_pages']['terms']['display']; ?></span></a></li>
+                             <li><a href="<?= $menus['static_pages']['disclaimer']['loc']; ?>"><span><?= $menus['static_pages']['disclaimer']['display']; ?></span></a></li>
+                             <li><a href="<?= $menus['static_pages']['privacy']['loc']; ?>"><span><?= $menus['static_pages']['privacy']['display']; ?></span></a></li>
+                         </ul>
+                     </div>
+                 </div>
+
+                 <!-- Links -->
+                 <div class="col-xl-2 col-lg-2 col-md-3">
+                     <div class="footer-links">
+                         <h3>Regions</h3>
+                         <ul>
+                             <?php
+                                foreach ($menus['static_pages']['featured-regions']['sub-menu'] as $key => $page) {
+                                    echo "<li><a href='$page[loc]'><span>$page[display]</span></a></li>";
+                                }
+                                ?>
+                             <li><a href='<?= $menus['static_pages']['featured-regions']['loc']; ?>'><span><?= $menus['static_pages']['featured-regions']['display']; ?></span></a></li>
+                         </ul>
+                     </div>
+                 </div>
+
+                 <!-- Links -->
+                 <div class="col-xl-2 col-lg-2 col-md-3">
+                     <div class="footer-links">
+                         <h3>Calendar</h3>
+                         <ul>
+                             <?php
+                                foreach (get_date_list() as $year => $month_list) {
+                                    foreach ($month_list as $month_number => $month_name) {
+                                        echo "<li><a href='" . base_url("calendar/" . $year . "/" . $month_number) . "'><span>" . $month_name . "</span></a></li>";
+                                    }
+                                }
+                                ?>
+                         </ul>
+                     </div>
+                 </div>
+
+                 <!-- Newsletter -->
+                 <div class="col-xl-4 col-lg-4 col-md-12">
+                     <h3><i class="icon-feather-search"></i> Race Search</h3>
+                     <p>Use the form below to search for a race name or town in which the race is taking place.</p>
+                     <?php
+                        // search form
+                        $attributes = ['class' => 'search, newsletter', 'id' => 'footer_search', 'method' => 'get'];
+                        echo form_open(base_url('search'), $attributes);
+                        $data = [
+                            'name'  => 's',
+                            'id'    => 'search_field',
+                            'value' => set_value('s', '', true),
+                            'placeholder' => 'Search',
+                        ];
+                        echo form_input($data);
+                        $data = [
+                            'type'    => 'submit',
+                            'content' => '<i class="icon-feather-arrow-right"></i>',
+                        ];
+                        echo form_button($data);;
+                        echo form_close();
+                        ?>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <!-- Footer Middle Section / End -->
+
+     <!-- Footer Copyrights -->
+     <div class="footer-bottom-section">
+         <div class="container">
+             <div class="row">
+                 <div class="col-xl-12">
+                     © <?=date("Y");?> <strong>RoadRunningZA</strong>. All Rights Reserved.
+                 </div>
+             </div>
+         </div>
+     </div>
+     <!-- Footer Copyrights / End -->
+
+ </div>
+ <!-- Footer / End -->
+
+ </div>
+ <!-- Wrapper / End -->
+
+
+ <!-- Scripts
+================================================== -->
+ <script src="<?= base_url('assets/js/jquery-3.6.0.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/jquery-migrate-3.3.2.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/mmenu.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/tippy.all.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/simplebar.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/bootstrap-slider.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/bootstrap-select.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/snackbar.j'); ?>s"></script>
+ <script src="<?= base_url('assets/js/clipboard.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/counterup.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/magnific-popup.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/slick.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/custom.js'); ?>"></script>
+
+ <!-- Alert modal -->
+ <?php
+    if (isset($flash_data)) {
+    ?>
+     <script>
+         $(document).ready(function() {
+             Snackbar.show({
+                 text: '<?= $flash_data['alert_msg']; ?>',
+                 pos: 'bottom-center',
+                 showAction: false,
+                 actionText: "Dismiss",
+                 duration: 4000,
+                 textColor: '#fff',
+                 backgroundColor: '#383838'
+             });
+         });
+     </script>
+ <?php
+    }
+    ?>
+
+ <!-- Google Autocomplete -->
+ <script>
+     function initAutocomplete() {
+         var options = {
+             types: ['(cities)'],
+             // componentRestrictions: {country: "us"}
+         };
+
+         var input = document.getElementById('autocomplete-input');
+         var autocomplete = new google.maps.places.Autocomplete(input, options);
+     }
+
+     // Autocomplete adjustment for homepage
+     if ($('.intro-banner-search-form')[0]) {
+         setTimeout(function() {
+             $(".pac-container").prependTo(".intro-search-field.with-autocomplete");
+         }, 300);
+     }
+ </script>
+
+ <!-- Google API -->
+ <script src="https://maps.googleapis.com/maps/api/js?key=&libraries=places&callback=initAutocomplete"></script>
 
  <?php
     if (isset($scripts_to_load)) :
@@ -91,16 +282,16 @@
                          user_id: <?= user()->id; ?>,
                          edition_id: <?= $edition['edition_id']; ?>
                      },
-                    //  success: function(res) {
-                    //      if (res == 1) {
-                    //          alert('Data saved successfully');
-                    //      } else {
-                    //          alert('Data not saved');
-                    //      }
-                    //  },
-                    //  error: function() {
-                    //      alert('data not saved');
-                    //  }
+                     //  success: function(res) {
+                     //      if (res == 1) {
+                     //          alert('Data saved successfully');
+                     //      } else {
+                     //          alert('Data not saved');
+                     //      }
+                     //  },
+                     //  error: function() {
+                     //      alert('data not saved');
+                     //  }
                  });
              });
 
@@ -115,16 +306,16 @@
                          user_id: <?= user()->id; ?>,
                          edition_id: <?= $edition['edition_id']; ?>
                      },
-                    //  success: function(res) {
-                    //      if (res == 1) {
-                    //          // alert('Data saved successfully');
-                    //      } else {
-                    //          // alert('Data not saved');
-                    //      }
-                    //  },
-                    //  error: function() {
-                    //      // alert('data not saved');
-                    //  }
+                     //  success: function(res) {
+                     //      if (res == 1) {
+                     //          // alert('Data saved successfully');
+                     //      } else {
+                     //          // alert('Data not saved');
+                     //      }
+                     //  },
+                     //  error: function() {
+                     //      // alert('data not saved');
+                     //  }
                  });
              });
          });
@@ -138,4 +329,6 @@
  </html>
 
  <?php
-    d($_SESSION);
+    // d(user());
+    // d($_SESSION);
+    // d(user()->getRoles());

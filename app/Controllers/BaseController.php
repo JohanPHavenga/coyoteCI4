@@ -49,30 +49,88 @@ abstract class BaseController extends Controller
         $this->edition_model = model(EditionModel::class);
         // set data_to_views as empty array
         $this->data_to_views['menus'] = $this->get_menus();;
+        // dd($this->data_to_views['menus']);
         // create session
         $this->session = \Config\Services::session();
         // check for flash data alert
         if (isset($_SESSION['alert_msg'])) {
-            $this->data_to_views['alert'] = $this->session->getFlashdata();
+            $this->data_to_views['flash_data'] = $this->session->getFlashdata();
         }
 
         // set province dropdown        
         $province_model = model(ProvinceModel::class);
         // $this->data_to_views['province_list']=$province_model->list();
 
-        $this->data_to_views['province_options'][0] = "All";
+        $this->data_to_views['province_options'][0] = "National";
         foreach ($province_model->list() as $province) {
             $this->data_to_views['province_options'][$province['province_id']] = $province['province_name'];
         }
         if (!isset($_SESSION['site_province'])) {
             $_SESSION['site_province'] = 0;
         }
+
+        // set user avatar
+        $this->data_to_views['user_avatar'] = base_url('assets/images/user-avatar-placeholder.png');
+        $this->data_to_views['user_status'] = 'offline';
+        if (logged_in()) {
+            if (user()->picture) {
+                $this->data_to_views['user_avatar'] = user()->picture;
+                
+            }
+            $this->data_to_views['user_status'] = 'online';
+            $this->data_to_views['user_roles'] = user()->getRoles();
+        }
+
+        // set default breadcrumbs
+        $this->data_to_views['bc_arr']=$this->get_crumbs();
+        // set default title
+        end($this->data_to_views['bc_arr']);        
+        $this->data_to_views['title']=key($this->data_to_views['bc_arr']);
+    }
+
+    public function get_crumbs()
+    {
+        // setup auto crumbs from URI
+        $uri = new \CodeIgniter\HTTP\URI(current_url());
+
+        $segs = $uri->getSegments();
+        // dd($segs);
+        $crumb_uri = base_url();
+        $total_segments = $uri->getTotalSegments();
+        $crumbs['Home'] = base_url();
+        for ($x = 0; $x < $total_segments; $x++) {
+
+            if (($x == $total_segments) || ($x == 3)) {
+                $crumb_uri = "";
+            } else {
+                $crumb_uri .= "/" . $segs[$x];
+            }
+
+            // make controller prural for event and overwrite URI
+            if (($x == 1) && ($segs[$x] == "event")) {
+                $segs[$x] = "race";
+            }
+            // make controller prural for display purposes
+            if (in_array($segs[$x], ["race"])) {
+                $segs[$x] = $segs[$x] . "s";
+            }
+
+            $segs[$x] = str_replace("_", " ", $segs[$x]);
+            $segs[$x] = str_replace("-", " ", $segs[$x]);
+            $crumbs[ucwords($segs[$x])] = $crumb_uri;
+
+            if ($x == 3) {
+                break;
+            }
+        }
+
+        return $crumbs;
     }
 
     public function get_menus()
     {
         $menus['static_pages'] = $this->get_static_pages();
-        $remove = ['switch-region', 'featured-regions', 'login', 'add-listing', 'search', 'sitemap', 'terms', 'disclaimer'];
+        $remove = ['switch-region', 'featured-regions', 'login', 'add-listing', 'search', 'sitemap', 'terms', 'disclaimer', 'home', 'privacy'];
         $menus['main_menu'] = array_diff_key($menus['static_pages'], array_flip($remove));
         if (logged_in()) {
             $menus['user_menu'] = $this->get_user_menu();
@@ -191,13 +249,6 @@ abstract class BaseController extends Controller
                     ],
                 ],
             ],
-            "about" => [
-                "display" => "About",
-                "loc" => base_url("about"),
-                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 month")),
-                "priority" => 0.5,
-                "changefreq" => "monthly",
-            ],
             "contact" => [
                 "display" => "Contact",
                 "loc" => base_url("contact"),
@@ -211,6 +262,13 @@ abstract class BaseController extends Controller
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
                         "priority" => 0.8,
                         "changefreq" => "yearly",
+                    ],
+                    "about" => [
+                        "display" => "About",
+                        "loc" => base_url("about"),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 month")),
+                        "priority" => 0.5,
+                        "changefreq" => "monthly",
                     ],
                     "support" => [
                         "display" => "Support the site",
@@ -332,37 +390,37 @@ abstract class BaseController extends Controller
             "dashboard" => [
                 "display" => "Dashboard",
                 "loc" => base_url("user/dashboard"),
-                "icon" => "icon-clipboard21",
+                "icon" => "icon-material-outline-dashboard",
             ],
             "profile" => [
-                "display" => "My Profile",
+                "display" => "Profile",
                 "loc" => base_url("user/profile"),
-                "icon" => "icon-user11",
+                "icon" => "icon-material-outline-face",
             ],
             "favourite" => [
-                "display" => "My Favourite Races",
+                "display" => "Favourites",
                 "loc" => base_url("race/favourite"),
-                "icon" => "icon-heart21",
+                "icon" => "icon-material-outline-favorite",
             ],
             "results" => [
-                "display" => "My Results",
+                "display" => "Results",
                 "loc" => base_url("my-results"),
-                "icon" => "icon-clock21",
+                "icon" => "icon-material-outline-assignment",
             ],
             "subscriptions" => [
-                "display" => "My Subscriptions",
+                "display" => "Subscriptions",
                 "loc" => base_url("user/my-subscriptions"),
-                "icon" => "icon-mail",
+                "icon" => "icon-material-baseline-mail-outline",
             ],
             "donate" => [
                 "display" => "Donate",
                 "loc" => base_url("user/donate"),
-                "icon" => "icon-clipboard21",
+                "icon" => "icon-material-outline-local-atm",
             ],
             "logout" => [
                 "display" => "Logout",
                 "loc" => base_url("logout"),
-                "icon" => "icon-log-out",
+                "icon" => "icon-material-outline-power-settings-new",
             ],
         ];
         return $menu_arr;

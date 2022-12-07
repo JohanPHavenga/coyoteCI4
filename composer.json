@@ -8,7 +8,8 @@
         "php": "^7.4 || ^8.0",
         "codeigniter4/framework": "^4.0",
         "myth/auth": "^1.2",
-        "denis303/codeigniter4-recaptcha": "dev-master"
+        "denis303/codeigniter4-recaptcha": "dev-master",
+        "geeklabs/ci4-breadcrumbs": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",

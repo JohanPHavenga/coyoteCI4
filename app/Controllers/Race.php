@@ -20,6 +20,7 @@ class Race extends BaseController
         $this->data_to_views['day'] = $day;
 
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('race/race_list')
             . view('templates/footer');
     }
@@ -59,8 +60,8 @@ class Race extends BaseController
         $this->data_to_views['edition_list'] = [];
         if (logged_in()) {
             $favourite_model = model(FavouriteModel::class);
-            $fav_races_ids=$favourite_model->get_favourite_list(user()->id);
-            $this->data_to_views['edition_list']=$this->edition_model->from_id($fav_races_ids);
+            $fav_races_ids = $favourite_model->get_favourite_list(user()->id);
+            $this->data_to_views['edition_list'] = $this->edition_model->from_id($fav_races_ids);
         } else {
             $this->data_to_views['notice'] = "Please log in to be able to favourite races";
         }
