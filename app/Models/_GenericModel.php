@@ -4,9 +4,11 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class RaceModel extends Model
+class GenericModel extends Model
 {
-    protected $table = 'races';
+    protected $table = 'generics';
+    protected $id_field = 'generic_id';
+    protected $no_info_id = 5;
 
     public function record_count()
     {
@@ -17,7 +19,7 @@ class RaceModel extends Model
     public function exists($id)
     {
         $builder = $this->db->table($this->table);
-        $query = $builder->select('race_id')->where("race_id", $id);
+        $builder->where($this->id_field, $id);
         if ($builder->countAllResults() > 0) {
             return true;
         } else {
@@ -25,18 +27,13 @@ class RaceModel extends Model
         }
     }
 
-
-    public function list($edition_id)
+    public function list()
     {
+        $data=[];
         $builder = $this->db->table($this->table);
-
-        $builder->where('edition_id', $edition_id)
-            ->join('racetypes','racetype_id');
-
         $query = $builder->get();
-
         foreach ($query->getResultArray() as $row) {
-            $data[$row['race_id']] = $row;
+            $data[$row[$this->id_field]] = $row;
         }
         return $data;
     }
@@ -47,8 +44,7 @@ class RaceModel extends Model
             return false;
         } else {
             $builder = $this->db->table($this->table);
-            $query = $builder->where("race_id", $id)->get();
-            // dd($builder->getCompiledSelect());
+            $query = $builder->where($this->id_field, $id)->get();
             return $query->getRowArray();
         }
     }

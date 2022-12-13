@@ -17,6 +17,19 @@ function fdateShort($date = null)
         return date("Y-m-d", strtotime($date));
     }
 }
+function fdateHumanFull($date, $show_dotw = false, $show_time = false)
+{
+    $date_str = "j F Y";
+    if ($show_dotw) {
+        $date_str = "l, " . $date_str;
+    }
+    if ($show_time) {
+        if (!time_is_midnight($date)) {
+            $date_str .= " H:i";
+        }
+    }
+    return date($date_str, strtotime($date));
+}
 
 function fdateMonth($date)
 {
@@ -39,12 +52,102 @@ function fdateEntries($date)
     return date($date_str, strtotime($date)) . $post_text;
 }
 
+function ftimeSort($time, $show_sec = false)
+{
+    if ($show_sec) {
+        return date("H:i:s", strtotime($time));
+    } else {
+        return date("H:i", strtotime($time));
+    }
+}
+
+function ftimeMil($time)
+{
+    return date("H\hi", strtotime($time));
+}
+
 function fdateTitle($date)
 {
     return date("D, d M Y", strtotime($date));
 }
 
+function fdisplayCurrency($amount, $des = 0)
+{
+    return "R" . number_format($amount, $des, '.', '');
+}
+
+function fraceDistance($distance, $small = false)
+{
+    if ($distance == 1.6) {
+        $dist = "1";
+        $denom = "mile";
+    } else {
+        $dist = floatval($distance);
+        $denom = "km";
+    }
+
+    if ($small) {
+        return $dist . "<small>" . $denom . "</small>";
+    } else {
+        return $dist . $denom;
+    }
+}
+
+function int_phone($phone)
+{
+    $phone = trim($phone);
+    $phone = str_replace(" ", "", $phone);
+    $phone = str_replace("-", "", $phone);
+    return preg_replace('/^(?:\+?27|0)?/', '+27', $phone);
+}
+
+
+function fphone($phone)
+{
+    $phone = int_phone($phone);
+    $int_code = substr($phone, 0, 3);
+    $code = substr($phone, 3, 2);
+    $first_3 = substr($phone, 5, 3);
+    $last_4 = substr($phone, 8, 4);
+    $new_phone = $int_code . " (0)" . $code . " " . $first_3 . " " . $last_4;
+    return $new_phone;
+}
+
 // -- HELPERS
+function detail_field_strlen($field)
+{
+    if ($field) {
+        if (strlen($field) > 10) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+function convert_seconds($seconds)
+{
+    $dt1 = new DateTime("@0");
+    $dt2 = new DateTime("@$seconds");
+    //    return $dt1->diff($dt2)->format('%a days, %h hours, %i minutes and %s seconds');
+    return $dt1->diff($dt2)->format('%a');
+}
+
+function move_to_top(&$array, $key)
+{
+    $temp = array($key => $array[$key]);
+    unset($array[$key]);
+    $array = $temp + $array;
+}
+
+function move_to_bottom(&$array, $key)
+{
+    $value = $array[$key];
+    unset($array[$key]);
+    $array[$key] = $value;
+}
 
 function time_is_midnight($date)
 {
@@ -70,31 +173,31 @@ function race_color($distance)
 {
     switch (true) {
         case $distance <= 9:
-            $color = 'danger';
+            $color = '#CE041C';
             break;
 
         case $distance == 10:
-            $color = 'warning';
+            $color = '#ffb20e';
             break;
 
         case $distance <= 21:
-            $color = 'secondary';
+            $color = '#5A6268';
             break;
 
         case $distance == 21.1:
-            $color = 'success';
+            $color = '#81c868';
             break;
 
         case $distance <= 42:
-            $color = 'info';
+            $color = '#53b0f8';
             break;
 
         case $distance == 42.2:
-            $color = 'primary';
+            $color = '#2250fc';
             break;
 
         default:
-            $color = 'dark';
+            $color = '#000';
             break;
     }
     return $color;
@@ -125,6 +228,18 @@ function time_to_sec($time)
             $sec += pow(60, $k) * $v;
         }
         return $sec;
+    } else {
+        return false;
+    }
+}
+
+function is_image($path)
+{
+    $extension = pathinfo($path, PATHINFO_EXTENSION);
+
+    $extensions = array('jpeg', 'jpg', 'png', 'gif', 'webp');
+    if (in_array($extension, $extensions)) {
+        return true;
     } else {
         return false;
     }

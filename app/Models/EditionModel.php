@@ -80,19 +80,29 @@ class EditionModel extends Model
 
     public function get_edition_id_from_slug($edition_slug)
     {
-        $builder = $this->db->table($this->table);
-
-        $query = $builder->select('edition_id')
+        $edition_builder = $this->db->table($this->table);
+        $edition_query = $edition_builder->select('edition_id, edition_name, edition_status, edition_redirect_url')
             ->where('edition_slug', $edition_slug)
             ->get();
 
-        if ($query->getRow()) {
-            return $query->getRow()->edition_id;
+        $edition_past_builder = $this->db->table("editions_past");
+        $edition_past_query = $edition_past_builder->select('edition_id, edition_name')
+            ->where('edition_slug', $edition_slug)
+            ->get();
+
+        if ($edition_builder->countAll() > 0) {
+            $result = $edition_query->getRowArray();
+            $result['source'] = "org";
+            return $result;
+        } elseif ($edition_past_builder->countAll() > 0) {
+            $result = $edition_past_query->getRowArray();
+            $result['source'] = "past";
+            return $result;
         } else {
             return false;
         }
     }
-
+    
     public function from_id($id_array = [])
     {
         $data = [];
@@ -115,24 +125,37 @@ class EditionModel extends Model
         return $data;
     }
 
-    public function list($from = false)
+    public function list($query_params=[], $flat = false)
     {
         $builder = $this->db->table($this->table);
 
         $builder->select('edition_id, edition_name, edition_slug, edition_date, updated_date')
-            ->where('edition_status !=', 2)
-            ->orderBy('edition_date', "DESC");
+            ->where('edition_status !=', 2);
 
-        if ($from) {
-            $builder->where('edition_date > ', date("Y-m-d 00:00", strtotime($from)));
+
+        foreach ($query_params as $operator => $clause_arr) {
+            if (is_array($clause_arr)) {
+                foreach ($clause_arr as $field => $value) {
+                    $builder->$operator($field, $value);
+                }
+            } else {
+                $this->db->$operator($clause_arr);
+            }
+        }
+        if (!isset($query_params['orderBy'])) {
+            $builder->orderBy('edition_date', 'DESC');
         }
 
         $query = $builder->get();
 
         foreach ($query->getResultArray() as $row) {
-            $year = date("Y", strtotime($row['edition_date']));
-            $month = date("m", strtotime($row['edition_date']));
-            $data[$year][$month][$row['edition_id']] = $row;
+            if ($flat) {
+                $data[$row['edition_id']] = $row;
+            } else {
+                $year = date("Y", strtotime($row['edition_date']));
+                $month = date("m", strtotime($row['edition_date']));
+                $data[$year][$month][$row['edition_id']] = $row;
+            }
         }
 
         return $data;
@@ -158,9 +181,26 @@ class EditionModel extends Model
             ->where('filetype_id', 1)
             ->where('file_linked_to', 'edition')
             ->where('linked_id', $edition_id);
-            // dd($builder->getCompiledSelect());
-            $query = $builder->get();    
-        $file_name=$query->getRow()->file_name;
-        return base_url("file/edition/" . $edition_slug . "/logo/" . $file_name);
+        // dd($builder->getCompiledSelect());
+        $query = $builder->get();
+
+        // dd($query->getRow());
+        if ($query->getRow()) {
+            $file_name = $query->getRow()->file_name;
+            $img_url = base_url("file/edition/" . $edition_slug . "/logo/" . $file_name);
+        } else {
+            $img_url = base_url("assets/images/run_pad.png");
+        }
+        return $img_url;
+    }
+
+    public function get_status_array()
+    {
+        $builder = $this->db->table("status");
+        $query = $builder->select('status_id, status_name')->get();
+        foreach ($query->getResultArray() as $row) {
+            $data[$row['status_id']] = $row['status_name'];
+        }
+        return $data;
     }
 }

@@ -859,7 +859,8 @@ ul.user-menu-small-nav li a:hover i { color: #66676b; }
 	height: 36px;
 	padding: 0;
 	position: relative;
-	zoom: 1;
+	transform:scale(1);
+  	transform-origin: 0 0;
 	margin-top: 20px;
 }
 
@@ -13173,7 +13174,8 @@ body #submit_map {
 	}
 
 .leaflet-oldie .leaflet-popup-content-wrapper {
-	zoom: 1;
+	transform:scale(1);
+  	transform-origin: 0 0;
 	}
 .leaflet-oldie .leaflet-popup-tip {
 	width: 24px;

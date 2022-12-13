@@ -24,21 +24,25 @@ class File extends BaseController
     //     }
     // }
 
-    public function handler($linked_to, $edition_slug, $filetype_name, $file_name = null)
+    public function handler($linked_to, $edition_slug, $filetype_name, $file_name = null, $race_filename = null)
     {
         $file_id = false;
         if (is_numeric($filetype_name)) {
             $file_id = $filetype_name;
         } else {
             $filetype_name = str_replace(" ", "_", urldecode($filetype_name));
+            // $filetype_name = str_replace("-", "_", urldecode($filetype_name));
         }
+
 
         switch ($linked_to) {
             case "edition":
                 $file_id = null;
-                $edition_id = $this->edition_model->get_edition_id_from_slug($edition_slug);
+                $e=$this->edition_model->get_edition_id_from_slug($edition_slug);
+                $edition_id = $e['edition_id'];
                 $file_list = $this->file_model->list("edition", $edition_id, true);
                 $filetype_list = $this->file_model->get_filetype_list();
+                // dd($filetype_list);
                 $filetype_id = $filetype_list[$filetype_name];
                 if ($file_list[$filetype_id]) {
                     foreach ($file_list[$filetype_id] as $key => $file_detail) {
@@ -49,12 +53,14 @@ class File extends BaseController
                 }
                 break;
             case "race":
-                $race_name = $filetype_name;
+                $race_name = $file_name;
 
                 $file_id = null;
-                $edition_id = $this->edition_model->get_edition_id_from_slug($edition_slug);
-                $this->data_to_views['race_list'] = $this->race_model->list(["where" => ["races.edition_id" => $edition_id]]);
+                $edition_sum = $this->edition_model->get_edition_id_from_slug($edition_slug);
+                $this->data_to_views['race_list'] = $this->race_model->list($edition_sum['edition_id']);
 
+                // d($race_filename);
+                // d($this->data_to_views['race_list']);
                 foreach ($this->data_to_views['race_list'] as $race_id => $race) {
                     if ($race_name == url_title($race['race_name'])) {
                         break;
@@ -65,7 +71,7 @@ class File extends BaseController
                 $filetype_list = $this->file_model->get_filetype_list();
                 $filetype_id = $filetype_list[$filetype_name];
                 foreach ($file_list[$filetype_id] as $key => $file_detail) {
-                    if ($file_detail['file_name'] == $file_name) {
+                    if ($file_detail['file_name'] == $race_filename) {
                         $file_id = $file_detail['file_id'];
                     }
                 }
@@ -75,9 +81,9 @@ class File extends BaseController
                 $file_id = my_decrypt($file_id);
                 break;
         }
-        //    dd($file_id);
-        //    dd($file_list);
-        //    dd($filetype_list);
+        //    d($file_id);
+        //    d($file_list);
+        //    d($filetype_list);
         //    dd($filetype_id);
         // check for INT
         if (!preg_match('/^\d+$/', $file_id)) {
@@ -114,7 +120,7 @@ class File extends BaseController
                     readfile($path);
                     break;
                 default:
-                    $this->display($file_detail['file_type'], $path);
+                    $this->display($file_detail['file_type'], $path, $file_detail['file_name']);
                     break;
             }
         } else {
@@ -127,11 +133,11 @@ class File extends BaseController
         // force_download($path, NULL);
     }
 
-    public function display($mime, $filepath)
+    public function display($mime, $filepath, $file_name)
     {
         header('Content-Length: ' . filesize($filepath));
         header("Content-Type: $mime");
-        header('Content-Disposition: inline; filename="' . $filepath . '";');
+        header('Content-Disposition: inline; filename="' . $file_name . '";');
         readfile($filepath);
         exit();        
     }

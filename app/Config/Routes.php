@@ -54,7 +54,7 @@ $routes->get('sitemap', 'Sitemap::index');
 $routes->get('sitemap/xml', 'Sitemap::xml');
 
 $routes->get('event/add', 'Event::add');
-$routes->get('event/(:segment)', 'Event::detail/$1');
+$routes->get('event/(:any)', 'Event::detail/$1');
 
 $routes->get('search', 'Race::search');
 $routes->get('race/most-viewed', 'Race::most_viewed');

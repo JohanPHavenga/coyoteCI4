@@ -29,7 +29,7 @@ class Race extends BaseController
     {
         //$this->request->getVar('name')
         if (isset($_GET['s'])) {
-            $att['s'] = $this->request->getGet('s');
+            $att['s'] = $this->data_to_views['search_string'];
             if (isset($_GET['t'])) {
                 $t = $this->request->getGet('t');
                 intval($t);

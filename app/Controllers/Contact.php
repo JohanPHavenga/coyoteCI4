@@ -4,9 +4,13 @@ namespace App\Controllers;
 
 class Contact extends BaseController
 {
-    public function index($status = null)
+    public function __construct()
     {
         helper('reCaptcha');
+    }
+
+    public function index($status = null)
+    {        
         
         $this->data_to_views['validation'] =  \Config\Services::validation();
         $this->data_to_views['scripts_to_load'] = [
@@ -74,6 +78,46 @@ class Contact extends BaseController
             $data = $email->printDebugger(['headers']);
             dd($data);
             return false;
+        }
+    }
+
+
+    public function event($slug = null)
+    {        
+        $this->data_to_views['validation'] =  \Config\Services::validation();
+        $this->data_to_views['scripts_to_load'] = [
+            "https://www.google.com/recaptcha/api.js",
+            "contact.js"
+        ];
+
+        // validation rules
+        if ($this->request->getPost()) {
+
+            $rules = [
+                'name' => ['label'  => 'Name', 'rules'  => 'required',],
+                'email' => ['label'  => 'Email', 'rules'  => 'required|valid_email',],
+                'subject' => ['label'  => 'Subject', 'rules'  => 'required',],
+                'message' => ['label'  => 'Message', 'rules'  => 'required',],
+                'reCaptcha3' => ['label'  => 'Message', 'rules'  => 'required|reCaptcha3[contactForm,0.9]',],
+            ];
+
+            if (!$this->validate($rules)) {
+                $this->data_to_views['validation'] = $this->validator;
+                return view('templates/header', $this->data_to_views)
+                    . view('contact/form')
+                    . view('templates/footer');
+            } else {
+                // stuur email
+                $this->send_email();
+                $this->data_to_views['status'] = $status;
+                return view('templates/header', $this->data_to_views)
+                    . view('contact/success')
+                    . view('templates/footer');
+            }
+        } else {
+            return view('templates/header', $this->data_to_views)
+                . view('contact/form')
+                . view('templates/footer');
         }
     }
 }

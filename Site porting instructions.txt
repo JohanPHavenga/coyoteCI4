@@ -1,0 +1,27 @@
+## Instructions how to copy the DB and use with new RR site
+
+1. Create new DB called coyoteci4
+2. Copy DB with data without history and emailque tables
+3. Copy emailque table without data
+4. Set env variable to connect to DB
+5. Rename users table to users_legacy
+6. run php spark migrate -all
+
+6. alter Users table
+
+ALTER TABLE `users`
+	ADD COLUMN `name` VARCHAR(255) NOT NULL AFTER `username`,
+	ADD COLUMN `surname` VARCHAR(255) NOT NULL AFTER `name`,
+	ADD COLUMN `club_id` INT NOT NULL DEFAULT '8' AFTER `force_pass_reset`,
+	ADD COLUMN `phone` VARCHAR(15) NULL DEFAULT NULL AFTER `club_id`,
+	ADD COLUMN `picture` VARCHAR(255) NULL DEFAULT NULL AFTER `phone`,
+	ADD COLUMN `profile_link` VARCHAR(255) NULL DEFAULT NULL AFTER `picture`;
+
+7. Run port users script
+8. rename favourite table to favourites
+9. Remove button text from filetype table that does not need to show on Documents section
+10. Copy uploads folder
+
+
+
+

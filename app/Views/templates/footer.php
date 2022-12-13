@@ -146,7 +146,7 @@
                      </div>
                  </div>
 
-                 <!-- Newsletter -->
+                 <!-- Search -->
                  <div class="col-xl-4 col-lg-4 col-md-12">
                      <h3><i class="icon-feather-search"></i> Race Search</h3>
                      <p>Use the form below to search for a race name or town in which the race is taking place.</p>
@@ -157,7 +157,7 @@
                         $data = [
                             'name'  => 's',
                             'id'    => 'search_field',
-                            'value' => set_value('s', '', true),
+                            'value' => $search_string,
                             'placeholder' => 'Search',
                         ];
                         echo form_input($data);
@@ -179,7 +179,7 @@
          <div class="container">
              <div class="row">
                  <div class="col-xl-12">
-                     © <?=date("Y");?> <strong>RoadRunningZA</strong>. All Rights Reserved.
+                     © <?= date("Y"); ?> <strong>RoadRunningZA</strong>. All Rights Reserved.
                  </div>
              </div>
          </div>
@@ -209,6 +209,14 @@
  <script src="<?= base_url('assets/js/slick.min.js'); ?>"></script>
  <script src="<?= base_url('assets/js/custom.js'); ?>"></script>
 
+ <!-- auto focus on search -->
+ <script>
+     let inputElem = document.querySelector("input#header_search_field");
+     window.addEventListener('load', function(e) {
+         inputElem.select();
+     })
+ </script>
+
  <!-- Alert modal -->
  <?php
     if (isset($flash_data)) {
@@ -220,7 +228,7 @@
                  pos: 'bottom-center',
                  showAction: false,
                  actionText: "Dismiss",
-                 duration: 4000,
+                 duration: 5000,
                  textColor: '#fff',
                  backgroundColor: '#383838'
              });
@@ -249,9 +257,6 @@
          }, 300);
      }
  </script>
-
- <!-- Google API -->
- <script src="https://maps.googleapis.com/maps/api/js?key=&libraries=places&callback=initAutocomplete"></script>
 
  <?php
     if (isset($scripts_to_load)) :
@@ -323,6 +328,18 @@
  <?php
     }
     ?>
+
+<!-- Leaflet // Docs: https://leafletjs.com/ -->
+<script src="<?= base_url('assets/js/leaflet.min.js'); ?>"></script>
+
+<!-- Leaflet Maps Scripts (locations are stored in leaflet-hireo.js) -->
+<script src="<?= base_url('assets/js/leaflet-markercluster.min.js'); ?>"></script>
+<script src="<?= base_url('assets/js/leaflet-gesture-handling.min.js'); ?>"></script>
+<script src="<?= base_url('assets/js/leaflet-hireo.js'); ?>"></script>
+
+<!-- Leaflet Geocoder + Search Autocomplete // Docs: https://github.com/perliedman/leaflet-control-geocoder -->
+<script src="<?= base_url('assets/js/leaflet-autocomplete.js'); ?>"></script>
+<script src="<?= base_url('assets/js/leaflet-control-geocoder.js'); ?>"></script>
 
  </body>
 

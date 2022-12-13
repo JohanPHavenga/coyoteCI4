@@ -1,3 +1,13 @@
+.job-listing .job-listing-footer ul li.show_on_small_only,
+.show_on_small_only {
+    display: none;
+}
+
+.show_on_tablets_and_below {
+    display: none;
+}
+
+
 .inline-form {
     display: flex;
 }
@@ -26,81 +36,168 @@
     color: #fff;
     margin-left: 10px;
     transition: 0.3s;
-  }
+}
 
-  .salary-box .salary-type {
-    /* text-align: right;
-    margin-bottom: 0; */
-  }
+.single-page-header .right-side {
+    /* max-width: 25%; */
+}
 
-  .single-page-header .right-side {
-    max-width: 25%;
-  }
-
-  .single-page-header .header-image {
+.single-page-header .header-image {
     padding: 0;
-  }
+}
 
-  mark.color {
+mark.color {
     background-color: #febe42;
-  }
+}
 
-  /* Long Verified Badge */
+.job-listing-company-logo {
+    display: flex;
+    height: 100%;
+}
+
+mark.box {
+    flex-grow: 1;
+    height: 100%;
+    text-align: center;
+}
+
+mark.box span {
+    display: inline-block;
+    vertical-align: bottom;
+    line-height: 3.5rem;
+    font-weight: bold;
+}
+
+.header-image img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+.timingptrovider_img {
+    border-width: 1px 1px 1px 0;
+    border-style: solid;
+    border-color:  #e0e0e0;
+    text-align: center;
+}
+.timingptrovider_img img {
+    object-fit:scale-down;
+    width: 95%;
+    height: 95%;
+}
+
+
+/* Long Verified Badge */
 .badge-with-title {
-	position: relative;
-	height: 26px;
-	display: flex;
-	top: -1px;
-	color: #fff;
-	font-weight: 500;
-	font-size: 14px;
-	text-align: center;
-	z-index: 10;
-	font-weight: 500;
-	border-radius: 4px;
-	padding: 0 8px 0 0;
-	margin: 0;
-	overflow: hidden;
-	padding-left: 34px;
-	line-height: 27px;
+    position: relative;
+    height: 26px;
+    display: flex;
+    top: -1px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+    z-index: 10;
+    font-weight: 500;
+    border-radius: 4px;
+    padding: 0 8px 0 0;
+    margin: 0;
+    overflow: hidden;
+    padding-left: 34px;
+    line-height: 27px;
 }
 
 .badge-with-title.verified {
     background-color: #30ab4a;
 }
+
 .badge-with-title.confirmed {
     background-color: #2a41e8;
 }
+
+.badge-with-title.pending {
+    background-color: #febe42;
+}
+
 .badge-with-title.unverified {
     background-color: #333;
 }
 
+.badge-with-title.cancelled {
+    background-color: #c40000;
+}
+
 .badge-with-title:before {
-	content: "\e92b";
-	font-family: "Feather-Icons";
-	font-size: 16px;
-	color: #fff;
-	position: absolute;
-	top: 0;
-	left: 0;
-	line-height: 26px;
-	height: 26px;
-	width: 26px;
-	display: inline-block;
+    font-family: "Feather-Icons";
+    font-size: 16px;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    line-height: 26px;
+    height: 26px;
+    width: 26px;
+    display: inline-block;
 }
 
 .badge-with-title.verified:before {
-	content: "\e92b";
-	font-family: "Feather-Icons";
-	background-color: #38b653;
+    content: "\e92b";
+    background-color: #38b653;
 }
+
 .badge-with-title.confirmed:before {
-	content: "\e9c5";
-	font-family: "Feather-Icons";
-	background-color: #334bf5;
+    content: "\e97c";
+    background-color: #334bf5;
 }
+
+.badge-with-title.pending:before {
+    content: "\e978";
+    background-color: #f7c054;
+}
+
 .badge-with-title.unverified:before {
-	content: "\e9d0";
-	font-family: "Feather-Icons";
-	background-color: #444;
+    content: "\e978";
+    background-color: #444;
+}
+
+.badge-with-title.cancelled:before {
+    content: "\e9d0";
+    background-color: #cc0606;
+}
+
+.single-page-section {
+    margin-bottom:40px;
+}
+
+.content-right-offset nav#breadcrumbs {
+    position: initial;
+}
+
+#titlebar {
+    margin-top: -65px;
+    margin-bottom: 45px;
+}
+ 
+@media (max-width: 576px) {
+    #header_search {
+        display: none;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .job-listing .job-listing-footer ul li.show_on_small_only,
+    .show_on_small_only {
+        display: inline;
+    }
+    .single-page-header {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 992px) {
+    .show_on_tablets_and_below {
+        display: block;
+    }
+
 }

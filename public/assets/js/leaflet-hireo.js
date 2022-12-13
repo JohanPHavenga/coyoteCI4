@@ -64,8 +64,8 @@ if(document.getElementById("map") !== null){
 	// Open Street Map 
 	// -----------------------//
 	L.tileLayer(
-		'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
+		'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors',
 		maxZoom: 18,
 	}).addTo(map);
 
@@ -215,8 +215,8 @@ function singleListingMap() {
 	// Open Street Map 
 	// -----------------------//
 	L.tileLayer(
-		'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
+		'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors',
 		maxZoom: 18,
 	}).addTo(map_single);
 

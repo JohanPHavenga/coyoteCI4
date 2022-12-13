@@ -37,6 +37,7 @@ abstract class BaseController extends Controller
      */
     protected $helpers = ['session', 'form', 'formulate', 'filesystem', 'auth', 'url', 'text_format'];
     protected $edition_model;
+    protected $status_list;
 
     /**
      * Constructor.
@@ -57,6 +58,9 @@ abstract class BaseController extends Controller
             $this->data_to_views['flash_data'] = $this->session->getFlashdata();
         }
 
+        // get status array
+        $this->status_list = $this->edition_model->get_status_array();
+
         // set province dropdown        
         $province_model = model(ProvinceModel::class);
         // $this->data_to_views['province_list']=$province_model->list();
@@ -75,17 +79,29 @@ abstract class BaseController extends Controller
         if (logged_in()) {
             if (user()->picture) {
                 $this->data_to_views['user_avatar'] = user()->picture;
-                
             }
             $this->data_to_views['user_status'] = 'online';
             $this->data_to_views['user_roles'] = user()->getRoles();
         }
 
         // set default breadcrumbs
-        $this->data_to_views['bc_arr']=$this->get_crumbs();
+        $this->data_to_views['bc_arr'] = $this->get_crumbs();
         // set default title
-        end($this->data_to_views['bc_arr']);        
-        $this->data_to_views['title']=key($this->data_to_views['bc_arr']);
+        end($this->data_to_views['bc_arr']);
+        $this->data_to_views['title'] = key($this->data_to_views['bc_arr']);
+
+
+        // validation on search - remove funny characters
+        if ($this->request->getGet('s')) {
+            $rules = ['s' => ['label'  => 'Search', 'rules'  => 'alpha_numeric_punct',],];
+            if (!$this->validate($rules)) {
+                $this->data_to_views['search_string'] = preg_replace("/[^A-Za-z0-9 ]/", '', $this->request->getGet('s'));
+            } else {
+                $this->data_to_views['search_string'] = $this->request->getGet('s');
+            }
+        } else {
+            $this->data_to_views['search_string'] = '';
+        }
     }
 
     public function get_crumbs()
@@ -445,7 +461,7 @@ abstract class BaseController extends Controller
         // check if subscription exists
         $sub_exists = $usersubscription_model->exists($user_id, $linked_to, $linked_id);
         if ($sub_exists) {
-            $alert = "We found a subsciption already existed for the email address entered. If you believe this to be an error please <a href='mailto:info@roadrunning.co.za'>contact us</a>.";
+            $alert = "There is already a subsciption linked to the email address for this event";
             $status = "warning";
             $icon = "info-circle";
         } else {
@@ -491,9 +507,135 @@ abstract class BaseController extends Controller
     {
         if (isset($file_list[1])) {
             return base_url("file/edition/" . $slug . "/logo/" . $file_list[1][0]['file_name']);
-        } else {           
+        } else {
             return base_url("assets/images/company-logo-05.png");
         }
     }
 
+    public function formulate_status_notice($status, $info_status)
+    {
+        $return = [];
+
+        switch ($status) {
+            case 2:
+                $msg = "<b>This event is set to DRAFT mode.</b> All detail has not yet been confirmed";
+                $short_msg = "DRAFT";
+                $state = "cancelled";
+                break;
+            case 3:
+                $msg = "<strong>This event has been CANCELLED.</strong> Please use the contact form below to contact the event organisers for more detail.</a>";
+                $short_msg = "Cancelled";
+                $state = "cancelled";
+                $icon = "times-circle";
+                break;
+            case 9:
+                $msg = "<strong>This event has been POSTPONED until further notice.</strong> Please contact the event organisers for more detail<br>"
+                    . "Please consider <b><a href='#subscribe'>subscribing</a></b> to the event below to receive an email once a new date is set";
+                $short_msg = "Postposed";
+                $state = "unverified";
+                break;
+            default:
+                switch ($info_status) {
+                    case 13:
+                        $msg = "<strong>PLEASE NOTE</strong> - Dates and race times has <u>not yet been confirmed</u> by the race organisers";
+                        $short_msg = "Unconfimred";
+                        $state = "unverified";
+                        break;
+                    case 14:
+                        $msg = "<b>DATE CONFIRMED</b> - Waiting for race information from the organisers";
+                        $short_msg = "Dates Confirmed";
+                        $state = "pending";
+                        break;
+                    case 15:
+                        $msg = "<b>EVENT CONFIRMED</b> - Information loaded has been confirmed as correct. Awaiting for complete information set from the organisers";
+                        $short_msg = "Awaiting Info";
+                        $state = "confirmed";
+                        break;
+                    case 16:
+                        $msg = "<b>LISTING VERIFIED</b> - All information below has been confirmed";
+                        $short_msg = "Verified";
+                        $state = "verified";
+                        break;
+                    case 10:
+                        $msg = "<b>RESULTS PENDING</b> - Waiting for results to be released.<br>Note this can take up to a week";
+                        $short_msg = "Results Pending";
+                        $state = "confirmed";
+                        break;
+                    case 11:
+                        $msg = "<b>RESULTS LOADED</b> - Click on link below to view";
+                        $short_msg = "Results Loaded";
+                        $state = "verified";
+                        break;
+                    case 12:
+                        $msg = "<b>NO RESULTS EXPECTED</b> - No official results will be released for this event";
+                        $short_msg = "No Results Expexted";
+                        $state = "unverified";
+                        break;
+                }
+                break;
+        }
+
+        $return['msg'] = $msg;
+        $return['short_msg'] = $short_msg;
+        $return['state'] = $state;
+        return $return;
+    }
+
+    public function get_timeago($date = false)
+    {
+        if (isset($date)) {
+            $timeAgo = strtotime($date);
+            $curTime = time();
+            $timeElapsed = $curTime - $timeAgo;
+            $seconds = $timeElapsed;
+            $minutes = round($timeElapsed / 60);
+            $hours = round($timeElapsed / 3600);
+            $days = round($timeElapsed / 86400);
+            $weeks = round($timeElapsed / 604800);
+            $months = round($timeElapsed / 2600640);
+            $years = round($timeElapsed / 31207680);
+            /* Seconds  Calculation*/
+            if ($seconds <= 60) {
+                return 'Just Now';
+            } /* Minutes */ elseif ($minutes <= 60) {
+                if ($minutes == 1) {
+                    return "One Minute ago";
+                } else {
+                    return $minutes . " time ago minutes";
+                }
+            } /* Hours */ elseif ($hours <= 24) {
+                if ($hours == 1) {
+                    return "One hour ago";
+                } else {
+                    return $hours . " Hours ago";
+                }
+            } /* Days */ elseif ($days <= 7) {
+                if ($days == 1) {
+                    return "One day ago";
+                } else {
+                    return $days . " days ago";
+                }
+            } /* Weeks */ elseif ($weeks <= 4.3) {
+                if ($weeks == 1) {
+                    return "One week ago";
+                } else {
+                    return $weeks . " weeks ago";
+                }
+            } /* Months */ elseif ($months <= 12) {
+                if ($months == 1) {
+                    return "One month ago";
+                } else {
+                    return $months . " months ago";
+                }
+            } /* Years */ else {
+                if ($years == 1) {
+                    return "One year ago";
+                } else {
+                    return $years . " years ago";
+                }
+            }
+        } else {
+            return "Not yet";
+        }
+    }
 }

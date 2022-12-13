@@ -19,7 +19,7 @@ if (!isset($meta_robots)) {
     <meta name="description" content="<?= $meta_description; ?>">
     <meta name="robots" content="<?= $meta_robots; ?>" />
 
-    <link rel="apple-touch-icon" sizes="152x152" href="<?= base_url('assets/favicon/apple-touch-icon.png'); ?>">
+    <link rel="apple-touch-icon" sizes="152x152" href="<?= base_url('assets/favicon/apple-icon-152x152.png'); ?>">
     <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('assets/favicon/favicon-32x32.png') ?>">
     <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('assets/favicon/favicon-16x16.png'); ?>">
     <link rel="manifest" href="<?= base_url('assets/favicon/manifest.json'); ?>">
@@ -53,7 +53,7 @@ if (!isset($meta_robots)) {
                         </div>
 
                         <!-- Main Navigation -->
-                        <nav id="navigation">
+                        <nav id="navigation" class="light">
                             <ul id="responsive">
                                 <?php
                                 foreach ($menus['main_menu'] as $menu_item) {
@@ -67,17 +67,55 @@ if (!isset($meta_robots)) {
                                     }
                                     echo "</li>";
                                 }
+                                // dd($event_menu);
+                                if (isset($event_menu)) {
+                                    echo "<li><a href='" . base_url('event/' . $slug) . "'>Race Menu</a>";
+                                    echo "<ul class='dropdown-nav'>";
+                                    foreach ($event_menu as $menu_item) {
+                                        echo "<li><a href='" . $menu_item['loc'] . "'>" . $menu_item['display'] . "</a>";
+                                        if (isset($menu_item['sub_menu'])) {
+                                            echo "<ul class='dropdown-nav'>";
+                                            foreach ($menu_item['sub_menu'] as $sub_menu_item) {
+                                                echo "<li><a href='" . $sub_menu_item['loc'] . "'>" . $sub_menu_item['display'] . "</a>";
+                                            }
+                                            echo "</ul>";
+                                        }
+                                        echo "</li>";
+                                    }
+                                    echo "</ul>";
+                                    echo "</li>";
+                                }
                                 ?>
+                                <li class='show_on_tablets_and_below'><a href='<?= base_url('search'); ?>'>Search</a></li>
                             </ul>
                         </nav>
                         <div class="clearfix"></div>
+
                         <!-- Main Navigation / End -->
 
                     </div>
                     <!-- Left Side Content / End -->
                     <!-- Right Side Content / End -->
                     <div class="right-side">
-
+                        <?php
+                        // search form
+                        $attributes = ['class' => 'search, inline-form', 'id' => 'header_search', 'method' => 'get', 'style' => 'float: left; margin: 15px 15px 0;'];
+                        echo form_open(base_url('search'), $attributes);
+                        $data = [
+                            'name'  => 's',
+                            'id'    => 'header_search_field',
+                            'value' => $search_string,
+                            'placeholder' => 'Search',
+                            // 'autofocus' => '',
+                        ];
+                        echo form_input($data);
+                        $data = [
+                            'type'    => 'submit',
+                            'content' => '<i class="icon-feather-arrow-right"></i>',
+                        ];
+                        // echo form_button($data);;
+                        echo form_close();
+                        ?>
                         <!-- User Menu -->
                         <div class="header-widget">
 

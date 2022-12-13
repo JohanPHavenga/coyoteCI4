@@ -1,42 +1,3 @@
-<!-- Titlebar
-================================================== -->
-<div class="single-page-header" data-background-image="<?= $header_map_url ?>">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="single-page-header-inner">
-                    <div class="left-side">
-                        <div class="header-image"><a href="single-company-profile.html"><img src="<?= $edition_data['logo_url']; ?>" alt=""></a></div>
-                        <div class="header-details">
-                            <h3><?= $edition_data['edition_name']; ?></h3>
-                            <h5><?= $edition_data['town_name']; ?></h5>
-                            <ul>
-                                <li><a href="single-company-profile.html"><i class="icon-material-outline-location-on"></i> <?=$edition_data['edition_address_end'];?></a></li>
-                                <li>
-                                    <!-- <div class="star-rating" data-rating="4.9"></div> -->
-                                    <p><mark class="color">Fees TBC</mark></p>
-                                </li>                                
-                                <li>
-                                    <div class="badge-with-title verified">Verified</div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="right-side">
-                        <div class="salary-box">
-                            <div class="salary-type">Event Date</div>
-                            <div class="salary-amount"><?= $event_date_range; ?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <p>
-            <!-- <img src="https://www.mapquestapi.com/staticmap/v5/map?key=4hQ9sTygIAgGPerQAj8Pp7eDop0bRckH&center=CapeTown,ZA&size=@2x" /> -->
-        </p>
-    </div>
-</div>
-
 <div class="container">
     <div class="row">
 
@@ -44,86 +5,80 @@
         <div class="col-xl-8 col-lg-8 content-right-offset">
 
             <div class="single-page-section">
-                <h3 class="margin-bottom-25">Intro</h3>
-                <?php
-                if (strlen($edition_data['edition_intro_detail'] > 10)) {
-                    echo $edition_data['edition_intro_detail'];
+                <?= view('event/detail/races'); ?>
+            </div>
+
+            <!-- INTRO -->
+            <?= view('event/detail/intro'); ?>
+
+            <!-- ENTRY -->
+            <div class="single-page-section">
+                <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                    <h4>Entry Detail</h4>
+                </div>
+                <?= view('event/detail/entries'); ?>
+            </div>
+
+            <!-- REGISTRATION -->
+            <?php
+            if ((!in_array(3, $edition_data['regtype_list'])) || (detail_field_strlen($edition_data['edition_reg_detail']))) {
+            ?>
+                <div class="single-page-section">
+                    <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                        <h4>Registration / Number Collection</h4>
+                    </div>
+                    <?= view('event/detail/registration'); ?>
+                </div>
+            <?php
+            }
+            ?>
+
+            <!-- RACE DAY INFO -->
+            <div class="single-page-section">
+                <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                    <h4>Race Day Information</h4>
+                </div>
+                <?= view('event/detail/race-day-info'); ?>
+            </div>
+
+            <!-- MAP -->
+            <div class="single-page-section">
+                <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                    <h4>Location Map</h4>
+                </div>
+                <?= view('event/detail/map'); ?>
+            </div>
+
+            <!-- ROUTE MAPS -->
+            <div class="single-page-section">
+                <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                    <h4>Route Maps</h4>
+                </div>
+                <?= view('event/detail/route-maps'); ?>
+            </div>
+
+            <!-- DOCUMENTS -->
+            <?php
+            if (!empty($file_list)) {
+                if (sizeof($file_list) > 1) {
+            ?>
+                    <div class="single-page-section">
+                        <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                            <h4>Documents</h4>
+                        </div>
+
+                        <?= view('event/detail/documents'); ?>
+                    </div>
+            <?php
                 }
-                ?>
-            </div>
-
+            }
+            ?>
+            <!-- CONTACT -->
             <div class="single-page-section">
-                <h3 class="margin-bottom-30">Location</h3>
-                <div id="single-job-map-container">
-                    <div id="singleListingMap" data-latitude="51.507717" data-longitude="-0.131095" data-map-icon="im im-icon-Hamburger"></div>
-                    <a href="#" id="streetView">Street View</a>
+                <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                    <h4>Contact Race Organisers</h4>
                 </div>
-            </div>
-
-            <div class="single-page-section">
-                <h3 class="margin-bottom-25">Similar Jobs</h3>
-
-                <!-- Listings Container -->
-                <div class="listings-container grid-layout">
-
-                    <!-- Job Listing -->
-                    <a href="#" class="job-listing">
-
-                        <!-- Job Listing Details -->
-                        <div class="job-listing-details">
-                            <!-- Logo -->
-                            <div class="job-listing-company-logo">
-                                <img src="images/company-logo-02.png" alt="">
-                            </div>
-
-                            <!-- Details -->
-                            <div class="job-listing-description">
-                                <h4 class="job-listing-company">Coffee</h4>
-                                <h3 class="job-listing-title">Barista and Cashier</h3>
-                            </div>
-                        </div>
-
-                        <!-- Job Listing Footer -->
-                        <div class="job-listing-footer">
-                            <ul>
-                                <li><i class="icon-material-outline-location-on"></i> San Francisco</li>
-                                <li><i class="icon-material-outline-business-center"></i> Full Time</li>
-                                <li><i class="icon-material-outline-account-balance-wallet"></i> $35000-$38000</li>
-                                <li><i class="icon-material-outline-access-time"></i> 2 days ago</li>
-                            </ul>
-                        </div>
-                    </a>
-
-                    <!-- Job Listing -->
-                    <a href="#" class="job-listing">
-
-                        <!-- Job Listing Details -->
-                        <div class="job-listing-details">
-                            <!-- Logo -->
-                            <div class="job-listing-company-logo">
-                                <img src="images/company-logo-03.png" alt="">
-                            </div>
-
-                            <!-- Details -->
-                            <div class="job-listing-description">
-                                <h4 class="job-listing-company">King <span class="verified-badge" title="Verified Employer" data-tippy-placement="top"></span></h4>
-                                <h3 class="job-listing-title">Restaurant Manager</h3>
-                            </div>
-                        </div>
-
-                        <!-- Job Listing Footer -->
-                        <div class="job-listing-footer">
-                            <ul>
-                                <li><i class="icon-material-outline-location-on"></i> San Francisco</li>
-                                <li><i class="icon-material-outline-business-center"></i> Full Time</li>
-                                <li><i class="icon-material-outline-account-balance-wallet"></i> $35000-$38000</li>
-                                <li><i class="icon-material-outline-access-time"></i> 2 days ago</li>
-                            </ul>
-                        </div>
-                    </a>
-                </div>
-                <!-- Listings Container / End -->
-
+                <?= view('event/detail/contact'); ?>
             </div>
         </div>
 
@@ -132,38 +87,9 @@
         <div class="col-xl-4 col-lg-4">
             <div class="sidebar-container">
 
-                <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim">Apply Now <i class="icon-material-outline-arrow-right-alt"></i></a>
+                <?= view('event/side/summary'); ?>
 
-                <!-- Sidebar Widget -->
-                <div class="sidebar-widget">
-                    <div class="job-overview">
-                        <div class="job-overview-headline">Job Summary</div>
-                        <div class="job-overview-inner">
-                            <ul>
-                                <li>
-                                    <i class="icon-material-outline-location-on"></i>
-                                    <span>Location</span>
-                                    <h5>London, United Kingdom</h5>
-                                </li>
-                                <li>
-                                    <i class="icon-material-outline-business-center"></i>
-                                    <span>Job Type</span>
-                                    <h5>Full Time</h5>
-                                </li>
-                                <li>
-                                    <i class="icon-material-outline-local-atm"></i>
-                                    <span>Salary</span>
-                                    <h5>$35k - $38k</h5>
-                                </li>
-                                <li>
-                                    <i class="icon-material-outline-access-time"></i>
-                                    <span>Date Posted</span>
-                                    <h5>2 days ago</h5>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+
 
                 <!-- Sidebar Widget -->
                 <div class="sidebar-widget">
@@ -253,3 +179,90 @@ $button_data = [
 echo form_button($button_data);;
 echo form_close();
 ?>
+
+<!-- Apply for a job popup
+================================================== -->
+<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+    <!--Tabs -->
+    <div class="sign-in-form">
+
+        <ul class="popup-tabs-nav">
+            <li><a href="#tab1">Apply Now</a></li>
+            <li><a href="#tab2">Second</a></li>
+        </ul>
+
+        <div class="popup-tabs-container">
+
+            <!-- Tab -->
+            <div class="popup-tab-content" id="tab1">
+
+                <!-- Welcome Text -->
+                <div class="welcome-text">
+                    <h3>Attach File With CV</h3>
+                </div>
+
+                <!-- Form -->
+                <form method="post" id="apply-now-form">
+
+                    <div class="input-with-icon-left">
+                        <i class="icon-material-outline-account-circle"></i>
+                        <input type="text" class="input-text with-border" name="name" id="name" placeholder="First and Last Name" required />
+                    </div>
+
+                    <div class="input-with-icon-left">
+                        <i class="icon-material-baseline-mail-outline"></i>
+                        <input type="text" class="input-text with-border" name="emailaddress" id="emailaddress" placeholder="Email Address" required />
+                    </div>
+
+                    <div class="uploadButton">
+                        <input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload-cv" />
+                        <label class="uploadButton-button ripple-effect" for="upload-cv">Select File</label>
+                        <span class="uploadButton-file-name">Upload your CV / resume relevant file. <br> Max. file size: 50 MB.</span>
+                    </div>
+
+                </form>
+
+                <!-- Button -->
+                <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit" form="apply-now-form">Apply Now <i class="icon-material-outline-arrow-right-alt"></i></button>
+
+            </div>
+
+            <!-- Tab -->
+            <div class="popup-tab-content" id="tab2">
+
+                <!-- Welcome Text -->
+                <div class="welcome-text">
+                    <h3>Attach File With CV</h3>
+                </div>
+
+                <!-- Form -->
+                <form method="post" id="apply-now-form">
+
+                    <div class="input-with-icon-left">
+                        <i class="icon-material-outline-account-circle"></i>
+                        <input type="text" class="input-text with-border" name="name" id="name" placeholder="First and Last Name" required />
+                    </div>
+
+                    <div class="input-with-icon-left">
+                        <i class="icon-material-baseline-mail-outline"></i>
+                        <input type="text" class="input-text with-border" name="emailaddress" id="emailaddress" placeholder="Email Address" required />
+                    </div>
+
+                    <div class="uploadButton">
+                        <input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload-cv" />
+                        <label class="uploadButton-button ripple-effect" for="upload-cv">Select File</label>
+                        <span class="uploadButton-file-name">Upload your CV / resume relevant file. <br> Max. file size: 50 MB.</span>
+                    </div>
+
+                </form>
+
+                <!-- Button -->
+                <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit" form="apply-now-form">Apply Now <i class="icon-material-outline-arrow-right-alt"></i></button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Apply for a job popup / End -->
