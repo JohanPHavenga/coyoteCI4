@@ -81,20 +81,22 @@ class EditionModel extends Model
     public function get_edition_id_from_slug($edition_slug)
     {
         $edition_builder = $this->db->table($this->table);
-        $edition_query = $edition_builder->select('edition_id, edition_name, edition_status, edition_redirect_url')
-            ->where('edition_slug', $edition_slug)
-            ->get();
+        $edition_builder->select('edition_id, edition_name, edition_status, edition_redirect_url')
+            ->where('edition_slug', $edition_slug);
 
         $edition_past_builder = $this->db->table("editions_past");
-        $edition_past_query = $edition_past_builder->select('edition_id, edition_name')
+        $edition_past_builder->select('edition_id, edition_name')
+            ->where('edition_slug', $edition_slug);
+
+        if ($edition_builder->countAllResults() > 0) {
+            $edition_query = $edition_builder->select('edition_id, edition_name, edition_status, edition_redirect_url')
             ->where('edition_slug', $edition_slug)
             ->get();
-
-        if ($edition_builder->countAll() > 0) {
             $result = $edition_query->getRowArray();
             $result['source'] = "org";
             return $result;
-        } elseif ($edition_past_builder->countAll() > 0) {
+        } elseif ($edition_past_builder->countAllResults() > 0) {
+            $edition_past_query = $edition_past_builder->where('edition_slug', $edition_slug)->get();
             $result = $edition_past_query->getRowArray();
             $result['source'] = "past";
             return $result;
@@ -102,7 +104,7 @@ class EditionModel extends Model
             return false;
         }
     }
-    
+
     public function from_id($id_array = [])
     {
         $data = [];
@@ -125,7 +127,7 @@ class EditionModel extends Model
         return $data;
     }
 
-    public function list($query_params=[], $flat = false)
+    public function list($query_params = [], $flat = false)
     {
         $builder = $this->db->table($this->table);
 

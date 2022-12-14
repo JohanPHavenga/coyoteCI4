@@ -64,4 +64,5 @@ $app->setContext($context);
  * up the engines and make this app do its thang.
  */
 
+ini_set("zlib.output_compression", 0);
 $app->run();

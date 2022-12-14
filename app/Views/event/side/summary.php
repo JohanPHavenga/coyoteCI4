@@ -1,13 +1,17 @@
 <?php
-if (
-    isset($edition_data['entrytype_list'][4]) && // entrytype for online entries
-    isset($url_list[5]) && // there is a url loaded for online entries
-    isset($date_list[3][0]['date_start']) && // online entries open date exists
-    (strtotime($date_list[3][0]['date_start']) < time())    // online entries date has passed
-) {
-    // check if entries has closed
-    if (strtotime($date_list[3][0]['date_end']) > time()) {
-        echo "<a href='" . $url_list[5][0]['url_name'] . "' class='apply-now-button popup-with-zoom-anim'>Enter Now <i class='icon-material-outline-arrow-right-alt'></i></a>";
+if ($in_past) {
+    echo "<a href='" . base_url('event/' . $slug . '/results') . "' class='apply-now-button'>View Results <i class='icon-material-outline-arrow-right-alt'></i></a>";
+} else {
+    if (
+        isset($edition_data['entrytype_list'][4]) && // entrytype for online entries
+        isset($url_list[5]) && // there is a url loaded for online entries
+        isset($date_list[3][0]['date_start']) && // online entries open date exists
+        (strtotime($date_list[3][0]['date_start']) < time())    // online entries date has passed
+    ) {
+        // check if entries has closed
+        if (strtotime($date_list[3][0]['date_end']) > time()) {
+            echo "<a href='" . $url_list[5][0]['url_name'] . "' class='apply-now-button'>Enter Now <i class='icon-material-outline-arrow-right-alt'></i></a>";
+        }
     }
 }
 ?>

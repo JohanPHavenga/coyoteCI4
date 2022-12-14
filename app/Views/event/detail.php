@@ -4,58 +4,77 @@
         <!-- Content -->
         <div class="col-xl-8 col-lg-8 content-right-offset">
 
-            <div class="single-page-section">
-                <?= view('event/detail/races'); ?>
-            </div>
-
-            <!-- INTRO -->
-            <?= view('event/detail/intro'); ?>
-
-            <!-- ENTRY -->
-            <div class="single-page-section">
-                <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
-                    <h4>Entry Detail</h4>
-                </div>
-                <?= view('event/detail/entries'); ?>
-            </div>
-
-            <!-- REGISTRATION -->
             <?php
-            if ((!in_array(3, $edition_data['regtype_list'])) || (detail_field_strlen($edition_data['edition_reg_detail']))) {
+            // notice banner for canclled and postponed races
+            if (isset($notice_banner)) {
+                echo '<p class="margin-top-20"><mark class="color"> <i class="icon-material-outline-notifications-active"></i> TAKE NOTE </mark></p>';
+                echo '<div class="notification ' . $notice_banner['state'] . '">' . $notice_banner['msg'] . '</div>';
+            }
+
+            if ($show_races) {
             ?>
                 <div class="single-page-section">
-                    <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
-                        <h4>Registration / Number Collection</h4>
-                    </div>
-                    <?= view('event/detail/registration'); ?>
+                    <?= view('event/detail/races'); ?>
                 </div>
             <?php
             }
             ?>
 
-            <!-- RACE DAY INFO -->
-            <div class="single-page-section">
-                <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
-                    <h4>Race Day Information</h4>
-                </div>
-                <?= view('event/detail/race-day-info'); ?>
-            </div>
+            <?php
+            if ($show_info) {
+            ?>
+                <!-- INTRO -->
+                <?= view('event/detail/intro'); ?>
 
-            <!-- MAP -->
-            <div class="single-page-section">
-                <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
-                    <h4>Location Map</h4>
+                <!-- ENTRY -->
+                <div class="single-page-section">
+                    <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                        <h4>Entry Detail</h4>
+                    </div>
+                    <?= view('event/detail/entries'); ?>
                 </div>
-                <?= view('event/detail/map'); ?>
-            </div>
 
-            <!-- ROUTE MAPS -->
-            <div class="single-page-section">
-                <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
-                    <h4>Route Maps</h4>
+                <!-- REGISTRATION -->
+                <?php
+                if ((!in_array(3, $edition_data['regtype_list'])) || (detail_field_strlen($edition_data['edition_reg_detail']))) {
+                ?>
+                    <div class="single-page-section">
+                        <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                            <h4>Registration / Number Collection</h4>
+                        </div>
+                        <?= view('event/detail/registration'); ?>
+                    </div>
+                <?php
+                }
+                ?>
+
+                <!-- RACE DAY INFO -->
+                <div class="single-page-section">
+                    <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                        <h4>Race Day Information</h4>
+                    </div>
+                    <?= view('event/detail/race-day-info'); ?>
                 </div>
-                <?= view('event/detail/route-maps'); ?>
-            </div>
+
+                <!-- MAP -->
+                <div class="single-page-section">
+                    <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                        <h4>Location Map</h4>
+                    </div>
+                    <?= view('event/detail/map'); ?>
+                </div>
+
+                <!-- ROUTE MAPS -->
+                <div class="single-page-section">
+                    <div class="section-headline border-top margin-top-50 padding-top-40 margin-bottom-25">
+                        <h4>Route Maps</h4>
+                    </div>
+                    <?= view('event/detail/route-maps'); ?>
+                </div>
+            <?php
+            }
+            // show info end
+            ?>
 
             <!-- DOCUMENTS -->
             <?php
@@ -86,7 +105,13 @@
         <!-- Sidebar -->
         <div class="col-xl-4 col-lg-4">
             <div class="sidebar-container">
-                <?= view('event/side/summary'); ?>
+                <?php
+                if ($show_summary) {
+                ?>
+                    <?= view('event/side/summary'); ?>
+                <?php
+                }
+                ?>
                 <?= view('event/side/bookmark'); ?>
                 <?= view('event/side/tags'); ?>
             </div>

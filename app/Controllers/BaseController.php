@@ -210,7 +210,7 @@ abstract class BaseController extends Controller
                         "badge" => "POPULAR",
                     ],
                     "favourite" => [
-                        "display" => "My Favourites",
+                        "display" => "Bookmarked",
                         "loc" => base_url("race/favourite"),
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 1,

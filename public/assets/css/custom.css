@@ -184,6 +184,10 @@ div.single-page-header + #titlebar {
     list-style-type: none;
     padding: 0;
 }
+
+.salary-amount.cancelled {
+    text-decoration:line-through;
+}
  
 @media (max-width: 576px) {
     #header_search {

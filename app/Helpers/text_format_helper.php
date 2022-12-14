@@ -1,11 +1,17 @@
 <?php
 function fdateHuman($date)
 {
+    if ($date == "TBC") {
+        return $date;
+    }
     return date("D j M", strtotime($date));
 }
 
 function fDateHumanShort($date)
 {
+    if ($date == "TBC") {
+        return $date;
+    }
     return date("d M", strtotime($date));
 }
 
@@ -19,6 +25,9 @@ function fdateShort($date = null)
 }
 function fdateHumanFull($date, $show_dotw = false, $show_time = false)
 {
+    if ($date == "TBC") {
+        return $date;
+    }
     $date_str = "j F Y";
     if ($show_dotw) {
         $date_str = "l, " . $date_str;
@@ -33,15 +42,25 @@ function fdateHumanFull($date, $show_dotw = false, $show_time = false)
 
 function fdateMonth($date)
 {
+    if ($date == "TBC") {
+        return $date;
+    }
     return date("F", strtotime($date));
 }
+
 function fdateYear($date)
 {
+    if ($date == "TBC") {
+        return $date;
+    }
     return date("Y", strtotime($date));
 }
 
 function fdateEntries($date)
 {
+    if ($date == "TBC") {
+        return $date;
+    }
     $post_text = '';
     $date_str = "l, j F";
     if (time_is_almost_midnight($date)) {
@@ -68,6 +87,9 @@ function ftimeMil($time)
 
 function fdateTitle($date)
 {
+    if ($date == "TBC") {
+        return $date;
+    }
     return date("D, d M Y", strtotime($date));
 }
 

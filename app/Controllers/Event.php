@@ -17,12 +17,14 @@ class Event extends BaseController
   public function detail($edition_slug, $page = "detail")
   {
     $edition_summary = $this->edition_model->get_edition_id_from_slug($edition_slug);
+    // dd($edition_summary);
 
     if ($edition_summary) {
       if ($edition_summary['source'] == "past") {
         // if edition name has changed
         $e = $this->edition_model->from_id([$edition_summary['edition_id']]);
-        $new_slug = $e['edition_slug'];
+        // dd($e);
+        $new_slug = $e[$edition_summary['edition_id']]['edition_slug'];
         $url = base_url("event/" . $new_slug);
         return redirect()->to($url, 301);
       } elseif ($edition_summary['edition_redirect_url']) {
@@ -93,6 +95,8 @@ class Event extends BaseController
       // in past?
       if (strtotime($edition_data['edition_date']) < time()) {
         $this->data_to_views['in_past'] = true;
+        $this->data_to_views['notice_banner']['msg'] = "This event has already taken place. Tap the <b>View Results</b> button to find your results";
+        $this->data_to_views['notice_banner']['state'] = 'success';
       } else {
         $this->data_to_views['in_past'] = false;
       }
@@ -101,10 +105,19 @@ class Event extends BaseController
       $this->data_to_views['last_updated'] = $this->get_timeago($edition_data['updated_date']);
 
       // date range
-      if ($date_list[1][0]['date_start'] == $date_list[1][0]['date_end']) {
-        $this->data_to_views['event_date_range'] = fDateHumanShort($date_list[1][0]['date_start']) . " " . fdateYear($date_list[1][0]['date_start']);
+      if (($edition_data['edition_status'] == 9) || ($edition_data['edition_info_status'] == 13)) {
+        // POSTPONED or UNCONFIRMED
+        $this->data_to_views['event_date_range'] = "TBC";
+        $this->data_to_views['edition_data']['edition_date'] = "TBC";
+        foreach ($race_list as $key => $race) {
+          $race_list['race_date'] = "TBC";
+        }
       } else {
-        $this->data_to_views['event_date_range'] = fDateHumanShort($date_list[1][0]['date_start']) . "-" . fDateHumanShort($date_list[1][0]['date_end']);
+        if ($date_list[1][0]['date_start'] == $date_list[1][0]['date_end']) {
+          $this->data_to_views['event_date_range'] = fDateHumanShort($date_list[1][0]['date_start']) . " " . fdateYear($date_list[1][0]['date_start']);
+        } else {
+          $this->data_to_views['event_date_range'] = fDateHumanShort($date_list[1][0]['date_start']) . "-" . fDateHumanShort($date_list[1][0]['date_end']);
+        }
       }
 
       // race fees
@@ -138,6 +151,43 @@ class Event extends BaseController
         }
       }
 
+      // PAGE LOAD LOGIC
+      // override for cancelled, postponed and unconfirmed races to summary page
+      $this->data_to_views['show_races'] = false;
+      $this->data_to_views['show_info'] = false;
+      $this->data_to_views['show_summary'] = false;
+      if (
+        ($edition_data['edition_status'] == 3) ||
+        ($edition_data['edition_status'] == 9) ||
+        ($edition_data['edition_info_status'] == 13)
+      ) {
+        $page = "detail";
+        // Cancelled 
+        if ($edition_data['edition_status'] == 3) {
+          $this->data_to_views['notice_banner']['msg'] = "This event has been <b>CANCELLED</b>";
+          $this->data_to_views['notice_banner']['state'] = 'error';
+        }
+        // Postponed
+        if ($edition_data['edition_status'] == 9) {
+          $this->data_to_views['notice_banner']['msg'] = "This event has been <b>POSTPONED</b>";
+          $this->data_to_views['notice_banner']['state'] = 'warning';
+          $this->data_to_views['show_races'] = true;
+        }
+        // Prelimenary
+        if ($edition_data['edition_info_status'] == 13) {
+          $this->data_to_views['notice_banner']['msg'] = "Note that the date for this event is yet to be confirmed. Please add yourself to the mailing list to receive future notifications";
+          $this->data_to_views['notice_banner']['state'] = 'warning';
+          $this->data_to_views['show_races'] = true;
+        }
+      } else {
+        $this->data_to_views['show_summary'] = true;
+        if (!$this->data_to_views['in_past']) {
+          $this->data_to_views['show_races'] = true;
+          $this->data_to_views['show_info'] = true;
+        }
+      }
+
+
       // if results loaded, get URLS to use
       if ($edition_data['edition_info_status'] == 11) {
         $this->data_to_views['results'] = $this->get_result_arr($edition_slug);
@@ -158,9 +208,10 @@ class Event extends BaseController
       $this->data_to_views['flyer'] = $this->get_flyer_arr($edition_slug);
       $this->data_to_views['entry_form'] = $this->get_entry_form_arr($edition_slug);
 
-      // dd($tag_list);
+
 
       if (file_exists(APPPATH . "views/event/" . $page . ".php")) {
+
         // -- LOAD VIEWS
         return view('templates/header', $this->data_to_views)
           . view('event/detail/header')
@@ -493,6 +544,14 @@ class Event extends BaseController
             "display" => "How To Enter",
             "loc" => base_url("event/" . $slug . "/entries"),
           ],
+          "race_day" => [
+            "display" => "Race Day Info",
+            "loc" => base_url("event/" . $slug . "/race-day-information"),
+          ],
+          "route_maps" => [
+            "display" => "Route Maps",
+            "loc" => base_url("event/" . $slug . "/route-maps"),
+          ],
           "subscribe" => [
             "display" => "Get Notifications",
             "loc" => base_url("event/" . $slug . "/subscribe"),
@@ -534,12 +593,15 @@ class Event extends BaseController
 
     // check if in past else hide to hide accommodation link
     if ($in_past) {
-      unset($menu_arr['accom']);
       unset($menu_arr['entries']);
+      unset($menu_arr['race_day']);
+      unset($menu_arr['route_maps']);
       unset($menu_arr['more']['sub_menu']['results']);
     } else {
       unset($menu_arr['results']);
       unset($menu_arr['more']['sub_menu']['entries']);
+      unset($menu_arr['more']['sub_menu']['race_day']);
+      unset($menu_arr['more']['sub_menu']['route_maps']);
     }
 
     return $menu_arr;
