@@ -210,16 +210,15 @@ class Event extends BaseController
 
 
 
-      if (file_exists(APPPATH . "views/event/" . $page . ".php")) {
-
+      // if (file_exists(APPPATH . "views/event/" . $page . ".php")) {
         // -- LOAD VIEWS
         return view('templates/header', $this->data_to_views)
           . view('event/detail/header')
           . view('event/' . $page)
           . view('templates/footer');
-      } else {
-        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Event page not found');
-      }
+      // } else {
+      //   throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Event page not found');
+      // }
     } else {
       throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('The race could not be matched to a record in the database');
     }
