@@ -266,61 +266,36 @@
             } else {
                 $js_link = base_url('assets/js/' . $row);
             }
-            echo "<script src='$js_link' type='text/javascript'></script>
+            echo "<script src='$js_link'></script>
             ";
         endforeach;
     endif;
 
-    if (logged_in() && isset($edition)) {
+    // FAVOURITE SCRIPTS
+    if (logged_in() && isset($edition_data)) {
+        if ($favourite['is_favourite']) {
     ?>
+         <script type="text/javascript">
+             $(document).ready(function() {
+                 $("#fav_but").toggleClass('bookmarked');
+             });
+         </script>
+     <?php
+        }
+        ?>
      <script type="text/javascript">
          // Ajax post
          $(document).ready(function() {
-             $("#fav_but_add").click(function() {
-                 $('#fav_but_add').removeClass('btn-light');
-                 $('#fav_but_add').addClass('btn-primary');
+             $("#fav_but").click(function() {
+                 $(this).toggleClass('bookmarked');
                  jQuery.ajax({
                      type: "POST",
-                     url: "<?php echo base_url('favourite/add_fav'); ?>",
+                     url: "<?php echo base_url('favourite/add_remove_fav'); ?>",
                      dataType: 'html',
                      data: {
                          user_id: <?= user()->id; ?>,
-                         edition_id: <?= $edition['edition_id']; ?>
+                         edition_id: <?= $edition_data['edition_id']; ?>
                      },
-                     //  success: function(res) {
-                     //      if (res == 1) {
-                     //          alert('Data saved successfully');
-                     //      } else {
-                     //          alert('Data not saved');
-                     //      }
-                     //  },
-                     //  error: function() {
-                     //      alert('data not saved');
-                     //  }
-                 });
-             });
-
-             $("#fav_but_remove").click(function() {
-                 $('#fav_but_remove').removeClass('btn-primary');
-                 $('#fav_but_remove').addClass('btn-light');
-                 jQuery.ajax({
-                     type: "POST",
-                     url: "<?php echo base_url('favourite/remove_fav'); ?>",
-                     dataType: 'html',
-                     data: {
-                         user_id: <?= user()->id; ?>,
-                         edition_id: <?= $edition['edition_id']; ?>
-                     },
-                     //  success: function(res) {
-                     //      if (res == 1) {
-                     //          // alert('Data saved successfully');
-                     //      } else {
-                     //          // alert('Data not saved');
-                     //      }
-                     //  },
-                     //  error: function() {
-                     //      // alert('data not saved');
-                     //  }
                  });
              });
          });
@@ -329,17 +304,17 @@
     }
     ?>
 
-<!-- Leaflet // Docs: https://leafletjs.com/ -->
-<script src="<?= base_url('assets/js/leaflet.min.js'); ?>"></script>
+ <!-- Leaflet // Docs: https://leafletjs.com/ -->
+ <script src="<?= base_url('assets/js/leaflet.min.js'); ?>"></script>
 
-<!-- Leaflet Maps Scripts (locations are stored in leaflet-hireo.js) -->
-<script src="<?= base_url('assets/js/leaflet-markercluster.min.js'); ?>"></script>
-<script src="<?= base_url('assets/js/leaflet-gesture-handling.min.js'); ?>"></script>
-<script src="<?= base_url('assets/js/leaflet-hireo.js'); ?>"></script>
+ <!-- Leaflet Maps Scripts (locations are stored in leaflet-hireo.js) -->
+ <script src="<?= base_url('assets/js/leaflet-markercluster.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/leaflet-gesture-handling.min.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/leaflet-hireo.js'); ?>"></script>
 
-<!-- Leaflet Geocoder + Search Autocomplete // Docs: https://github.com/perliedman/leaflet-control-geocoder -->
-<script src="<?= base_url('assets/js/leaflet-autocomplete.js'); ?>"></script>
-<script src="<?= base_url('assets/js/leaflet-control-geocoder.js'); ?>"></script>
+ <!-- Leaflet Geocoder + Search Autocomplete // Docs: https://github.com/perliedman/leaflet-control-geocoder -->
+ <script src="<?= base_url('assets/js/leaflet-autocomplete.js'); ?>"></script>
+ <script src="<?= base_url('assets/js/leaflet-control-geocoder.js'); ?>"></script>
 
  </body>
 

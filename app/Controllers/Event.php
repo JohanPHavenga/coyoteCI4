@@ -11,6 +11,7 @@ class Event extends BaseController
     $this->race_model = model(RaceModel::class);
     $this->url_model = model(UrlModel::class);
     $this->file_model = model(FileModel::class);
+    helper('reCaptcha');
   }
 
   public function detail($edition_slug, $page = "detail")
@@ -40,6 +41,13 @@ class Event extends BaseController
       $tag_model = model(TagModel::class);
       $favourite_model = model(FavouriteModel::class);
 
+      // form validation stuffs
+      $this->data_to_views['validation'] =  \Config\Services::validation();
+      $this->data_to_views['scripts_to_load'] = [
+        "https://www.google.com/recaptcha/api.js",
+        "contact.js"
+      ];
+
       // -- GET DATA
       $this->data_to_views['edition_data'] = $edition_data = $this->edition_model->detail($edition_id, true);
 
@@ -47,6 +55,7 @@ class Event extends BaseController
       $this->data_to_views['date_list'] = $date_list = $date_model->list("edition", $edition_id, false, true);
       $this->data_to_views['file_list'] = $file_list = $this->file_model->list("edition", $edition_id, true);
       $this->data_to_views['url_list'] = $url_list = $this->url_model->list("edition", $edition_id, true);
+      $this->data_to_views['tag_list'] = $tag_list = $tag_model->get_edition_tag_list($edition_id);
 
       $this->data_to_views['edition_data']['race_summary'] = $race_summary = $this->get_set_race_suammry($race_list, $edition_data['edition_date'], $edition_data['edition_info_prizegizing']);
       $this->data_to_views['edition_data']['entrytype_list'] = $entrytype_model->get_edition_entrytype_list($edition_id);
@@ -149,7 +158,7 @@ class Event extends BaseController
       $this->data_to_views['flyer'] = $this->get_flyer_arr($edition_slug);
       $this->data_to_views['entry_form'] = $this->get_entry_form_arr($edition_slug);
 
-      // dd(APPPATH . "views/event" . $page . ".php");
+      // dd($tag_list);
 
       if (file_exists(APPPATH . "views/event/" . $page . ".php")) {
         // -- LOAD VIEWS

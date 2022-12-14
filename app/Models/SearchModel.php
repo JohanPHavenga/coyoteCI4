@@ -200,4 +200,42 @@ class SearchModel extends Model
         }
         return $data;
     }
+
+
+    public function advanced($query_params=[], $flat = false)
+    {
+        $builder = $this->db->table($this->table);
+
+        $builder->select('edition_id, edition_name, edition_slug, edition_date')
+            ->where('edition_status !=', 2);
+
+        foreach ($query_params as $operator => $clause_arr) {
+            if (is_array($clause_arr)) {
+                foreach ($clause_arr as $field => $value) {
+                    $builder->$operator($field, $value);
+                }
+            } else {
+                $this->db->$operator($clause_arr);
+            }
+        }
+        if (!isset($query_params['orderBy'])) {
+            $builder->orderBy('edition_date', 'DESC');
+        }
+
+        // dd($builder->getCompiledSelect());
+
+        $query = $builder->get();
+
+        foreach ($query->getResultArray() as $row) {
+            if ($flat) {
+                $data[$row['edition_id']] = $row;
+            } else {
+                $year = date("Y", strtotime($row['edition_date']));
+                $month = date("m", strtotime($row['edition_date']));
+                $data[$year][$month][$row['edition_id']] = $row;
+            }
+        }
+
+        return $data;
+    }
 }

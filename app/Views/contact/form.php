@@ -1,66 +1,71 @@
-<h1>Contact Us</h1>
-<p>Use the form below to send your query to us</p>
-<?php
+<div class="container">
+    <div class="row">
 
-$errors = $validation->getErrors();
-if (!empty($errors)) {
-?>
-    <div class="alert alert-danger" role="alert">
-        <ul>
-            <?php foreach ($errors as $error) { ?>
-                <li><?= esc($error) ?></li>
-            <?php } ?>
-        </ul>
+        <div class="col-xl-8 col-lg-8 content-right-offset">
+            <?php
+            $errors = $validation->getErrors();
+            if (!empty($errors)) {
+                echo '<div class="notification error"><ul>';
+                foreach ($errors as $error) {
+                    echo '<li>' . esc($error) . '</li>';
+                }
+                echo '</ul></div>';
+            } else {
+                echo '<div class="boxed-list margin-bottom-40">
+                <div class="boxed-list-headline">
+                <h3><i class="icon-material-outline-question-answer"></i> Any questions? Feel free to contact us!</h3></div>
+                <div class="clearfix"></div></div>';
+            }
+
+            $attributes = array(
+                'method' => 'post',
+                'class' => 'contact-form',
+                'id' => 'contact-form',
+                'autocomplete' => 'on',
+                'role' => 'form'
+            );
+            echo form_open(base_url('contact'), $attributes);
+            ?>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-with-icon-left">
+                        <input class="with-border" name="name" type="text" id="name" placeholder="Your Name" required="required" value="<?= set_value('name'); ?>" />
+                        <i class="icon-material-outline-account-circle"></i>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="input-with-icon-left">
+                        <input class="with-border" name="email" type="email" id="email" placeholder="Email Address" value="<?= set_value('email'); ?>" pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$" required="required" />
+                        <i class="icon-material-outline-email"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-with-icon-left">
+                <input class="with-border" name="subject" type="text" id="subject" placeholder="Subject" required="required" value="<?= set_value('subject'); ?>" />
+                <i class="icon-material-outline-assignment"></i>
+            </div>
+
+            <div>
+                <textarea class="with-border" name="comments" cols="40" rows="5" id="comments" placeholder="Message" spellcheck="true" required="required"><?= set_value('comments'); ?></textarea>
+            </div>
+
+            <input type="submit" class="submit button margin-top-15" id="submit" value="Submit Message" />
+
+            <?php
+            echo reCaptcha3('reCaptcha3', ['id' => 'recaptcha_v3'], ['action' => 'contactForm']);
+            echo form_close();
+            ?>
+            
+
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-xl-4 col-lg-4">
+            <div class="sidebar-container">
+            </div>
+        </div>
+
     </div>
-<?php
-}
-
-
-$attributes = ['class' => 'row', 'id' => 'contact-form'];
-echo form_open(base_url('contact'), $attributes);
-
-$field_data = [
-    'name' => 'name',
-    'id' => 'name',
-    'placeholder' => 'Name & Surname',
-    'value' => set_value('name'),
-    'class' => 'form-control',
-];
-echo '<div class="col-6 form-group">';
-echo form_input($field_data);
-echo "</div>";
-
-$field_data = [
-    'name' => 'email',
-    'id' => 'email',
-    'placeholder' => 'Email Address',
-    'value' => set_value('email'),
-    'class' => 'form-control',
-];
-echo '<div class="col-12 form-group">';
-echo form_input($field_data);
-echo "</div>";
-
-$field_data = [
-    'name' => 'message',
-    'id' => 'message',
-    'cols' => '10',
-    'rows' => '6',
-    'placeholder' => 'Message',
-    'value' => set_value('message'),
-    'class' => 'form-control',
-];
-echo '<div class="col-12 form-group">';
-echo form_textarea($field_data);
-echo "</div>";
-
-echo reCaptcha3('reCaptcha3', ['id' => 'recaptcha_v3'], ['action' => 'contactForm']);
-
-$field_data = [
-    'value' => 'submit',
-    'class' => 'btn btn-secondary',
-];
-echo '<div class="col-12">';
-echo form_submit($field_data);
-echo "</div>";
-echo form_close();
+</div>

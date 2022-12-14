@@ -12,6 +12,15 @@ class Favourite extends BaseController
         $this->user_model = model(UserModelExtended::class);
     }
 
+	public function add_remove_fav()
+	{		
+		if ($this->favourite_model->exists($this->request->getVar('user_id'), $this->request->getVar('edition_id'))) {
+			return $this->remove_fav();
+		} else {
+			return $this->add_fav();
+		}
+	}
+
     public function add_fav()
 	{		
 		$data = array(

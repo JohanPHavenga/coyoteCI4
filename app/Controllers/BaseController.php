@@ -104,6 +104,36 @@ abstract class BaseController extends Controller
         }
     }
 
+    public function send_email($att)
+    {
+        // need to always send NAME, EMAIL and MESSAGE
+        $email = \Config\Services::email();
+        if (isset($att['to'])) {
+            $to = $att['to'];
+        } else {
+            $to = 'info@roadrunning.co.za';
+        }
+        if (isset($att['subject'])) {
+            $subject = $att['subject'];
+        } else {
+            $subject = 'Website Contact: ' . $att['name'];
+        }
+
+        $email->setTo($to);
+        $email->setCC("info@roadrunning.co.za");
+        $email->setFrom($att['email'], $att['name']);
+        $email->setSubject($subject);
+        $email->setMessage($att['message']);
+
+        if ($email->send()) {
+            return true;
+        } else {
+            $data = $email->printDebugger(['headers']);
+            // dd($data);
+            return false;
+        }
+    }
+
     public function get_crumbs()
     {
         // setup auto crumbs from URI

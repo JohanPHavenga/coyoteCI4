@@ -14,6 +14,17 @@ class FavouriteModel extends Model
         return $builder->countAll();
     }
 
+    public function exists($user_id, $edition_id)
+    {
+        $builder = $this->db->table($this->table);
+        $builder->where("user_id", $user_id)->where("edition_id", $edition_id);
+        if ($builder->countAllResults() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function get_race_list($edition_id)
     {
         $builder = $this->db->table($this->table);

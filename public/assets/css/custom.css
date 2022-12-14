@@ -173,8 +173,16 @@ mark.box span {
 }
 
 #titlebar {
-    margin-top: -65px;
     margin-bottom: 45px;
+}
+div.single-page-header + #titlebar {
+    margin-top: -65px;
+}
+
+.notification ul {
+    margin: 0px;
+    list-style-type: none;
+    padding: 0;
 }
  
 @media (max-width: 576px) {

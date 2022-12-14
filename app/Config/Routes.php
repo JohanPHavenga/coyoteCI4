@@ -49,6 +49,7 @@ $routes->get('newsletter', 'User::newsletter');
 $routes->get('contact', 'Contact::index');
 $routes->post('contact', 'Contact::index');
 $routes->post('contact/(:segment)', 'Contact::index/$1');
+$routes->post('contact/event/(:segment)', 'Contact::event/$1');
 
 $routes->get('sitemap', 'Sitemap::index');
 $routes->get('sitemap/xml', 'Sitemap::xml');
@@ -57,6 +58,7 @@ $routes->get('event/add', 'Event::add');
 $routes->get('event/(:any)', 'Event::detail/$1');
 
 $routes->get('search', 'Race::search');
+$routes->get('search/tag/(:any)', 'Race::tag/$1');
 $routes->get('race/most-viewed', 'Race::most_viewed');
 $routes->get('race/(:segment)', 'Race::$1');
 $routes->get('calendar', 'Race::list');
@@ -97,6 +99,8 @@ $routes->get('unsubscribe/(:segment)', 'User::unsubscribe/$1');
 $routes->get('unsub_success/(:segment)', 'User::unsub_success/$1');
 $routes->post('favourite/add_fav', 'Favourite::add_fav', ['filter' => 'role:user']);
 $routes->post('favourite/remove_fav', 'Favourite::remove_fav', ['filter' => 'role:user']);
+$routes->post('favourite/add_remove_fav', 'Favourite::add_remove_fav', ['filter' => 'role:user']);
+$routes->get('favourite/add_remove_fav', 'Favourite::add_remove_fav', ['filter' => 'role:user']);
 
 $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'role:admin'], function ($routes) {
     $routes->get('/', 'Dashboard::index');

@@ -1,3 +1,3 @@
 function onSubmit(token) {
-    document.getElementById("contact-form").submit();
+    document.getElementById("contactForm").submit();
 }

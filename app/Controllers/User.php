@@ -164,7 +164,7 @@ class User extends BaseController
                 return redirect()->to(base_url("user/my-subscriptions"));
             }
         } else {
-            d("n");
+            // d("n");
             $this->session->setFlashdata([
                 'alert_msg' => "Subsciption could not be found",
                 'alert_status' => "danger",

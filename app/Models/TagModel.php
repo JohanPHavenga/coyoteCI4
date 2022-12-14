@@ -51,9 +51,8 @@ class TagModel extends Model
 
     public function get_edition_tag_list($edition_id) {
         $data=[];
-        $builder = $this->db->table($this->table);
+        $builder = $this->db->table("edition_tag");
         $builder->select("tag_id, tag_name, tagtype_name")
-                ->from("edition_tag")
                 ->join("tags", "tag_id")
                 ->join("tagtypes", "tagtype_id", "left")
                 ->where("tag_status", 1)
