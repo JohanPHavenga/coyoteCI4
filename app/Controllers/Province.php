@@ -39,7 +39,13 @@ class Province extends BaseController
     }
 
     public function switch() {
+        if (logged_in()) {
+            $user_model = model(UserModelExtended::class);
+            $update_province = $user_model->set_user(['province' => $this->request->getPost('province_switch')], user()->id);
+        }
         $_SESSION['site_province']=$this->request->getPost('province_switch');
+        set_cookie("site_province", $this->request->getPost('province_switch'), 172800);
+
         return redirect()->back();
     }
 }

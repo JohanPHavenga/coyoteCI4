@@ -31,9 +31,43 @@ if (!isset($meta_robots)) {
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/colors/blue.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/custom.css'); ?>">
+    <?php
+    if (isset($structured_data)) {
+        echo $structured_data;
+    } ?>
 </head>
 
 <body>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KGZWVTGL2R"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-KGZWVTGL2R');
+    </script>
+
+    <!-- Analytics -->
+    <script async>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-85900175-2', 'auto');
+        ga('send', 'pageview');
+    </script>
     <!-- Wrapper -->
     <div id="wrapper">
 
@@ -175,6 +209,15 @@ if (!isset($meta_robots)) {
                                                     Not logged in <span>Anonymous</span>
                                                 </div>
                                             </div>
+                                            <?php
+                                            // province switch form
+                                            $attributes = ['class' => 'province_switch margin-top-25', 'id' => 'site_version', 'method' => 'post'];
+                                            echo form_open(base_url('province/switch'), $attributes);
+
+                                            $js = "class='selectpicker with-border' onchange='this.form.submit()'";
+                                            echo form_dropdown('province_switch', $province_options, $_SESSION['site_province'], $js);
+                                            echo form_close();
+                                            ?>
                                         </div>
                                         <ul class="user-menu-small-nav">
                                             <li><a href="<?= base_url('login'); ?>"><i class="icon-material-outline-input"></i> Login</a></li>

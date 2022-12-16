@@ -35,7 +35,16 @@ abstract class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = ['session', 'form', 'formulate', 'filesystem', 'auth', 'url', 'text_format'];
+    protected $helpers = [
+        'session',
+        'form',
+        'formulate',
+        'filesystem',
+        'auth',
+        'url',
+        'text_format',
+        'cookie'
+    ];
     protected $edition_model;
     protected $status_list;
 
@@ -64,13 +73,23 @@ abstract class BaseController extends Controller
         // set province dropdown        
         $province_model = model(ProvinceModel::class);
         // $this->data_to_views['province_list']=$province_model->list();
-
         $this->data_to_views['province_options'][0] = "National";
         foreach ($province_model->list() as $province) {
             $this->data_to_views['province_options'][$province['province_id']] = $province['province_name'];
         }
+
+        // dd(user());
+
         if (!isset($_SESSION['site_province'])) {
-            $_SESSION['site_province'] = 0;
+            if (logged_in()) {
+                $_SESSION['site_province'] = user()->province;
+            } else {
+                if (has_cookie('site_province')) {
+                    $_SESSION['site_province'] = get_cookie('site_province');
+                } else {
+                    $_SESSION['site_province'] = 0;
+                }
+            }
         }
 
         // set user avatar

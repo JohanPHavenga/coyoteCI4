@@ -85,6 +85,16 @@ function ftimeMil($time)
     return date("H\hi", strtotime($time));
 }
 
+function fdateToCal($timestamp)
+{
+    return date('Ymd\THis', $timestamp);
+}
+
+function fdateStructured($timestamp)
+{
+    return date('Y-m-d\TH:i:s' . '+02:00', strtotime($timestamp));
+}
+
 function fdateTitle($date)
 {
     if ($date == "TBC") {

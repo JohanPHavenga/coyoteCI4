@@ -20,8 +20,18 @@ ALTER TABLE `users`
 7. Run port users script
 8. rename favourite table to favourites
 9. Remove button text from filetype table that does not need to show on Documents section
-10. Copy uploads folder
+10. Alter users table, adding province column
+ALTER TABLE `users`
+	ADD COLUMN `province` TINYINT(2) NOT NULL DEFAULT '0' AFTER `profile_link`;
+11. Copy uploads folder
 
 
 
 
+Code to save Province on login incase it is overwritten in myth/controllers/AuthController line 100
+// GET USER PROVINCE and WRITE TO SESSION
+$user_model = model(UserModelExtended::class);
+$user_info = $user_model->detail($this->auth->user()->id);
+if ($user_info['province'] != 0) {
+	$_SESSION['site_province'] = $user_info['province'];
+}

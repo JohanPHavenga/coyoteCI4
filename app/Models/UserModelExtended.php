@@ -20,9 +20,7 @@ class UserModelExtended extends Model
             return false;
         } else {
             $builder = $this->db->table($this->table);
-            $query = $builder->select('id, name, surname, email, phone')
-                ->where("id", $id)
-                ->get();
+            $query = $builder->where("id", $id)->get();
             // dd($builder->getCompiledSelect());
             return $query->getRowArray();
         }

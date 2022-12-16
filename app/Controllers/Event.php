@@ -14,8 +14,19 @@ class Event extends BaseController
     helper('reCaptcha');
   }
 
-  public function detail($edition_slug, $page = "detail")
+  public function detail($edition_slug, $page = "detail", $param_1 = '', $param_2 = '', $param_3 = '')
   {
+    // 301 redirects for old pages
+    switch ($page) {
+      case "accommodation":
+        return redirect()->to(base_url("event/" . $edition_slug), 301);
+        // return redirect(base_url("event/" . $edition_slug), 'auto', 301); 
+        break;
+      case "distances":
+        return redirect()->to(base_url("event/" . $edition_slug . "/races"), 301);
+        break;
+    }
+
     $edition_summary = $this->edition_model->get_edition_id_from_slug($edition_slug);
     // dd($edition_summary);
 
@@ -199,6 +210,79 @@ class Event extends BaseController
 
       // PAGE TITLE and META
       $this->data_to_views['page_title'] = $page_title = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($edition_data['edition_date']);
+      if ($page == "detail") {
+        $view = \Config\Services::renderer();
+        $this->data_to_views['structured_data'] = $view
+          ->setVar('edition_data', $edition_data)
+          ->setVar('date_list', $date_list)
+          ->setVar('race_list', $race_list)
+          ->render("event/structured_data");
+        $this->data_to_views['meta_description'] = $this->formulate_meta_description($this->data_to_views['edition_data']);
+      } else {
+        $this->data_to_views['page_title'] = ucwords(str_replace("-", " ", $page));
+        switch ($page) {
+          case "entries":
+            $this->data_to_views['page_title'] = "How to enter";
+            $meta_title = "Information on how to enter the ";
+            break;
+          case "contact":
+            $this->data_to_views['page_title'] = "Contact Organisers";
+            $meta_title = "Organiser contact information for the ";
+            break;
+          case "accommodation":
+            $meta_title = "Accommodation options for the ";
+            break;
+          case "subscribe":
+            $this->data_to_views['page_title'] = "Mailing List";
+            $meta_title = "Add yourself to the mailing list for the ";
+            break;
+          case "results":
+            $meta_title = $this->data_to_views['page_title'] . " for the ";
+            foreach ($this->data_to_views['race_list'] as $race_id => $race) {
+              $results = $this->race_model->get_race_detail_with_results(["race_id" => $race_id]);
+              if ($results) {
+                $this->data_to_views['result_list'][$race_id] = $results;
+              }
+            }
+            // as dar iets na /results is
+            if ((isset($param_1)) && (isset($this->data_to_views['results']['race']))) {
+              if (is_numeric($param_1)) {
+                $dist = $param_1;
+                $racetype = $param_2;
+                // R/W exception
+                if (isset($param_3)) {
+                  if (($param_3 == "W") && ($param_2 == "R")) {
+                    $racetype = "R/W";
+                  }
+                }
+                $this->data_to_views['race_data'] = $this->data_to_views['results']['race'][$racetype][$dist];
+                $this->data_to_views['race_info'] = $this->data_to_views['race_list'][$this->data_to_views['race_data']['race_id']];
+                $this->data_to_views['race_id'] = $this->data_to_views['race_data']['race_id'];
+
+                $this->load->library('table');
+                $this->data_to_views['css_to_load'] = [base_url("assets/js/plugins/components/datatables/datatables.min.css")];
+                $this->data_to_views['scripts_to_load'] = [
+                  base_url("assets/js/plugins/components/datatables/datatables.min.js"),
+                  base_url("assets/js/data-tables_20200706.js"),
+                ];
+                // set view
+                if (!empty($this->data_to_views['race_info'])) {
+                  $view_to_load = "result-race";
+                }
+                $meta_title = $this->data_to_views['race_data']['text'] . " for the ";
+                $page_title = $this->data_to_views['race_data']['distance'] . "km - " . $page_title;
+              }
+            }
+
+            break;
+          default:
+            $meta_title = $this->data_to_views['page_title'] . " for the ";
+            break;
+        }
+        $this->data_to_views['page_title'] = $this->data_to_views['page_title'] . " - " . $page_title;
+        $this->data_to_views['meta_description'] = $meta_title . fDateYear($edition_data['edition_date']) . " edition of the " . substr($edition_data['edition_name'], 0, -5);
+        $this->data_to_views['meta_description'] = str_replace("the The", "The", $this->data_to_views['meta_description']);
+      }
       // -- end title and meta
 
       // get flat arrays
@@ -211,11 +295,11 @@ class Event extends BaseController
 
 
       // if (file_exists(APPPATH . "views/event/" . $page . ".php")) {
-        // -- LOAD VIEWS
-        return view('templates/header', $this->data_to_views)
-          . view('event/detail/header')
-          . view('event/' . $page)
-          . view('templates/footer');
+      // -- LOAD VIEWS
+      return view('templates/header', $this->data_to_views)
+        . view('event/detail/header')
+        . view('event/' . $page)
+        . view('templates/footer');
       // } else {
       //   throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Event page not found');
       // }
@@ -641,6 +725,17 @@ class Event extends BaseController
         }
       }
     }
+    return $return;
+  }
+
+  private function formulate_meta_description($edition_data)
+  {
+    $return = "Listing for the annual " .
+      $edition_data['event_name'] . " in " .
+      $edition_data['town_name'] . ", " .
+      $edition_data['province_name'] . " on " .
+      fdateHumanFull($edition_data['edition_date']) . " starting from " .
+      ftimeSort($edition_data['race_summary']['times']['start']);
     return $return;
   }
 }
