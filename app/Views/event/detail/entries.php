@@ -148,7 +148,10 @@
                     if (array_key_exists("race_fee_flat", $race_fee['fees'])) {
                         echo "R<b>" . floatval($race_fee['fees']['race_fee_flat']) . "</b>";
                     } else {
-                        echo "R<b>" . floatval($race_fee['fees']['race_fee_senior_licenced']) . "</b> - R<b>" . floatval($race_fee['fees']['race_fee_senior_unlicenced']) . "</b>";
+                        echo "R<b>" . floatval($race_fee['fees']['race_fee_senior_licenced']) . "</b>";
+                        if (isset($race_fee['fees']['race_fee_senior_unlicenced'])) {
+                            echo "- R<b>" . floatval($race_fee['fees']['race_fee_senior_unlicenced']) . "</b>";
+                        }
                     }
                     echo "</li>";
                 }

@@ -88,4 +88,16 @@ class FileModel extends Model
         }
         return $edition_list;
     }
+
+    public function get_all_edition_logos() {
+        $builder = $this->db->table($this->table);
+        $builder->select("linked_id AS edition_id, file_name");
+        $builder->where(["filetype_id"=>1,"file_linked_to"=>"edition"]);
+        $query = $builder->get();
+        foreach ($query->getResultArray() as $row) {
+            $data[$row['edition_id']] = $row['file_name'];
+        }
+        return $data;
+    }
+
 }

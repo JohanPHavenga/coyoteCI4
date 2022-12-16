@@ -29,6 +29,8 @@ class Race extends BaseController
     {
         $this->data_to_views['edition_list'] = $this->search_model->upcoming();
 
+        // dd($this->data_to_views['edition_list']);
+
         return view('templates/header', $this->data_to_views)
             . view('race/race_list')
             . view('templates/footer');

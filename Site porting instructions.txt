@@ -24,8 +24,10 @@ ALTER TABLE `users`
 ALTER TABLE `users`
 	ADD COLUMN `province` TINYINT(2) NOT NULL DEFAULT '0' AFTER `profile_link`;
 11. Copy uploads folder
-
-
+12. ALTER TABLE `temp_search`
+	ADD COLUMN `club_name` VARCHAR(50) NULL AFTER `has_local_results`,
+	ADD COLUMN `asa_member_abbr` VARCHAR(5) NULL AFTER `club_name`,
+	ADD COLUMN `img_url` VARCHAR(255) NULL AFTER `asa_member_abbr`;
 
 
 Code to save Province on login incase it is overwritten in myth/controllers/AuthController line 100

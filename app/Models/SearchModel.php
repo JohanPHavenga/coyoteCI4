@@ -204,6 +204,7 @@ class SearchModel extends Model
 
     public function advanced($query_params=[], $flat = false)
     {
+        $data=[];
         $builder = $this->db->table($this->table);
 
         $builder->select('edition_id, edition_name, edition_slug, edition_date')
@@ -237,5 +238,35 @@ class SearchModel extends Model
         }
 
         return $data;
+    }
+
+    public function set_search_table($data, $id_type, $id = null)
+    {
+        $builder = $this->db->table($this->table);
+
+        if ($id) {
+            $builder->where($id_type, $id);
+            $builder->update($data);
+            return $id;
+        } else {
+            $builder->set($data);
+            $builder->insert();
+            return $this->db->insertID();
+        }
+    }
+
+    function clear_search_table()
+    {
+        $builder = $this->db->table($this->table);
+        $builder->truncate();
+    }
+
+    function set_search_table_bulk($bulk_search_data)
+    {
+
+        $builder = $this->db->table($this->table);
+        $builder->insertBatch($bulk_search_data);
+
+        return true;
     }
 }

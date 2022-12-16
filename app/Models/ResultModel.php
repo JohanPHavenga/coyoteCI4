@@ -65,6 +65,20 @@ class ResultModel extends Model
         }
     }
 
+    public function distinct_races_with_results()
+    {
+        $builder = $this->db->table("results");
+        $builder->distinct();
+        $builder->select('race_id');
+        $builder->groupBy('race_id');
+        $query=$builder->get();        
+        // dd($builder->getCompiledSelect());
+        foreach ($query->getResultArray() as $row) {
+            $data[] = $row['race_id'];
+        }
+        return $data;
+    }
+
     public function set_result($usersub_data)
     {
         if (empty($usersubscription_data)) {

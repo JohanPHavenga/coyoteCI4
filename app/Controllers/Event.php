@@ -62,14 +62,17 @@ class Event extends BaseController
       ];
 
       // -- GET DATA
-      $this->data_to_views['edition_data'] = $edition_data = $this->edition_model->detail($edition_id, true);
-
       $this->data_to_views['race_list'] = $race_list = $this->race_model->list($edition_id);
       $this->data_to_views['date_list'] = $date_list = $date_model->list("edition", $edition_id, false, true);
       $this->data_to_views['file_list'] = $file_list = $this->file_model->list("edition", $edition_id, true);
       $this->data_to_views['url_list'] = $url_list = $this->url_model->list("edition", $edition_id, true);
       $this->data_to_views['tag_list'] = $tag_list = $tag_model->get_edition_tag_list($edition_id);
 
+      // Edition Data
+      $edition_data = $this->edition_model->detail($edition_id, true);
+      $edition_data['logo_url'] = $this->get_edition_img_url($edition_slug, $file_list);
+      $edition_data['edition_url'] = base_url("event/" . $edition_slug);
+      $this->data_to_views['edition_data'] = $edition_data;
       $this->data_to_views['edition_data']['race_summary'] = $race_summary = $this->get_set_race_suammry($race_list, $edition_data['edition_date'], $edition_data['edition_info_prizegizing']);
       $this->data_to_views['edition_data']['entrytype_list'] = $entrytype_model->get_edition_entrytype_list($edition_id);
       $this->data_to_views['edition_data']['regtype_list'] = $regtype_model->get_edition_regtype_list($edition_id);
@@ -313,6 +316,17 @@ class Event extends BaseController
     return view('templates/header', $this->data_to_views)
       . view('event/add')
       . view('templates/footer');
+  }
+
+  private function get_edition_img_url($edition_slug, $file_list)
+  {
+    if (isset($file_list[1])) {
+      $file_name = $file_list[1][0]['file_name'];
+      $img_url = base_url("file/edition/" . $edition_slug . "/logo/" . $file_name);
+    } else {
+      $img_url = base_url("assets/images/generated.jpg");
+    }
+    return $img_url;
   }
 
   private function get_set_race_suammry($race_list, $edition_date, $prize_giving_time)

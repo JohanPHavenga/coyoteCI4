@@ -90,8 +90,8 @@ class EditionModel extends Model
 
         if ($edition_builder->countAllResults() > 0) {
             $edition_query = $edition_builder->select('edition_id, edition_name, edition_status, edition_redirect_url')
-            ->where('edition_slug', $edition_slug)
-            ->get();
+                ->where('edition_slug', $edition_slug)
+                ->get();
             $result = $edition_query->getRowArray();
             $result['source'] = "org";
             return $result;
@@ -127,12 +127,16 @@ class EditionModel extends Model
         return $data;
     }
 
-    public function list($query_params = [], $flat = false)
+    public function list($query_params = [], $flat = false, $field_list = false)
     {
         $builder = $this->db->table($this->table);
 
-        $builder->select('edition_id, edition_name, edition_slug, edition_date, updated_date')
-            ->where('edition_status !=', 2);
+        if ($field_list) {
+            $builder->select($field_list);
+        } else {
+            $builder->select('edition_id, edition_name, edition_slug, edition_date, updated_date');
+        }
+        $builder->where('edition_status !=', 2);
 
 
         foreach ($query_params as $operator => $clause_arr) {
@@ -141,12 +145,14 @@ class EditionModel extends Model
                     $builder->$operator($field, $value);
                 }
             } else {
-                $this->db->$operator($clause_arr);
+                $builder->$operator($clause_arr);
             }
         }
         if (!isset($query_params['orderBy'])) {
             $builder->orderBy('edition_date', 'DESC');
         }
+
+        // dd($builder->getCompiledSelect());
 
         $query = $builder->get();
 
@@ -176,6 +182,21 @@ class EditionModel extends Model
         return $edition;
     }
 
+    public function set_edition($data, $id = null)
+    {
+        $builder = $this->db->table($this->table);
+
+        if ($id) {
+            $builder->where('edition_id', $id);
+            $builder->update($data);
+            return $id;
+        } else {
+            $builder->set($data);
+            $builder->insert();
+            return $this->db->insertID();
+        }
+    }
+
     private function get_edition_img_url($edition_id, $edition_slug)
     {
         $builder = $this->db->table("files");
@@ -191,10 +212,16 @@ class EditionModel extends Model
             $file_name = $query->getRow()->file_name;
             $img_url = base_url("file/edition/" . $edition_slug . "/logo/" . $file_name);
         } else {
-            $img_url = base_url("assets/images/run_pad.png");
+            $img_url = base_url("assets/images/generated.jpg");
         }
         return $img_url;
     }
+
+
+
+    // =========================================================================================================================================
+    //  General queries as edition model is always available
+    // =========================================================================================================================================
 
     public function get_status_array()
     {
@@ -204,5 +231,41 @@ class EditionModel extends Model
             $data[$row['status_id']] = $row['status_name'];
         }
         return $data;
+    }
+    public function log_runtime($runtime_data)
+    {
+        $builder = $this->db->table("runtimes");
+        return $builder->insert($runtime_data);
+    }
+
+
+    public function remove_old_searches($before_date)
+    {
+        // get count for records older than date provided
+        $builder = $this->db->table("searches");
+        $builder->select("search_id")->where('created_date < ', $before_date);
+        $record_count = $builder->countAllResults();
+
+        // remove old records
+        $builder = $this->db->table("searches");
+        $builder->where('created_date < ', $before_date);
+        $builder->delete();
+
+        return $record_count;
+    }
+
+    public function runtime_log_cleanup($before_date)
+    {
+        // get count for records older than date provided
+        $builder = $this->db->table("runtimes");
+        $builder->where('runtime_end < ', $before_date);
+        $record_count = $builder->countAllResults();
+
+        // remove old records
+        $builder = $this->db->table("runtimes");
+        $builder->where('runtime_end < ', $before_date);
+        $builder->delete();
+
+        return $record_count;
     }
 }

@@ -70,6 +70,9 @@ $routes->get('my-results', 'Results::my_results');
 $routes->get('result/search', 'Results::search', ['filter' => 'role:user']);
 $routes->get('result/claim/(:any)', 'Results::claim/$1', ['filter' => 'role:user']);
 
+$routes->get('cron/daily', 'Cron::daily');
+$routes->get('cron/intra_day', 'Cron::intra_day');
+
 $routes->get('file/(:any)', 'File::handler/$1');
 
 // temp route

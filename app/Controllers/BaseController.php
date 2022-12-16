@@ -687,4 +687,71 @@ abstract class BaseController extends Controller
             return "Not yet";
         }
     }
+
+    private function has_auto_mail_been_send($emailtemplate_id, $edition_id)
+    {
+        $this->load->model('autoemail_model');
+        if ($this->autoemail_model->exists($emailtemplate_id, $edition_id)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // to be converted
+    public function auto_mailer($emailtemplate_id = 0, $edition_id = 0)
+    {
+        $this->load->model('autoemail_model');
+        $this->load->model('edition_model');
+        $this->load->model('admin/emailtemplate_model');
+        $this->load->model('admin/emailmerge_model');
+        $this->load->model('admin/usersubscription_model');
+        // get edition detail
+        $edition_detail = $this->edition_model->get_edition_detail($edition_id);
+        // get email temaplte list
+        $emailtemplate_list = $this->emailtemplate_model->get_emailtemplate_list();
+
+        // security check
+        if ((!array_key_exists($emailtemplate_id, $emailtemplate_list)) || (!$edition_detail)) {
+            $this->session->set_flashdata([
+                'alert' => " Mmmmm, somthing is not right.",
+                'status' => "danger",
+            ]);
+            redirect(base_url("404"), 'refresh', 404);
+            die();
+        }
+        // check of mails mag gestuur word
+        if ($edition_detail['edition_no_auto_mail']) {
+            return false;
+        }
+        // doen check of mail alreeds gestuur is
+        if ($this->has_auto_mail_been_send($emailtemplate_id, $edition_id)) {
+            return false;
+        }
+        // main code
+        $user_arr = $this->usersubscription_model->get_usersubscription_list("edition", $edition_id);
+        if (!$user_arr) {
+            return false;
+        } else {
+            foreach ($user_arr as $user) {
+                $user_list[] = $user['user_id'];
+            }
+        }
+        $user_str = implode(",", $user_list);
+        $emailtemplate = $this->emailtemplate_model->get_emailtemplate_detail($emailtemplate_id);
+
+        // create email merge
+        $merge_data = array(
+            "emailmerge_status" => 4,
+            "emailmerge_subject" => $emailtemplate['emailtemplate_name'] . " " . $edition_detail['edition_name'],
+            "emailmerge_body" => $emailtemplate['emailtemplate_body'],
+            "emailmerge_recipients" => $user_str,
+            "emailmerge_linked_to" => "edition",
+            "linked_id" => $edition_id,
+        );
+        $emailmerge_id = $this->emailmerge_model->set_emailmerge("add", 0, $merge_data);
+        $autoemail_id = $this->autoemail_model->set_autoemail($emailtemplate_id, $edition_id);
+
+        return true;
+    }
 }

@@ -71,12 +71,11 @@ class DateModel extends Model
     public function get_dates($edition_list=[]) {
         if (!empty($edition_list)) {
             foreach ($edition_list as $edition_id => $edition) {
-                $edition_list[$edition_id]['date_list']=$this->get_date_list("edition",$edition_id, false, true);
+                $edition_list[$edition_id]['date_list']=$this->list("edition",$edition_id, false, true);
             }
         }
         return $edition_list;
     }
-
-    
+   
 
 }

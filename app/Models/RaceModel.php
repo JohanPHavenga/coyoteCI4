@@ -25,13 +25,16 @@ class RaceModel extends Model
         }
     }
 
-
-    public function list($edition_id)
+    public function list($edition_id = false)
     {
         $builder = $this->db->table($this->table);
 
-        $builder->where('edition_id', $edition_id)
-            ->join('racetypes', 'racetype_id');
+        if ($edition_id) {
+            $builder->where('edition_id', $edition_id);
+        } else {
+            $builder->select(["race_id", "edition_id", "race_name", "race_distance", "race_time_start", "racetype_abbr", "racetype_icon"]);
+        }
+        $builder->join('racetypes', 'racetype_id');
 
         $query = $builder->get();
 
