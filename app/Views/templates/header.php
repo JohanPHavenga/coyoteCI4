@@ -68,12 +68,23 @@ if (!isset($meta_robots)) {
         ga('create', 'UA-85900175-2', 'auto');
         ga('send', 'pageview');
     </script>
+
+    <?php
+    // tranparent header for home page
+    if ($transparent_header) {
+        $wrapper_class = "wrapper-with-transparent-header";
+        $header_class = "transparent-header";
+    } else {
+        $wrapper_class = "";
+        $header_class = "";
+    }
+    ?>
     <!-- Wrapper -->
-    <div id="wrapper">
+    <div id="wrapper" class="<?= $wrapper_class; ?>">
 
         <!-- Header Container
         ================================================== -->
-        <header id="header-container" class="fullwidth">
+        <header id="header-container" class="fullwidth <?= $header_class; ?>">
             <!-- Header -->
             <div id="header">
                 <div class="container">
@@ -132,23 +143,25 @@ if (!isset($meta_robots)) {
                     <!-- Right Side Content / End -->
                     <div class="right-side">
                         <?php
-                        // search form
-                        $attributes = ['class' => 'search, inline-form', 'id' => 'header_search', 'method' => 'get', 'style' => 'float: left; margin: 15px 15px 0;'];
-                        echo form_open(base_url('search'), $attributes);
-                        $data = [
-                            'name'  => 's',
-                            'id'    => 'header_search_field',
-                            'value' => $search_string,
-                            'placeholder' => 'Search',
-                            // 'autofocus' => '',
-                        ];
-                        echo form_input($data);
-                        $data = [
-                            'type'    => 'submit',
-                            'content' => '<i class="icon-feather-arrow-right"></i>',
-                        ];
-                        // echo form_button($data);;
-                        echo form_close();
+                        if (!$transparent_header) {
+                            // search form
+                            $attributes = ['class' => 'search, inline-form', 'id' => 'header_search', 'method' => 'get', 'style' => 'float: left; margin: 15px 15px 0;'];
+                            echo form_open(base_url('search'), $attributes);
+                            $data = [
+                                'name'  => 's',
+                                'id'    => 'header_search_field',
+                                'value' => $search_string,
+                                'placeholder' => 'Search',
+                                // 'autofocus' => '',
+                            ];
+                            echo form_input($data);
+                            $data = [
+                                'type'    => 'submit',
+                                'content' => '<i class="icon-feather-arrow-right"></i>',
+                            ];
+                            // echo form_button($data);;
+                            echo form_close();
+                        }
                         ?>
                         <!-- User Menu -->
                         <div class="header-widget">

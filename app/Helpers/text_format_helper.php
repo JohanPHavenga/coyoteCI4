@@ -212,19 +212,21 @@ function race_color($distance)
             $color = '#ffb20e';
             break;
 
-        case $distance <= 21:
+        case $distance < 21:
             $color = '#5A6268';
             break;
 
         case $distance == 21.1:
+        case $distance == 21:
             $color = '#81c868';
             break;
 
-        case $distance <= 42:
+        case $distance < 42:
             $color = '#53b0f8';
             break;
 
         case $distance == 42.2:
+        case $distance == 42:
             $color = '#2250fc';
             break;
 

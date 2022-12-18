@@ -19,7 +19,7 @@
             $status_msg['msg'] = $status_notice_list[$key]['msg'];
         ?>
             <!-- Job Listing -->
-            <a href="<?= base_url('event/' . $edition['edition_slug']); ?>" class="job-listing">
+            <a href="<?= base_url('event/' . $edition['edition_slug']); ?>" class="job-listing with-apply-button">
 
                 <!-- Job Listing Details -->
                 <div class="job-listing-details">
@@ -60,8 +60,8 @@
                         </div>
                     </div>
 
-                    <!-- Bookmark -->
-                    <!-- <span class="bookmark-icon"></span> -->
+                    <!-- Apply Button -->
+                    <span class="list-apply-button ripple-effect">View</span>
                 </div>
             </a>
     <?php

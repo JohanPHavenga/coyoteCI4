@@ -128,6 +128,9 @@ abstract class BaseController extends Controller
         } else {
             $this->data_to_views['search_string'] = '';
         }
+
+        // transparent header for home page
+        $this->data_to_views['transparent_header']=false;
     }
 
     public function send_email($att)

@@ -4,11 +4,34 @@ namespace App\Controllers;
 
 class Home extends BaseController
 {
+    protected $race_model;
+
+    public function __construct()
+    {
+        $this->race_model = model(RaceModel::class);
+        $this->result_model = model(ResultModel::class);
+        $this->search_model = model(SearchModel::class);
+    }
+
     public function index()
     {
+        $this->data_to_views['transparent_header'] = true;
+
         $this->data_to_views['all_editions_count'] = $this->edition_model->record_count();
+        $this->data_to_views['all_races_count'] = $this->race_model->record_count();
+        $this->data_to_views['all_races_with_results_count'] = count($this->result_model->distinct_races_with_results());
+
+        $this->data_to_views['race_distance_list'] = $this->race_model->race_distance_list();
+        $this->data_to_views['status_notice_list'] = $this->status_notice_list();
+
         $this->data_to_views['last_updated'] = $this->edition_model->last_updated(5);
-        $this->data_to_views['featured'] = $this->edition_model->featured(5);
+
+        $view = \Config\Services::renderer();
+        $featured_list = $this->data_to_views['featured'] = $this->edition_model->featured(5);
+        $this->data_to_views['featured_list'] = $view
+            ->setVar('edition_list',  $this->search_model->from_edition_id(array_keys($featured_list)))
+            ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
+            ->render("templates/list");
 
         // dd($this->data_to_views['featured']);
 

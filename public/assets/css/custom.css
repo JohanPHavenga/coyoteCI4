@@ -38,6 +38,12 @@
     transition: 0.3s;
 }
 
+.inline-form-home  {
+    display: flex;
+    width: 100%;
+}
+
+
 .single-page-header .right-side {
     /* max-width: 25%; */
 }

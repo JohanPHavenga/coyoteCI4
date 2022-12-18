@@ -20,6 +20,7 @@ class Sitemap extends BaseController
         $this->data_to_views['region_list'] = $this->region_model->list();
 
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('sitemap/view')
             . view('templates/footer');
     }
@@ -147,18 +148,18 @@ class Sitemap extends BaseController
                     // if older than 2 years
                     if (strtotime($edition['edition_date']) < strtotime('-2 year')) {
                         continue;
-                    }                     
+                    }
                     if (strtotime($edition['edition_date']) < strtotime('-1 year')) {
                         $last_mod = date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year"));
                         $change_freq = "yearly";
                         $priority = "0.2";
-                    }                    
+                    }
                     if (strtotime($edition['edition_date']) >= strtotime('-1 year')) {
                         $last_mod = date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 week"));
                         $change_freq = "weekly";
                         $priority = "0.6";
-                    } 
-                    
+                    }
+
                     if (strtotime($edition['edition_date']) >= strtotime('-1 month')) {
                         $last_mod = date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 day"));
                         $change_freq = "daily";
