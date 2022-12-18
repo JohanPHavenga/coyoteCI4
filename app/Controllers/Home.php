@@ -20,6 +20,7 @@ class Home extends BaseController
     public function about()
     {
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('about')
             . view('templates/footer');
     }
@@ -32,14 +33,52 @@ class Home extends BaseController
 
     public function faq()
     {
+        $this->data_to_views['bc_arr'] = $this->replace_key($this->data_to_views['bc_arr'], $this->data_to_views['page_title'], "FAQ");
+        $this->data_to_views['page_title'] = "Frequently Asked Questions";
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('faq')
             . view('templates/footer');
     }
 
-    public function training_programs()
+    public function training_programs($race_name = null)
     {
+        if (isset($race_name)) {
+            switch (strtolower(urldecode($race_name))) {
+                case "marathon":
+                    $t_prog_text = "Marathon Training Programs";
+                    $t_prog_link = "https://coachparry.com/marathon-training-roadmap/?via=roadrunningza";
+                    break;
+                case "half-marathon":
+                case "half marathon":
+                    $t_prog_text = "Half-Marathon Training Programs";
+                    $t_prog_link = "https://coachparry.com/half-marathon-training-roadmap/?via=roadrunningza";
+                    break;
+                case "10km":
+                case "10km road":
+                case "10km-road":
+                case "10km-run":
+                case "10km run":
+                case "10km race":
+                case "10km-race":
+                    $t_prog_text = "10K Training Programs";
+                    $t_prog_link = "https://coachparry.com/10k-training-roadmap/?via=roadrunningza";
+                    break;
+                default:
+                    $t_prog_text = "Training Programs";
+                    $t_prog_link = "https://coachparry.com/training-programmes/#run?via=roadrunningza";
+                    break;
+            }
+        } else {
+            $t_prog_text = "Training Programs";
+            $t_prog_link = "https://coachparry.com/training-programmes/#run?via=roadrunningza";
+        }
+
+        $this->data_to_views['page_title'] = $t_prog_text;
+        $this->data_to_views['meta_description'] = "Link through to " . $t_prog_text . "s from Coach Parry";
+        $this->data_to_views['coach_parry_link'] = $t_prog_link;
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('training-programs')
             . view('templates/footer');
     }
@@ -47,13 +86,17 @@ class Home extends BaseController
     public function friends()
     {
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('friends')
             . view('templates/footer');
     }
 
     public function support()
     {
+        $this->data_to_views['page_title'] = "Support the website";
+
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('support')
             . view('templates/footer');
     }
@@ -61,20 +104,26 @@ class Home extends BaseController
     public function sitemap()
     {
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('sitemap')
             . view('templates/footer');
     }
 
     public function terms_conditions()
     {
+        $this->data_to_views['page_title'] = "Terms & Conditions";
+        $this->data_to_views['companyName'] = "RoadRunningZA";
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('terms-conditions')
             . view('templates/footer');
     }
 
     public function disclaimer()
     {
+        $this->data_to_views['companyName'] = "RoadRunningZA";
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('disclaimer')
             . view('templates/footer');
     }
@@ -82,6 +131,7 @@ class Home extends BaseController
     public function privacy_policy()
     {
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('privacy_policy')
             . view('templates/footer');
     }

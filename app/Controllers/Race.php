@@ -9,6 +9,9 @@ class Race extends BaseController
     public function __construct()
     {
         $this->search_model = model(SearchModel::class);
+        $this->race_model = model(RaceModel::class);
+        $this->data_to_views['status_notice_list'] = $this->status_notice_list();
+        $this->data_to_views['race_distance_list'] = $this->race_model->race_distance_list();
     }
 
     public function list($year = null, $month = null, $day = null)
@@ -19,6 +22,28 @@ class Race extends BaseController
         $this->data_to_views['month'] = $month;
         $this->data_to_views['day'] = $day;
 
+        $this->data_to_views['page_title'] = '';
+        if (isset($day)) {
+            $this->data_to_views['page_title'] = $day;
+        }
+        if (isset($month)) {
+            $month_name = date("F", mktime(0, 0, 0, intval($month), 10));
+            $this->data_to_views['page_title'] =  $this->data_to_views['page_title'] . " " . $month_name;
+            $this->data_to_views['bc_arr'] = $this->replace_key($this->data_to_views['bc_arr'], intval($month), $month_name);
+        }
+        if (isset($year)) {
+            $this->data_to_views['page_title'] =  $this->data_to_views['page_title'] . " " . $year;
+        }
+
+        // dd($this->data_to_views['bc_arr']);
+
+        $view = \Config\Services::renderer();
+        $this->data_to_views['list'] = $view
+            ->setVar('edition_list',  $this->search_model->list($year, $month, $day))
+            ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
+            ->render("templates/list");
+
+
         return view('templates/header', $this->data_to_views)
             . view('templates/title_bar')
             . view('race/race_list')
@@ -27,50 +52,76 @@ class Race extends BaseController
 
     public function upcoming()
     {
-        $this->data_to_views['edition_list'] = $this->search_model->upcoming();
+        $this->data_to_views['page_title'] = "Upcoming Races";
+
+        $view = \Config\Services::renderer();
+        $this->data_to_views['list'] = $view
+            ->setVar('edition_list',  $this->search_model->upcoming("+3 months"))
+            ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
+            ->render("templates/list");
 
         // dd($this->data_to_views['edition_list']);
 
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('race/race_list')
             . view('templates/footer');
     }
 
     public function favourite()
     {
-        $this->data_to_views['edition_list'] = [];
+        $this->data_to_views['page_title'] = "Bookmarked Races";
         if (logged_in()) {
             $favourite_model = model(FavouriteModel::class);
             $fav_races_ids = $favourite_model->get_favourite_list(user()->id);
-            $this->data_to_views['edition_list'] = $this->edition_model->from_id($fav_races_ids);
+            // $this->data_to_views['edition_list'] = $this->edition_model->from_id($fav_races_ids);
+
+            $view = \Config\Services::renderer();
+            $this->data_to_views['list'] = $view
+                ->setVar('edition_list',  $this->search_model->from_edition_id($fav_races_ids))
+                ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
+                ->render("templates/list");
         } else {
-            $this->data_to_views['notice'] = "Please log in to be able to favourite races";
+            $this->data_to_views['notice'] = "Please <b><a href='" . base_url('login') . "'>log in</a></b> to enable this functionality";
         }
 
         return view('templates/header', $this->data_to_views)
-            . view('templates/notice')
-            . view('race/race_list')
+            . view('templates/title_bar')
+            . view('race/bookmarked')
             . view('templates/footer');
     }
 
     public function featured()
     {
-        $this->data_to_views['edition_list'] = $this->edition_model->featured(20);
+        $this->data_to_views['page_title'] = "Featured Races";
+        $featured_list = $this->edition_model->featured(20);
+
+        $view = \Config\Services::renderer();
+        $this->data_to_views['list'] = $view
+            ->setVar('edition_list',  $this->search_model->from_edition_id(array_keys($featured_list)))
+            ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
+            ->render("templates/list");
 
         return view('templates/header', $this->data_to_views)
-            . view('race/race_list')
+            . view('templates/title_bar')
+            . view('race/featured')
             . view('templates/footer');
     }
 
     public function parkrun()
     {
+        $this->data_to_views['bc_arr'] = $this->replace_key($this->data_to_views['bc_arr'], $this->data_to_views['page_title'], "parkrun");
+        $this->data_to_views['page_title'] = "parkrun";
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('race/parkrun')
             . view('templates/footer');
     }
 
     public function search()
     {
+        // dd($_GET);
+        $att = [];
         //$this->request->getVar('name')
         if (isset($_GET['s'])) {
             $att['s'] = $this->data_to_views['search_string'];
@@ -81,11 +132,33 @@ class Race extends BaseController
             } else {
                 $att['t'] = '6';
             }
-            $this->data_to_views['edition_list'] = $this->search_model->search($att);
-        } else {
-            $this->data_to_views['edition_list'] = [];
         }
+
+        // DISTANCE
+        if (isset($_GET['distance'])) {
+            foreach ($_GET['distance'] as $distance) {
+                $att['distance'][] = $distance;
+            }
+        }
+        // LOCATION
+        if (isset($_GET['location'])) {
+            $att['location'] = $_GET['location'];
+        }
+        // VERIFIED
+        if (isset($_GET['verified'])) {
+            $att['verified'] = $_GET['verified'];
+        }
+
+        // $this->data_to_views['edition_list'] = $this->search_model->search($att);
+
+        $view = \Config\Services::renderer();
+        $this->data_to_views['list'] = $view
+            ->setVar('edition_list', $this->search_model->search($att))
+            ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
+            ->render("templates/list");
+
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('race/race_list')
             . view('templates/footer');
     }
@@ -98,7 +171,7 @@ class Race extends BaseController
         $search_params['where']["edition_date >= "] = date("Y-m-d 00:00:00");
         $search_params['where']["edition_date <= "] = date("Y-m-d 23:59:59", strtotime("1 year"));
 
-        
+
         $search_params['orderBy']["edition_date"] = "ASC";
 
         $query = urldecode($query);
@@ -143,9 +216,16 @@ class Race extends BaseController
                 break;
         }
 
-        $this->data_to_views['edition_list'] = $this->search_model->advanced($search_params, true);
+        // $this->data_to_views['edition_list'] = $this->search_model->advanced($search_params, true);
+
+        $view = \Config\Services::renderer();
+        $this->data_to_views['list'] = $view
+            ->setVar('edition_list', $this->search_model->advanced($search_params, true))
+            ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
+            ->render("templates/list");
 
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('race/race_list')
             . view('templates/footer');
     }

@@ -26,6 +26,7 @@ class File extends BaseController
 
     public function handler($linked_to, $edition_slug, $filetype_name, $file_name = null, $race_filename = null)
     {
+        
         $file_id = false;
         if (is_numeric($filetype_name)) {
             $file_id = $filetype_name;
@@ -33,17 +34,26 @@ class File extends BaseController
             $filetype_name = str_replace(" ", "_", urldecode($filetype_name));
             // $filetype_name = str_replace("-", "_", urldecode($filetype_name));
         }
+        
+        // check for thumb_nail
+        $pos=strpos($file_name, "thumb_");
+        if ($pos!==false) {
+            $thumb_filename=$file_name;
+            $file_name=str_replace("thumb_","",$file_name);
+        }
 
 
         switch ($linked_to) {
             case "edition":
                 $file_id = null;
-                $e=$this->edition_model->get_edition_id_from_slug($edition_slug);
+                $e = $this->edition_model->get_edition_id_from_slug($edition_slug);
                 $edition_id = $e['edition_id'];
                 $file_list = $this->file_model->list("edition", $edition_id, true);
                 $filetype_list = $this->file_model->get_filetype_list();
                 // dd($filetype_list);
+                // exception for logo thumb
                 $filetype_id = $filetype_list[$filetype_name];
+                
                 if ($file_list[$filetype_id]) {
                     foreach ($file_list[$filetype_id] as $key => $file_detail) {
                         if ($file_detail['file_name'] == $file_name) {
@@ -100,7 +110,11 @@ class File extends BaseController
         $id_type = $file_detail['file_linked_to'];
         $id = $file_detail['linked_id'];
         // add race id section here
+
         // set path
+        if (isset($thumb_filename)) {
+            $file_detail['file_name']=$thumb_filename;
+        }
         $path = "./uploads/" . $id_type . "/" . $id . "/" . $file_detail['file_name'];
 
         // echo file_exists($path);
@@ -139,6 +153,6 @@ class File extends BaseController
         header("Content-Type: $mime");
         header('Content-Disposition: inline; filename="' . $file_name . '";');
         readfile($filepath);
-        exit();        
+        exit();
     }
 }

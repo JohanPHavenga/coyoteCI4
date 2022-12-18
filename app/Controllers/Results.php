@@ -9,14 +9,26 @@ class Results extends BaseController
     public function __construct()
     {
         $this->result_model = model(ResultModel::class);
+        $this->race_model = model(RaceModel::class);
+        $this->data_to_views['status_notice_list'] = $this->status_notice_list();
+        $this->data_to_views['race_distance_list'] = $this->race_model->race_distance_list();
     }
 
     public function list()
     {
         // add search model
         $search_model = model(SearchModel::class);
-        $this->data_to_views['edition_list'] = $search_model->results();
+        // $this->data_to_views['edition_list'] = $search_model->results();
+
+        $view = \Config\Services::renderer();
+        $this->data_to_views['list'] = $view
+            ->setVar('edition_list',  $search_model->results())
+            ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
+            ->render("templates/list");
+
+
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('race/race_list')
             . view('templates/footer');
     }
@@ -53,7 +65,7 @@ class Results extends BaseController
 
     public function claim($action, $race_id, $load = "summary")
     {
-        
+
         // add search model
         switch ($action) {
             case "list":

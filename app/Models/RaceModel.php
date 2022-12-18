@@ -84,8 +84,20 @@ class RaceModel extends Model
 
         foreach ($query->getResultArray() as $row) {
             $data[$row['result_id']] = $row;
-            $data[$row['result_id']]['race_color'] = $this->get_race_color($row['race_distance']);
+            $data[$row['result_id']]['race_color'] = race_color($row['race_distance']);
         }
         return $data;
+    }
+    public function race_distance_list()
+    {
+        return [
+            5 => "Fun Runs",
+            10 => "10km",
+            15 => "15km",
+            21 => "Half-Marathon",
+            30 => "30km",
+            42 => "Marathon",
+            43 => "Ultra",
+        ];
     }
 }

@@ -70,8 +70,11 @@ class Event extends BaseController
 
       // Edition Data
       $edition_data = $this->edition_model->detail($edition_id, true);
-      $edition_data['logo_url'] = $this->get_edition_img_url($edition_slug, $file_list);
+      $images=$this->get_edition_img_urls($edition_id, $edition_slug, $file_list);
+      $edition_data['logo_url'] = $images['logo'];
       $edition_data['edition_url'] = base_url("event/" . $edition_slug);
+
+
       $this->data_to_views['edition_data'] = $edition_data;
       $this->data_to_views['edition_data']['race_summary'] = $race_summary = $this->get_set_race_suammry($race_list, $edition_data['edition_date'], $edition_data['edition_info_prizegizing']);
       $this->data_to_views['edition_data']['entrytype_list'] = $entrytype_model->get_edition_entrytype_list($edition_id);
@@ -124,7 +127,7 @@ class Event extends BaseController
         $this->data_to_views['event_date_range'] = "TBC";
         $this->data_to_views['edition_data']['edition_date'] = "TBC";
         foreach ($race_list as $key => $race) {
-          $race_list['race_date'] = "TBC";
+          $race_list[$key]['race_date'] = "TBC";
         }
       } else {
         if ($date_list[1][0]['date_start'] == $date_list[1][0]['date_end']) {
@@ -318,15 +321,18 @@ class Event extends BaseController
       . view('templates/footer');
   }
 
-  private function get_edition_img_url($edition_slug, $file_list)
+  private function get_edition_img_urls($edition_id, $edition_slug, $file_list)
   {
     if (isset($file_list[1])) {
       $file_name = $file_list[1][0]['file_name'];
-      $img_url = base_url("file/edition/" . $edition_slug . "/logo/" . $file_name);
+      $images['logo'] = base_url("file/edition/" . $edition_slug . "/logo/" . $file_name);
+      $images['thumb'] = base_url("file/edition/" . $edition_slug . "/logo/thumb_" . $file_name);
+
     } else {
-      $img_url = base_url("assets/images/generated.jpg");
+      $images['logo'] = base_url("assets/images/generated.webp");
+      $images['thumb'] = base_url("assets/images/generated.webp");
     }
-    return $img_url;
+    return $images;
   }
 
   private function get_set_race_suammry($race_list, $edition_date, $prize_giving_time)

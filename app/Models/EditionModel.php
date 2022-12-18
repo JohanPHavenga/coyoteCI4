@@ -33,12 +33,21 @@ class EditionModel extends Model
     {
         $builder = $this->db->table($this->table);
 
-        $query = $builder->select('edition_id, edition_name, edition_slug, edition_date, updated_date')
+        $builder->select('edition_id, edition_name, edition_slug, edition_date, editions.updated_date')
             ->where('edition_isfeatured', "1")
             ->where('edition_date > ', date("Y-m-d"))
             ->orderBy('edition_date', "ASC")
-            ->limit($count)
-            ->get();
+            ->limit($count);
+
+        if ($_SESSION['site_province'] > 0) {
+            $builder->join('events', 'event_id')
+                ->join('towns', 'town_id')
+                ->join('regions', 'region_id')
+                ->join('provinces', 'regions.province_id=provinces.province_id')
+                ->where('provinces.province_id', $_SESSION['site_province']);
+        }
+        
+        $query = $builder->get();
 
         foreach ($query->getResultArray() as $row) {
             $data[$row['edition_id']] = $row;
@@ -113,7 +122,7 @@ class EditionModel extends Model
         }
         $builder = $this->db->table($this->table);
 
-        $builder->select('edition_id, edition_name, edition_slug, edition_date, updated_date')
+        $builder->select('edition_id, edition_name, edition_slug, edition_date, edition_status, edition_info_status, updated_date')
             ->where('edition_status !=', 2)
             ->whereIn('edition_id', $id_array)
             ->orderBy('edition_date', "DESC");

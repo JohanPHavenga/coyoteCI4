@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-xl-12">
-                <h2><?=$title;?></h2>
+                <h2><?=$page_title;?></h2>
                 <!-- Breadcrumbs -->
                 <nav id="breadcrumbs" class="">
                     <ul>

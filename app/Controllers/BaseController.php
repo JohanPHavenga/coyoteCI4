@@ -91,6 +91,13 @@ abstract class BaseController extends Controller
                 }
             }
         }
+        if (!isset($_SESSION['sort_by'])) {
+            if (has_cookie('sort_by')) {
+                $_SESSION['sort_by'] = get_cookie('sort_by');
+            } else {
+                $_SESSION['sort_by'] = 'date';
+            }
+        }
 
         // set user avatar
         $this->data_to_views['user_avatar'] = base_url('assets/images/user-avatar-placeholder.png');
@@ -107,7 +114,7 @@ abstract class BaseController extends Controller
         $this->data_to_views['bc_arr'] = $this->get_crumbs();
         // set default title
         end($this->data_to_views['bc_arr']);
-        $this->data_to_views['title'] = key($this->data_to_views['bc_arr']);
+        $this->data_to_views['page_title'] = key($this->data_to_views['bc_arr']);
 
 
         // validation on search - remove funny characters
@@ -140,7 +147,8 @@ abstract class BaseController extends Controller
 
         $email->setTo($to);
         $email->setCC("info@roadrunning.co.za");
-        $email->setFrom($att['email'], $att['name']);
+        $email->setFrom("webmaster@roadrunning.co.za", $att['name']);
+        $email->setReplyTo($att['email'], $att['name']);
         $email->setSubject($subject);
         $email->setMessage($att['message']);
 
@@ -182,6 +190,7 @@ abstract class BaseController extends Controller
 
             $segs[$x] = str_replace("_", " ", $segs[$x]);
             $segs[$x] = str_replace("-", " ", $segs[$x]);
+            $segs[$x] = str_replace("%20", " ", $segs[$x]);
             $crumbs[ucwords($segs[$x])] = $crumb_uri;
 
             if ($x == 3) {
@@ -552,73 +561,88 @@ abstract class BaseController extends Controller
         }
     }
 
-    public function get_img_url($slug, $file_list)
+    public function status_notice_list()
     {
-        if (isset($file_list[1])) {
-            return base_url("file/edition/" . $slug . "/logo/" . $file_list[1][0]['file_name']);
-        } else {
-            return base_url("assets/images/company-logo-05.png");
-        }
+        return [
+            2 => [
+                "msg" => "<b>This event is set to DRAFT mode.</b> All detail has not yet been confirmed",
+                "short_msg" => "DRAFT",
+                "state" => "cancelled",
+            ],
+            3 => [
+                "msg" => "<strong>This event has been CANCELLED.</strong> Please use the event contact form  to contact the event organisers for more detail.",
+                "short_msg" => "Cancelled",
+                "state" => "cancelled",
+            ],
+            9 => [
+                "msg" => "<strong>This event has been POSTPONED until further notice.</strong> Please contact the event organisers for more detail<br>"
+                    . "Please consider <b><a href='#subscribe'>subscribing</a></b> to the event below to receive an email once a new date is set",
+                "short_msg" => "Postposed",
+                "state" => "unverified",
+            ],
+            13 => [
+                "msg" => "<strong>PLEASE NOTE</strong> - Dates and race times has <u>not yet been confirmed</u> by the race organisers",
+                "short_msg" => "Unconfimred",
+                "state" => "unverified",
+            ],
+            14 => [
+                "msg" => "<b>DATE CONFIRMED</b> - Waiting for race information from the organisers",
+                "short_msg" => "Dates Confirmed",
+                "state" => "pending",
+            ],
+            15 => [
+                "msg" => "<b>EVENT CONFIRMED</b> - Information loaded has been confirmed as correct. Awaiting for complete information set from the organisers",
+                "short_msg" => "Awaiting Info",
+                "state" => "confirmed",
+            ],
+            16 => [
+                "msg" => "<b>LISTING VERIFIED</b> - All information below has been confirmed",
+                "short_msg" => "Verified",
+                "state" => "verified",
+            ],
+            10 => [
+                "msg" => "<b>RESULTS PENDING</b> - Waiting for results to be released.<br>Note this can take up to a week",
+                "short_msg" => "Results Pending",
+                "state" => "confirmed",
+            ],
+            11 => [
+                "msg" => "<b>RESULTS LOADED</b> - Click on link below to view",
+                "short_msg" => "Results Loaded",
+                "state" => "verified",
+            ],
+            12 => [
+                "msg" => "<b>NO RESULTS EXPECTED</b> - No official results will be released for this event",
+                "short_msg" => "No Results Expexted",
+                "state" => "unverified",
+            ],
+        ];
     }
 
     public function formulate_status_notice($status, $info_status)
     {
+        $status_notice_list = $this->status_notice_list();
         $return = [];
 
         switch ($status) {
             case 2:
-                $msg = "<b>This event is set to DRAFT mode.</b> All detail has not yet been confirmed";
-                $short_msg = "DRAFT";
-                $state = "cancelled";
-                break;
             case 3:
-                $msg = "<strong>This event has been CANCELLED.</strong> Please use the contact form below to contact the event organisers for more detail.</a>";
-                $short_msg = "Cancelled";
-                $state = "cancelled";
-                $icon = "times-circle";
-                break;
             case 9:
-                $msg = "<strong>This event has been POSTPONED until further notice.</strong> Please contact the event organisers for more detail<br>"
-                    . "Please consider <b><a href='#subscribe'>subscribing</a></b> to the event below to receive an email once a new date is set";
-                $short_msg = "Postposed";
-                $state = "unverified";
+                $msg = $status_notice_list[$status]['msg'];
+                $short_msg = $status_notice_list[$status]['short_msg'];
+                $state = $status_notice_list[$status]['state'];
                 break;
             default:
                 switch ($info_status) {
                     case 13:
-                        $msg = "<strong>PLEASE NOTE</strong> - Dates and race times has <u>not yet been confirmed</u> by the race organisers";
-                        $short_msg = "Unconfimred";
-                        $state = "unverified";
-                        break;
                     case 14:
-                        $msg = "<b>DATE CONFIRMED</b> - Waiting for race information from the organisers";
-                        $short_msg = "Dates Confirmed";
-                        $state = "pending";
-                        break;
                     case 15:
-                        $msg = "<b>EVENT CONFIRMED</b> - Information loaded has been confirmed as correct. Awaiting for complete information set from the organisers";
-                        $short_msg = "Awaiting Info";
-                        $state = "confirmed";
-                        break;
                     case 16:
-                        $msg = "<b>LISTING VERIFIED</b> - All information below has been confirmed";
-                        $short_msg = "Verified";
-                        $state = "verified";
-                        break;
                     case 10:
-                        $msg = "<b>RESULTS PENDING</b> - Waiting for results to be released.<br>Note this can take up to a week";
-                        $short_msg = "Results Pending";
-                        $state = "confirmed";
-                        break;
                     case 11:
-                        $msg = "<b>RESULTS LOADED</b> - Click on link below to view";
-                        $short_msg = "Results Loaded";
-                        $state = "verified";
-                        break;
                     case 12:
-                        $msg = "<b>NO RESULTS EXPECTED</b> - No official results will be released for this event";
-                        $short_msg = "No Results Expexted";
-                        $state = "unverified";
+                        $msg = $status_notice_list[$info_status]['msg'];
+                        $short_msg = $status_notice_list[$info_status]['short_msg'];
+                        $state = $status_notice_list[$info_status]['state'];
                         break;
                 }
                 break;
@@ -627,6 +651,7 @@ abstract class BaseController extends Controller
         $return['msg'] = $msg;
         $return['short_msg'] = $short_msg;
         $return['state'] = $state;
+        // dd($return);
         return $return;
     }
 
@@ -698,6 +723,22 @@ abstract class BaseController extends Controller
         }
     }
 
+    public function sort_picker()
+    {
+        $_SESSION['sort_by'] = $this->request->getPost('sort_by_picker');
+        set_cookie("sort_by", $this->request->getPost('sort_by_picker'), 172800);
+        return redirect()->back();
+    }
+
+    public function replace_key($arr, $oldkey, $newkey) {
+        if(array_key_exists( $oldkey, $arr)) {
+            $keys = array_keys($arr);
+            $keys[array_search($oldkey, $keys)] = $newkey;
+            return array_combine($keys, $arr);	
+        }
+        return $arr;
+    }
+
     // to be converted
     public function auto_mailer($emailtemplate_id = 0, $edition_id = 0)
     {
@@ -753,5 +794,53 @@ abstract class BaseController extends Controller
         $autoemail_id = $this->autoemail_model->set_autoemail($emailtemplate_id, $edition_id);
 
         return true;
+    }
+
+    public function createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height, $background = false)
+    {
+        list($original_width, $original_height, $original_type) = getimagesize($filepath);
+        if ($original_width > $original_height) {
+            $new_width = $thumbnail_width;
+            $new_height = intval($original_height * $new_width / $original_width);
+        } else {
+            $new_height = $thumbnail_height;
+            $new_width = intval($original_width * $new_height / $original_height);
+        }
+        $dest_x = intval(($thumbnail_width - $new_width) / 2);
+        $dest_y = intval(($thumbnail_height - $new_height) / 2);
+
+        if ($original_type === 1) {
+            $imgt = "ImageGIF";
+            $imgcreatefrom = "ImageCreateFromGIF";
+        } else if ($original_type === 2) {
+            $imgt = "ImageJPEG";
+            $imgcreatefrom = "ImageCreateFromJPEG";
+        } else if ($original_type === 3) {
+            $imgt = "ImagePNG";
+            $imgcreatefrom = "ImageCreateFromPNG";
+            $background = 'transparent';
+            // dd($filepath);
+        } else {
+            return false;
+        }
+
+        $old_image = $imgcreatefrom($filepath);
+        $new_image = imagecreatetruecolor($thumbnail_width, $thumbnail_height); // creates new image, but with a black background
+
+        // figuring out the color for the background
+        if (is_array($background) && count($background) === 3) {
+            list($red, $green, $blue) = $background;
+            $color = imagecolorallocate($new_image, $red, $green, $blue);
+            imagefill($new_image, 0, 0, $color);
+            // apply transparent background only if is a png image
+        } else if ($background === 'transparent' && $original_type === 3) {
+            imagesavealpha($new_image, TRUE);
+            $color = imagecolorallocatealpha($new_image, 0, 0, 0, 127);
+            imagefill($new_image, 0, 0, $color);
+        }
+
+        imagecopyresampled($new_image, $old_image, $dest_x, $dest_y, 0, 0, $new_width, $new_height, $original_width, $original_height);
+        $imgt($new_image, $thumbpath);
+        return file_exists($thumbpath);
     }
 }

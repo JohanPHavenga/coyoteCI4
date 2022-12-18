@@ -82,8 +82,10 @@ class User extends BaseController
 
     public function newsletter()
     {
+        $this->data_to_views['page_title'] = "Subscribe to our Newsletter";
         helper('encrypt');
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('user/newsletter')
             . view('templates/footer');
     }

@@ -39,6 +39,7 @@ $routes->get('/', 'Home::index');
 $routes->get('about', 'Home::about');
 $routes->get('faq', 'Home::faq');
 $routes->get('training-programs', 'Home::training_programs');
+$routes->get('training-programs/(:segment)', 'Home::training_programs/$1');
 $routes->get('friends', 'Home::friends');
 $routes->get('support', 'Home::support');
 $routes->get('terms-conditions', 'Home::terms_conditions');
@@ -59,11 +60,12 @@ $routes->get('event/(:any)', 'Event::detail/$1');
 
 $routes->get('search', 'Race::search');
 $routes->get('search/tag/(:any)', 'Race::tag/$1');
-$routes->get('race/most-viewed', 'Race::most_viewed');
-$routes->get('race/(:segment)', 'Race::$1');
+$routes->get('race', 'Race::upcoming');
+$routes->get('race/(:any)', 'Race::$1');
 $routes->get('calendar', 'Race::list');
 $routes->get('race-calendar', 'Race::list');
 $routes->get('calendar/(:any)', 'Race::list/$1');
+$routes->post('race/sort_picker', 'Race::sort_picker');
 
 $routes->get('results', 'Results::list');
 $routes->get('my-results', 'Results::my_results');

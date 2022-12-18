@@ -225,10 +225,10 @@
          $(document).ready(function() {
              Snackbar.show({
                  text: '<?= $flash_data['alert_msg']; ?>',
-                 pos: 'bottom-center',
-                 showAction: false,
+                 pos: 'top-right',
+                 showAction: true,
                  actionText: "Dismiss",
-                 duration: 5000,
+                 duration: 6000,
                  textColor: '#fff',
                  backgroundColor: '#383838'
              });

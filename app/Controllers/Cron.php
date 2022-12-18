@@ -56,7 +56,7 @@ class Cron extends BaseController
                 "events" => "event_id",
                 "towns" => "town_id",
                 "regions" => "region_id",
-                "provinces" => "regions.province_id=provinces.province_id",                
+                "provinces" => "regions.province_id=provinces.province_id",
                 "edition_asa_member" => "edition_id",
                 "asa_members" => "asa_member_id",
                 "organising_club" => "event_id",
@@ -66,15 +66,36 @@ class Cron extends BaseController
         $edition_list = $this->edition_model->list($query_params, true, $field_arr);
         $race_list = $race_model->list();
         $race_result_list = $result_model->distinct_races_with_results();
-        $edition_logos=$file_model->get_all_edition_logos();
+        $edition_logos = $file_model->get_all_edition_logos();
+
 
         foreach ($race_list as $race_id => $race) {
             // if edition active
             if (isset($edition_list[$race['edition_id']])) {
+                // set generic images
+                $img_url = base_url("assets/images/generated.jpg");
+                $thumb_url = base_url("assets/images/generated_thumb.jpg");
+                // check if file has logo
                 if (isset($edition_logos[$race['edition_id']])) {
-                    $img_url = base_url("file/edition/" . $edition_list[$race['edition_id']]['edition_slug'] . "/logo/" . $edition_logos[$race['edition_id']]);
-                } else {
-                    $img_url = base_url("assets/images/generated.jpg");
+                    $img_filepath = "uploads/edition/" . $race['edition_id'] . "/" . $edition_logos[$race['edition_id']];
+                    // check if image exists (this is more for localhost purposes to make the script work without all the images)
+                    if (file_exists($img_filepath)) {
+                        $img_url = base_url("file/edition/" . $edition_list[$race['edition_id']]['edition_slug'] . "/logo/" . $edition_logos[$race['edition_id']]);
+
+                        $thumb_filepath = "uploads/edition/" . $race['edition_id'] . "/thumb_" . $edition_logos[$race['edition_id']];
+                        // check if thumbnail already exists
+                        if (!file_exists($thumb_filepath)) {
+                            // else genrate thumb                    
+                            $thumb = $this->createThumbnail(
+                                "uploads/edition/" . $race['edition_id'] . "/" . $edition_logos[$race['edition_id']],
+                                "uploads/edition/" . $race['edition_id'] . "/thumb_" . $edition_logos[$race['edition_id']],
+                                140,
+                                140,
+                                array(255, 255, 255)
+                            );
+                        }
+                        $thumb_url = base_url("file/edition/" . $edition_list[$race['edition_id']]['edition_slug'] . "/logo/thumb_" . $edition_logos[$race['edition_id']]);
+                    }
                 }
                 // d($race);
                 // dd($edition_list[164]);
@@ -94,6 +115,7 @@ class Cron extends BaseController
                 }
                 $search_data[$race_id]['has_local_results'] = $has_local_results;
                 $search_data[$race_id]['img_url'] = $img_url;
+                $search_data[$race_id]['thumb_url'] = $thumb_url;
                 $control_count++;
                 // dd($search_data);
             }
