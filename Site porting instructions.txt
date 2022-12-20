@@ -27,8 +27,10 @@ ALTER TABLE `users`
 12. ALTER TABLE `temp_search`
 	ADD COLUMN `club_name` VARCHAR(50) NULL AFTER `has_local_results`,
 	ADD COLUMN `asa_member_abbr` VARCHAR(5) NULL AFTER `club_name`,
-	ADD COLUMN `img_url` VARCHAR(255) NULL AFTER `asa_member_abbr`;
+	ADD COLUMN `img_url` VARCHAR(255) NULL AFTER `asa_member_abbr`,
 	ADD COLUMN `thumb_url` VARCHAR(255) NULL DEFAULT NULL AFTER `img_url`;
+
+13.allow_url_fopen=1 op xneelo vir recaptcha
 
 
 Code to save Province on login incase it is overwritten in myth/controllers/AuthController line 100

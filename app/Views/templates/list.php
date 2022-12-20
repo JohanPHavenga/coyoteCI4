@@ -25,9 +25,9 @@
                 <div class="job-listing-details">
 
                     <!-- Logo -->
-                    <div class="job-listing-company-logo">
+                    <!-- <div class="job-listing-company-logo">
                         <img src="<?= $edition['thumb_url']; ?>" alt="">
-                    </div>
+                    </div> -->
 
                     <!-- Details -->
                     <div class="job-listing-description">
