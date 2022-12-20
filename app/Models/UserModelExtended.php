@@ -30,11 +30,16 @@ class UserModelExtended extends Model
     {
         $builder = $this->db->table($this->table);
         $query = $builder->select('id')
-            ->where("email", $email)
-            ->get();
-        return $query->getRow()->id;
+            ->where("email", $email);
+        $count = $builder->countAllResults();
+        if ($count > 0) {
+            $query = $builder->get();
+            return $query->getRow()->id;
+        } else {
+            return false;
+        }
     }
-    
+
 
     public function set_user($data, $id = null, $roles = [])
     {

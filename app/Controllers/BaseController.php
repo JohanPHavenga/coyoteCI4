@@ -47,6 +47,7 @@ abstract class BaseController extends Controller
     ];
     protected $edition_model;
     protected $status_list;
+    protected $data_to_views, $controller, $method;
 
     /**
      * Constructor.
@@ -131,6 +132,13 @@ abstract class BaseController extends Controller
 
         // transparent header for home page
         $this->data_to_views['transparent_header']=false;
+
+        // get controller & method names
+        $router = service('router'); 
+        $this->controller  = $router->controllerName();
+        $this->method  = $router->methodName();        
+        $this->data_to_views['controller']=$this->controller;
+        $this->data_to_views['method']=$this->method;
     }
 
     public function send_email($att)
@@ -209,9 +217,9 @@ abstract class BaseController extends Controller
         $menus['static_pages'] = $this->get_static_pages();
         $remove = ['switch-region', 'featured-regions', 'login', 'add-listing', 'search', 'sitemap', 'terms', 'disclaimer', 'home', 'privacy'];
         $menus['main_menu'] = array_diff_key($menus['static_pages'], array_flip($remove));
-        if (logged_in()) {
+        // if (logged_in()) {
             $menus['user_menu'] = $this->get_user_menu();
-        }
+        // }
         return $menus;
     }
 
@@ -475,17 +483,17 @@ abstract class BaseController extends Controller
                 "icon" => "icon-material-outline-face",
             ],
             "favourite" => [
-                "display" => "Favourites",
+                "display" => "Bookmarked",
                 "loc" => base_url("race/favourite"),
                 "icon" => "icon-material-outline-favorite",
             ],
             "results" => [
                 "display" => "Results",
-                "loc" => base_url("my-results"),
+                "loc" => base_url("user/results"),
                 "icon" => "icon-material-outline-assignment",
             ],
             "subscriptions" => [
-                "display" => "Subscriptions",
+                "display" => "Mailing Lists",
                 "loc" => base_url("user/my-subscriptions"),
                 "icon" => "icon-material-baseline-mail-outline",
             ],

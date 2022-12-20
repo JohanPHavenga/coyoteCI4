@@ -10,38 +10,69 @@
 
             <!-- Dashboard Headline -->
             <div class="dashboard-headline">
-                <h3>Howdy, <?= user()->name; ?>!</h3>
-                <span>We are glad to see you again</span>
+                <h3>Results</h3>
 
                 <!-- Breadcrumbs -->
                 <nav id="breadcrumbs" class="dark">
                     <ul>
-                        <li><a href="<?=base_url();?>">Home</a></li>
-                        <li>Dashboard</li>
+                        <li><a href="<?= base_url(); ?>">Home</a></li>
+                        <li><a href="<?= base_url("user/dashboard"); ?>">Dashboard</a></li>
+                        <li>Results</li>
                     </ul>
                 </nav>
             </div>
 
-            <!-- Fun Facts Container -->
-            <div class="fun-facts-container">
-                <div class="fun-fact" data-fun-fact-color="#36bd78">
-                    <div class="fun-fact-text">
-                        <span>Linked Results</span>
-                        <h4><?= $result_num; ?></h4>
-                    </div>
-                    <div class="fun-fact-icon"><i class="icon-feather-watch"></i></div>
-                </div>
-                <div class="fun-fact" data-fun-fact-color="#b81b7f">
-                    <div class="fun-fact-text">
-                        <span>Subscriptions</span>
-                        <h4><?=$sub_num;?></h4>
-                    </div>
-                    <div class="fun-fact-icon"><i class="icon-feather-mail"></i></div>
-                </div>
-            </div>
-
             <!-- Row -->
             <div class="row">
+                <div class="col-xl-12">
+
+                    <div class="dashboard-box main-box-in-row">
+                        <div class="headline">
+                            <h3><i class="icon-material-outline-library-add"></i> Link results</h3>
+                        </div>
+                        <div class="content with-padding">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <p>Use the search form below to search for your results to add them to your profile. Alternatively
+                                        you can add results manually if the result set is not available.
+                                    </p>
+                                    <?php
+                                    $search_url = base_url("result/search");
+                                    $attributes = array('class' => 'search, inline-form', 'id' => 'search_results', 'method' => 'get');
+                                    echo form_open($search_url, $attributes);
+
+                                    echo "<div>";
+                                    echo form_input([
+                                        'name' => 'race',
+                                        'id' => 'race_name',
+                                        'value' => set_value('result_search'),
+                                        'class' => 'form-control required',
+                                        'placeholder' => 'Search for a race',
+                                        'autocomplete' => 'off',
+                                        'required' => '',
+                                    ]);
+                                    echo "</div>";
+
+                                    $button_data = [
+                                        'id' => 'subscribe',
+                                        'type' => 'submit',
+                                        'content' => '<i class="icon-feather-arrow-right"></i>',
+                                    ];
+                                    echo form_button($button_data);;
+                                    echo form_close();
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end dashboard-box -->
+
+                    <!-- <div class="col-lg-4 m-b-20">
+                        <h4 class="text-uppercase">Auto Search</h4>
+                        <p>Use your name & surname to auto find suggested results</p>
+                        <a href="<?= base_url("result/auto"); ?>" class="btn btn-primary">Auto Search</a>
+                    </div> -->
+                </div>
 
                 <div class="col-xl-12">
                     <?php
@@ -97,7 +128,6 @@
                     ?>
                 </div>
             </div>
-            <!-- Row / End -->
 
             <?= $user_footer; ?>
 

@@ -3,25 +3,59 @@
     <div class="row">
 
         <div class="col-xl-9 col-lg-8 content-right-offset">
-            <div class="sort-by">
-                <span>Sort by:</span>
-                <?php
-                // sorting switch form
-                $sort_options = [
-                    "date" => "Date",
-                    "distance" => "Distance",
-                ];
-                $attributes = ['class' => '', 'id' => 'sort_by_picker', 'method' => 'post'];
-                echo form_open(base_url('race/sort_picker'), $attributes);
+            <?php
+            if (isset($list)) {
+            ?>
+                <div class="sort-by">
+                    <span>Sort by:</span>
+                    <?php
+                    // sorting switch form
+                    $sort_options = [
+                        "date" => "Date",
+                        "distance" => "Distance",
+                    ];
+                    $attributes = ['class' => '', 'id' => 'sort_by_picker', 'method' => 'post'];
+                    echo form_open(base_url('race/sort_picker'), $attributes);
 
-                $js = "class='selectpicker hide-tick' onchange='this.form.submit()'";
-                echo form_dropdown('sort_by_picker', $sort_options, $_SESSION['sort_by'], $js);
-                echo form_close();
-                ?>
-            </div>
+                    $js = "class='selectpicker hide-tick' onchange='this.form.submit()'";
+                    echo form_dropdown('sort_by_picker', $sort_options, $_SESSION['sort_by'], $js);
+                    echo form_close();
+                    ?>
+                </div>
 
-            <?= $list; ?>
+            <?php
+                echo $list;
+            } else {
+            ?>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <?php
+                        $search_url = base_url("search");
+                        $attributes = array('class' => 'search, inline-form', 'id' => 'search_results', 'method' => 'get');
+                        echo form_open($search_url, $attributes);
 
+                        echo form_input([
+                            'name' => 's',
+                            'id' => 'search_form',
+                            'value' => $search_string,
+                            'placeholder' => 'Search for a race',
+                            'autocomplete' => 'off',
+                            'required' => '',
+                        ]);
+
+                        $button_data = [
+                            'id' => 'subscribe',
+                            'type' => 'submit',
+                            'content' => '<i class="icon-feather-arrow-right"></i>',
+                        ];
+                        echo form_button($button_data);;
+                        echo form_close();
+                        ?>
+                    </div>
+                </div>
+            <?php
+            }
+            ?>
         </div>
 
         <div class="col-xl-3 col-lg-4">

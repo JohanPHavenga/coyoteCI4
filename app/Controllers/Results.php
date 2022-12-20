@@ -36,52 +36,52 @@ class Results extends BaseController
     public function my_results()
     {
         if (logged_in()) {
-            $this->data_to_views['user_result_list'] = $this->result_model->list(['user_id' => user()->id]);
-        } else {
-            $this->data_to_views['user_result_list'] = '';
-        }
+            return redirect()->to(base_url("user/results"));
+        } 
+
         return view('templates/header', $this->data_to_views)
+            . view('templates/title_bar')
             . view('results/my_results')
             . view('templates/footer');
     }
 
-    public function search()
-    {
-        $search_model = model(SearchModel::class);
-        if (isset($_GET['race'])) {
-            $ss =  $this->data_to_views['s'] = $this->request->getGet('race');
-            $this->data_to_views['race_list_with_results'] = $search_model->my_result_search($ss, 1);
-            $this->data_to_views['race_list_with_no_results'] = $search_model->my_result_search($ss, 0);
-        } else {
-            $this->data_to_views['s'] = '';
-            $this->data_to_views['race_list_with_results'] = $this->data_to_views['race_list_with_no_results']  = [];
-        }
+    // public function search()
+    // {
+    //     $search_model = model(SearchModel::class);
+    //     if (isset($_GET['race'])) {
+    //         $ss =  $this->data_to_views['s'] = $this->request->getGet('race');
+    //         $this->data_to_views['race_list_with_results'] = $search_model->my_result_search($ss, 1);
+    //         $this->data_to_views['race_list_with_no_results'] = $search_model->my_result_search($ss, 0);
+    //     } else {
+    //         $this->data_to_views['s'] = '';
+    //         $this->data_to_views['race_list_with_results'] = $this->data_to_views['race_list_with_no_results']  = [];
+    //     }
 
-        $this->data_to_views['race_search'] = $this->request->getVar('race');
-        return view('templates/header', $this->data_to_views)
-            . view('results/search')
-            . view('templates/footer');
-    }
+    //     $this->data_to_views['race_search'] = $this->request->getVar('race');
+    //     return view('templates/header', $this->data_to_views)
+    //         . view('results/search')
+    //         . view('templates/footer');
+    // }
 
-    public function claim($action, $race_id, $load = "summary")
-    {
+    // public function claim($action, $race_id, $load = "summary")
+    // {
 
-        // add search model
-        switch ($action) {
-            case "list":
-                $att['race_id'] = $this->data_to_views['race_id'] = $race_id;
-                if ($load == "summary") {
-                    $att['name'] = user()->name;
-                    $att['surname'] = user()->surname;
-                }
-                $this->data_to_views['result_list'] = $this->result_model->get_results_with_race_detail($att);
-                break;
-            default:
-                dd("error");
-                break;
-        }
-        return view('templates/header', $this->data_to_views)
-            . view('results/claim')
-            . view('templates/footer');
-    }
+    //     // add search model
+    //     switch ($action) {
+    //         case "list":
+    //             $att['race_id'] = $this->data_to_views['race_id'] = $race_id;
+    //             if ($load == "summary") {
+    //                 $att['name'] = user()->name;
+    //                 $att['surname'] = user()->surname;
+    //             }
+    //             $this->data_to_views['result_list'] = $this->result_model->get_results_with_race_detail($att);
+    //             break;
+    //         default:
+    //             dd("error");
+    //             break;
+    //     }
+    //     return view('templates/header', $this->data_to_views)
+    //         . view('results/claim')
+    //         . view('templates/footer');
+    // }
 }

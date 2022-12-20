@@ -14,16 +14,19 @@ class UserSubscriptionModel extends Model
         return $builder->countAll();
     }
 
-    public function exists($user_id, $linked_to, $linked_id)
+    public function exists($user_id, $linked_to = null, $linked_id = null)
     {
         $builder = $this->db->table($this->table);
-        $query = $builder->select('id', 'name', 'surname', 'email', 'phone')
-            ->where("user_id", $user_id)
-            ->where("linked_to", $linked_to)
-            ->where("linked_id", $linked_id);
-
-        if ($builder->countAllResults() > 0) {
-            return true;
+        $builder->select('id')->where("user_id", $user_id);
+        if ($linked_to) {
+            $builder->where("linked_to", $linked_to);
+        }
+        if ($linked_id) {
+            $builder->where("linked_id", $linked_id);
+        }
+        $count=$builder->countAllResults();
+        if ($count > 0) {
+            return $count;
         } else {
             return false;
         }
@@ -31,7 +34,7 @@ class UserSubscriptionModel extends Model
 
     public function list($id, $linked_to = NULL, $linked_id = 0)
     {
-        $data = [];        
+        $data = [];
         $builder = $this->db->table($this->table);
         $builder->where("user_id", $id);
 

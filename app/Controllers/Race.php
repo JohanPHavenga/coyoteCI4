@@ -151,11 +151,13 @@ class Race extends BaseController
 
         // $this->data_to_views['edition_list'] = $this->search_model->search($att);
 
-        $view = \Config\Services::renderer();
-        $this->data_to_views['list'] = $view
-            ->setVar('edition_list', $this->search_model->search($att))
-            ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
-            ->render("templates/list");
+        if (!empty($_GET)) {
+            $view = \Config\Services::renderer();
+            $this->data_to_views['list'] = $view
+                ->setVar('edition_list', $this->search_model->search($att))
+                ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
+                ->render("templates/list");
+        } 
 
         return view('templates/header', $this->data_to_views)
             . view('templates/title_bar')

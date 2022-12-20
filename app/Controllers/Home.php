@@ -15,6 +15,7 @@ class Home extends BaseController
 
     public function index()
     {
+        $this->data_to_views['page_title']="RoadRunning.co.za - Run without being chased";
         $this->data_to_views['transparent_header'] = true;
 
         $this->data_to_views['all_editions_count'] = $this->edition_model->record_count();
@@ -30,6 +31,14 @@ class Home extends BaseController
         $featured_list = $this->data_to_views['featured'] = $this->edition_model->featured(5);
         $this->data_to_views['featured_list'] = $view
             ->setVar('edition_list',  $this->search_model->from_edition_id(array_keys($featured_list)))
+            ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
+            ->render("templates/list");
+
+            
+        $view = \Config\Services::renderer();
+        $last_updated = $this->data_to_views['last_updated'] = $this->edition_model->last_updated(5);
+        $this->data_to_views['last_updated_list'] = $view
+            ->setVar('edition_list', $this->search_model->from_edition_id(array_keys($last_updated)))
             ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
             ->render("templates/list");
 

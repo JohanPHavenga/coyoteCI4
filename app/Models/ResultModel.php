@@ -50,19 +50,12 @@ class ResultModel extends Model
         return $data;
     }
 
-    public function exists($user_id, $linked_to, $linked_id)
+    public function exists($user_id, $result_id)
     {
         $builder = $this->db->table($this->table);
-        $query = $builder->select('id', 'name', 'surname', 'email', 'phone')
-            ->where("user_id", $user_id)
-            ->where("linked_to", $linked_to)
-            ->where("linked_id", $linked_id);
-
-        if ($builder->countAllResults() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        $builder->where("user_id", $user_id)->where("result_id", $result_id);
+        // dd($builder->countAllResults());
+        return $builder->countAllResults();
     }
 
     public function distinct_races_with_results()
@@ -71,7 +64,7 @@ class ResultModel extends Model
         $builder->distinct();
         $builder->select('race_id');
         $builder->groupBy('race_id');
-        $query=$builder->get();        
+        $query = $builder->get();
         // dd($builder->getCompiledSelect());
         foreach ($query->getResultArray() as $row) {
             $data[] = $row['race_id'];
@@ -79,39 +72,58 @@ class ResultModel extends Model
         return $data;
     }
 
-    public function set_result($usersub_data)
+    public function set_result($user_data)
     {
-        if (empty($usersubscription_data)) {
-            $id_type = $this->request->getPost("linked_to") . "_id";
-            $id = $this->request->getPost($id_type);
-
-            $usersub_data = array(
-                'user_id' => $this->request->getPost('user_id'),
-                'linked_to' => $this->request->getPost('linked_to'),
-                'linked_id' => $id,
-            );
-        }
         $builder = $this->db->table($this->table);
-        $builder->replace($usersub_data);
+        $builder->replace($user_data);
         return $this->db->affectedRows();
     }
 
-    public function remove_result($user_id, $linked_to, $linked_id)
+    // public function set_result($usersub_data)
+    // {
+    //     if (empty($usersubscription_data)) {
+    //         $id_type = $this->request->getPost("linked_to") . "_id";
+    //         $id = $this->request->getPost($id_type);
+
+    //         $usersub_data = array(
+    //             'user_id' => $this->request->getPost('user_id'),
+    //             'linked_to' => $this->request->getPost('linked_to'),
+    //             'linked_id' => $id,
+    //         );
+    //     }
+    //     $builder = $this->db->table($this->table);
+    //     $builder->replace($usersub_data);
+    //     return $this->db->affectedRows();
+    // }
+
+    public function remove_result($user_id, $result_id)
     {
         if (!($user_id)) {
             return false;
         } else {
             $builder = $this->db->table($this->table);
             $builder->where('user_id', $user_id);
-            $builder->where('linked_to', $linked_to);
-            $builder->where('linked_id', $linked_id);
+            $builder->where('result_id', $result_id);
             $builder->delete();
         }
     }
 
+    // public function remove_result($user_id, $linked_to, $linked_id)
+    // {
+    //     if (!($user_id)) {
+    //         return false;
+    //     } else {
+    //         $builder = $this->db->table($this->table);
+    //         $builder->where('user_id', $user_id);
+    //         $builder->where('linked_to', $linked_to);
+    //         $builder->where('linked_id', $linked_id);
+    //         $builder->delete();
+    //     }
+    // }
+
     public function get_results_with_race_detail($att = [])
     {
-        $data=[];
+        $data = [];
         $builder = $this->db->table('results');
         $builder->select('results.*,race_name, race_distance, edition_name, edition_date, edition_slug, event_name, town_name, file_name')
             ->join("races", 'results.race_id = races.race_id', 'inner')
@@ -140,5 +152,38 @@ class ResultModel extends Model
         }
 
         return $data;
+    }
+
+    public function get_userresult_count($user_id)
+    {
+        $userresult_list = [];
+        $builder = $this->db->table($this->table);
+        $builder->select("race_distance, COUNT(race_distance) AS count");
+        $builder->join("results", "result_id");
+        $builder->join("races", "race_id");
+        $builder->where('user_result.user_id', $user_id);
+        $builder->groupBy("race_distance");
+        $builder->orderBy("race_distance", "DESC");
+        $query = $builder->get();
+
+        foreach ($query->getResultArray() as $key => $row) {
+            $round_dist = round($row['race_distance']);
+            $key = "dist_" . $round_dist;
+            $userresult_list[$key]['count'] = $row['count'];
+            $userresult_list[$key]['distance'] = $round_dist;
+            $userresult_list[$key]['chart'] = "chart_" . $round_dist;
+            switch ($round_dist) {
+                case 42:
+                    $userresult_list[$key]['name'] = "Marathons";
+                    break;
+                case 21:
+                    $userresult_list[$key]['name'] = "Half-Marathons";
+                    break;
+                default:
+                    $userresult_list[$key]['name'] = $round_dist . "km Races";
+                    break;
+            }
+        }
+        return $userresult_list;
     }
 }

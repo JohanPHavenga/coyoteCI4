@@ -69,8 +69,10 @@ $routes->post('race/sort_picker', 'Race::sort_picker');
 
 $routes->get('results', 'Results::list');
 $routes->get('my-results', 'Results::my_results');
-$routes->get('result/search', 'Results::search', ['filter' => 'role:user']);
-$routes->get('result/claim/(:any)', 'Results::claim/$1', ['filter' => 'role:user']);
+$routes->get('result/search', 'User::result_search', ['filter' => 'role:user']);
+$routes->get('result/claim/(:any)', 'User::result_claim/$1', ['filter' => 'role:user']);
+$routes->get('result/view/(:any)', 'User::result_view/$1', ['filter' => 'role:user']);
+$routes->get('result/remove/(:any)', 'User::result_remove/$1', ['filter' => 'role:user']);
 
 $routes->get('cron/daily', 'Cron::daily');
 $routes->get('cron/intra_day', 'Cron::intra_day');
@@ -92,10 +94,12 @@ $routes->get('province/(:segment)', 'Province::races/$1');
 $routes->group('user', ['filter' => 'role:user'], function ($routes) {
     $routes->get('/', 'User::dashboard');
     $routes->get('dashboard', 'User::dashboard');
+    $routes->get('results', 'User::results');
     $routes->get('profile', 'User::profile');
     $routes->post('profile', 'User::profile');
     $routes->get('success', 'User::success');
     $routes->get('my-subscriptions', 'User::subscriptions');
+    $routes->get('my-subscriptions/(:segment)', 'User::subscriptions/$1');
     $routes->get('donate', 'User::donate');
     $routes->post('subscribe/(:segment)', 'User::subscribe/$1');
 });

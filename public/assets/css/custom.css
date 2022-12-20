@@ -38,9 +38,16 @@
     transition: 0.3s;
 }
 
-.inline-form-home  {
+.inline-form-home {
     display: flex;
     width: 100%;
+}
+
+.submit-field label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
 }
 
 
@@ -79,14 +86,16 @@ mark.box span {
     width: 100%;
     height: 100%;
 }
+
 .timingptrovider_img {
     border-width: 1px 1px 1px 0;
     border-style: solid;
-    border-color:  #e0e0e0;
+    border-color: #e0e0e0;
     text-align: center;
 }
+
 .timingptrovider_img img {
-    object-fit:scale-down;
+    object-fit: scale-down;
     width: 95%;
     height: 95%;
 }
@@ -171,7 +180,7 @@ mark.box span {
 }
 
 .single-page-section {
-    margin-bottom:40px;
+    margin-bottom: 40px;
 }
 
 .content-right-offset nav#breadcrumbs {
@@ -181,7 +190,8 @@ mark.box span {
 #titlebar {
     margin-bottom: 45px;
 }
-div.single-page-header + #titlebar {
+
+div.single-page-header+#titlebar {
     margin-top: -65px;
 }
 
@@ -192,9 +202,9 @@ div.single-page-header + #titlebar {
 }
 
 .salary-amount.cancelled {
-    text-decoration:line-through;
+    text-decoration: line-through;
 }
- 
+
 @media (max-width: 576px) {
     #header_search {
         display: none;
@@ -208,6 +218,7 @@ div.single-page-header + #titlebar {
     .show_on_small_only {
         display: inline;
     }
+
     .single-page-header {
         margin-bottom: 0;
     }
