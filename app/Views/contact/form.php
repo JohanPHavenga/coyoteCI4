@@ -24,19 +24,26 @@
                 'autocomplete' => 'on',
                 'role' => 'form'
             );
+            $prepop=["name"=>'','email'=>''];
+            if (logged_in()) {
+                $prepop=[
+                    "name"=>user()->name." ".user()->surname,
+                    "email"=>user()->email,
+                ];
+            }
             echo form_open(base_url('contact'), $attributes);
             ?>
             <div class="row">
                 <div class="col-md-6">
                     <div class="input-with-icon-left">
-                        <input class="with-border" name="name" type="text" id="name" placeholder="Your Name" required="required" value="<?= set_value('name'); ?>" />
+                        <input class="with-border" name="name" type="text" id="name" placeholder="Your Name" required="required" value="<?= set_value('name', $prepop['name']); ?>" />
                         <i class="icon-material-outline-account-circle"></i>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="input-with-icon-left">
-                        <input class="with-border" name="email" type="email" id="email" placeholder="Email Address" value="<?= set_value('email'); ?>" pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$" required="required" />
+                        <input class="with-border" name="email" type="email" id="email" placeholder="Email Address" value="<?= set_value('email', $prepop['email']); ?>" pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$" required="required" />
                         <i class="icon-material-outline-email"></i>
                     </div>
                 </div>

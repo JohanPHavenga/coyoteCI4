@@ -131,20 +131,21 @@ abstract class BaseController extends Controller
         }
 
         // transparent header for home page
-        $this->data_to_views['transparent_header']=false;
+        $this->data_to_views['transparent_header'] = false;
 
         // get controller & method names
-        $router = service('router'); 
+        $router = service('router');
         $this->controller  = $router->controllerName();
-        $this->method  = $router->methodName();        
-        $this->data_to_views['controller']=$this->controller;
-        $this->data_to_views['method']=$this->method;
+        $this->method  = $router->methodName();
+        $this->data_to_views['controller'] = $this->controller;
+        $this->data_to_views['method'] = $this->method;
     }
 
     public function send_email($att)
     {
         // need to always send NAME, EMAIL and MESSAGE
         $email = \Config\Services::email();
+
         if (isset($att['to'])) {
             $to = $att['to'];
         } else {
@@ -157,8 +158,8 @@ abstract class BaseController extends Controller
         }
 
         $email->setTo($to);
-        $email->setCC("info@roadrunning.co.za");
-        $email->setFrom("webmaster@roadrunning.co.za", $att['name']);
+        $email->setCC('info@roadrunning.co.za');
+        $email->setFrom('webmaster@roadrunning.co.za', $att['name']);
         $email->setReplyTo($att['email'], $att['name']);
         $email->setSubject($subject);
         $email->setMessage($att['message']);
@@ -218,7 +219,7 @@ abstract class BaseController extends Controller
         $remove = ['switch-region', 'featured-regions', 'login', 'add-listing', 'search', 'sitemap', 'terms', 'disclaimer', 'home', 'privacy'];
         $menus['main_menu'] = array_diff_key($menus['static_pages'], array_flip($remove));
         // if (logged_in()) {
-            $menus['user_menu'] = $this->get_user_menu();
+        $menus['user_menu'] = $this->get_user_menu();
         // }
         return $menus;
     }
@@ -741,11 +742,12 @@ abstract class BaseController extends Controller
         return redirect()->back();
     }
 
-    public function replace_key($arr, $oldkey, $newkey) {
-        if(array_key_exists( $oldkey, $arr)) {
+    public function replace_key($arr, $oldkey, $newkey)
+    {
+        if (array_key_exists($oldkey, $arr)) {
             $keys = array_keys($arr);
             $keys[array_search($oldkey, $keys)] = $newkey;
-            return array_combine($keys, $arr);	
+            return array_combine($keys, $arr);
         }
         return $arr;
     }

@@ -1,2 +1,0 @@
-<?php
-    echo "results list";

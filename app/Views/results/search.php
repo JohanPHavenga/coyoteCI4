@@ -97,7 +97,7 @@
                                                 <ul class="dashboard-box-list">
                                                     <?php
                                                     foreach ($race_list_with_no_results as $race) {
-                                                        $link = base_url('result/claim/list/' . $race['race_id']);
+                                                        $link = base_url('result/add/' . $race['race_id']);
                                                     ?>
                                                         <li>
                                                             <div class="boxed-list-item">

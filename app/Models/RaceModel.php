@@ -50,7 +50,7 @@ class RaceModel extends Model
             return false;
         } else {
             $builder = $this->db->table($this->table);
-            $query = $builder->where("race_id", $id)->get();
+            $query = $builder->where("race_id", $id)->join('editions','edition_id')->get();
             // dd($builder->getCompiledSelect());
             return $query->getRowArray();
         }

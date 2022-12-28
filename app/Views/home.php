@@ -33,7 +33,7 @@
                     </div>
 
                     <!-- Search Field -->
-                    <div class="intro-search-field">
+                    <div class="intro-search-field hide_mobile">
                         <select class="selectpicker default" multiple data-selected-text-format="count" data-size="7" title="All Distances" name="distance[]">
                             <?php
                             foreach ($race_distance_list as $distance => $name) {
@@ -52,7 +52,7 @@
                     </div>
 
                     <!-- Button -->
-                    <div class="intro-search-button">
+                    <div class="intro-search-button hide_mobile">
                         <button class="button ripple-effect" type="submit">Search</button>
                     </div>
                     <?php
@@ -110,6 +110,7 @@
 
             </div>
         </div>
+        <?= view('templates/horizontal_ad.php');?>
     </div>
 </div>
 <!-- Featured Jobs / End -->

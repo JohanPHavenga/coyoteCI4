@@ -30,11 +30,20 @@ if (!isset($meta_robots)) {
 
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/colors/blue.css'); ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/custom.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/my_custom.css'); ?>">
     <?php
     if (isset($structured_data)) {
         echo $structured_data;
     } ?>
+    <!-- auto ads -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script async>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-8912238222537097",
+            enable_page_level_ads: true
+        });
+    </script>
+    <!-- auto ads end -->
 </head>
 
 <body>

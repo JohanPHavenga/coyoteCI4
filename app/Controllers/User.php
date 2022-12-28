@@ -337,10 +337,64 @@ class User extends BaseController
             // check if already exists
             $this->result_model->remove_result($user_id, $result_id);
             $this->session->setFlashdata(['alert_msg' => "Result has been removed from your profile",]);
-          
         } else {
-            $this->session->setFlashdata(['alert_msg' => "You are not linked to that result",]);            
+            $this->session->setFlashdata(['alert_msg' => "You are not linked to that result",]);
         }
         return redirect()->to(base_url("user/results"));
+    }
+
+    public function result_add($race_id)
+    {
+        $race_model = model(RaceModel::class);;
+        $this->data_to_views['race_id'] = $race_id;
+        // get race info
+        $this->data_to_views['race_info'] = $race_model->detail($race_id);
+
+        //Category Dropdown
+        $this->data_to_views['category_dropdown'] = [
+            "" => "",
+            "Junior" => "Junior",
+            "Senior" => "Senior",
+            "40-49" => "40-49",
+            "50-59" => "50-59",
+            "60-69" => "60-69",
+            "70+" => "70+",
+        ];
+
+        $this->data_to_views['page_title'] = "Add result manually";
+
+        $this->data_to_views['validation'] =  \Config\Services::validation();
+
+        // validation rules
+        if ($this->request->getPost()) {
+
+            $rules = [
+                'result_time' => ['label'  => 'Time', 'rules'  => 'trim|required',],
+                'result_pos' => ['label'  => 'Position', 'rules'  => 'trim|required',],
+                'result_name' => ['label'  => 'Name', 'rules'  => 'required|trim',],
+                'result_surname' => ['label'  => 'Surname', 'rules'  => 'required|trim',],
+                'result_sex' => ['label'  => 'Gender', 'rules'  => 'required',],
+            ];
+
+            if (!$this->validate($rules)) {
+                $this->data_to_views['validation'] = $this->validator;
+                return view('templates/header', $this->data_to_views)
+                    . view('results/add')
+                    . view('templates/footer');
+            } else {
+                // write result to result table
+                $result_id = $this->result_model->set_results_table($this->request->getPost());
+                // write to user_result table
+                $this->result_model->set_result(["user_id" => user()->id, "result_id" => $result_id]);
+                $this->session->setFlashdata(['alert_msg' => "Result has been added to your profile",]);
+                return redirect()->to(base_url("user/results"));
+                // redirect to user/my-results
+            }
+        } else {
+            return view('templates/header', $this->data_to_views)
+                . view('results/add')
+                . view('templates/footer');
+        }
+
     }
 }

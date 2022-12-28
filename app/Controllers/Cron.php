@@ -82,19 +82,19 @@ class Cron extends BaseController
                     if (file_exists($img_filepath)) {
                         $img_url = base_url("file/edition/" . $edition_list[$race['edition_id']]['edition_slug'] . "/logo/" . $edition_logos[$race['edition_id']]);
 
-                        $thumb_filepath = "uploads/edition/" . $race['edition_id'] . "/thumb_" . $edition_logos[$race['edition_id']];
-                        // check if thumbnail already exists
-                        if (!file_exists($thumb_filepath)) {
-                            // else genrate thumb                    
-                            $thumb = $this->createThumbnail(
-                                "uploads/edition/" . $race['edition_id'] . "/" . $edition_logos[$race['edition_id']],
-                                "uploads/edition/" . $race['edition_id'] . "/thumb_" . $edition_logos[$race['edition_id']],
-                                140,
-                                140,
-                                array(255, 255, 255)
-                            );
-                        }
-                        $thumb_url = base_url("file/edition/" . $edition_list[$race['edition_id']]['edition_slug'] . "/logo/thumb_" . $edition_logos[$race['edition_id']]);
+                        // $thumb_filepath = "uploads/edition/" . $race['edition_id'] . "/thumb_" . $edition_logos[$race['edition_id']];
+                        // // check if thumbnail already exists
+                        // if (!file_exists($thumb_filepath)) {
+                        //     // else genrate thumb                    
+                        //     $thumb = $this->createThumbnail(
+                        //         "uploads/edition/" . $race['edition_id'] . "/" . $edition_logos[$race['edition_id']],
+                        //         "uploads/edition/" . $race['edition_id'] . "/thumb_" . $edition_logos[$race['edition_id']],
+                        //         140,
+                        //         140,
+                        //         array(255, 255, 255)
+                        //     );
+                        // }
+                        // $thumb_url = base_url("file/edition/" . $edition_list[$race['edition_id']]['edition_slug'] . "/logo/thumb_" . $edition_logos[$race['edition_id']]);
                     }
                 }
                 // d($race);

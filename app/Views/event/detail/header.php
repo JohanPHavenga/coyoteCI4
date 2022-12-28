@@ -6,7 +6,7 @@
             <div class="col-md-12">
                 <div class="single-page-header-inner">
                     <div class="left-side">
-                        <div class="header-image"><img src="<?= $edition_data['logo_url']; ?>" alt=""></div>
+                        <div class="header-image"><img src="<?= $edition_data['thumb_url']; ?>" alt=""></div>
                         <div class="header-details">
                             <h3><?= $edition_data['edition_name']; ?></h3>
                             <h5><?= $edition_data['town_name']; ?></h5>

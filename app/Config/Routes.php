@@ -73,6 +73,8 @@ $routes->get('result/search', 'User::result_search', ['filter' => 'role:user']);
 $routes->get('result/claim/(:any)', 'User::result_claim/$1', ['filter' => 'role:user']);
 $routes->get('result/view/(:any)', 'User::result_view/$1', ['filter' => 'role:user']);
 $routes->get('result/remove/(:any)', 'User::result_remove/$1', ['filter' => 'role:user']);
+$routes->get('result/add/(:any)', 'User::result_add/$1', ['filter' => 'role:user']);
+$routes->post('result/add/(:any)', 'User::result_add/$1', ['filter' => 'role:user']);
 
 $routes->get('cron/daily', 'Cron::daily');
 $routes->get('cron/intra_day', 'Cron::intra_day');

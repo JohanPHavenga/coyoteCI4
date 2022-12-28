@@ -72,6 +72,13 @@ class ResultModel extends Model
         return $data;
     }
 
+    public function set_results_table($user_data)
+    {
+        $builder = $this->db->table("results");
+        $builder->replace($user_data);
+        return $this->db->insertID();
+    }
+
     public function set_result($user_data)
     {
         $builder = $this->db->table($this->table);

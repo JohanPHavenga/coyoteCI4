@@ -72,6 +72,7 @@ class Event extends BaseController
       $edition_data = $this->edition_model->detail($edition_id, true);
       $images=$this->get_edition_img_urls($edition_id, $edition_slug, $file_list);
       $edition_data['logo_url'] = $images['logo'];
+      $edition_data['thumb_url'] = $images['thumb'];
       $edition_data['edition_url'] = base_url("event/" . $edition_slug);
 
 

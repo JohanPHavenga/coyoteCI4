@@ -15,6 +15,7 @@
             ?>
                 <div class="single-page-section">
                     <?= view('event/detail/races'); ?>
+                    <?= view('templates/horizontal_ad.php'); ?>
                 </div>
             <?php
             }
@@ -54,6 +55,7 @@
                         <h4>Race Day Information</h4>
                     </div>
                     <?= view('event/detail/race-day-info'); ?>
+                    <?= view('templates/horizontal_ad.php'); ?>
                 </div>
 
                 <!-- MAP -->
@@ -112,6 +114,7 @@
                 <?php
                 }
                 ?>
+                <?= view('templates/vertical_ad.php');?>
                 <?= view('event/side/bookmark'); ?>
                 <?= view('event/side/tags'); ?>
             </div>

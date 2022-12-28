@@ -128,6 +128,6 @@ nb-configuration.xml
 #-------------------------
 # RR CUSTOM
 #-------------------------
-/public/uploads
-/public/old
+/public_html/uploads
+/public_html/old
 

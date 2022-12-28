@@ -50,10 +50,10 @@
     margin-bottom: 12px;
 }
 
-
-.single-page-header .right-side {
-    /* max-width: 25%; */
+h4.widget-title {
+    margin-bottom: 5px;
 }
+
 
 .single-page-header .header-image {
     padding: 0;
@@ -206,10 +206,10 @@ div.single-page-header+#titlebar {
 }
 
 @media (max-width: 576px) {
-    #header_search {
+    #header_search
+    {
         display: none;
     }
-
 }
 
 @media (max-width: 768px) {
@@ -222,11 +222,17 @@ div.single-page-header+#titlebar {
     .single-page-header {
         margin-bottom: 0;
     }
+    
 }
 
 @media (max-width: 992px) {
     .show_on_tablets_and_below {
         display: block;
     }
+    .hide_mobile
+    {
+        display: none;
+    }
+
 
 }
