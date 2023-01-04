@@ -1,2 +1,6 @@
 User-agent: *
 Disallow: 
+Disallow: /old/
+Disallow: /new/
+Disallow: /admin/
+Disallow: /cron/

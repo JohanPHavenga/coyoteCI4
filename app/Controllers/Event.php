@@ -70,7 +70,7 @@ class Event extends BaseController
 
       // Edition Data
       $edition_data = $this->edition_model->detail($edition_id, true);
-      $images=$this->get_edition_img_urls($edition_id, $edition_slug, $file_list);
+      $images = $this->get_edition_img_urls($edition_id, $edition_slug, $file_list);
       $edition_data['logo_url'] = $images['logo'];
       $edition_data['thumb_url'] = $images['thumb'];
       $edition_data['edition_url'] = base_url("event/" . $edition_slug);
@@ -327,8 +327,11 @@ class Event extends BaseController
     if (isset($file_list[1])) {
       $file_name = $file_list[1][0]['file_name'];
       $images['logo'] = base_url("file/edition/" . $edition_slug . "/logo/" . $file_name);
-      $images['thumb'] = base_url("file/edition/" . $edition_slug . "/logo/thumb_" . $file_name);
-
+      if (file_exists(base_url("file/edition/" . $edition_slug . "/logo/thumb_" . $file_name))) {
+        $images['thumb'] = base_url("file/edition/" . $edition_slug . "/logo/thumb_" . $file_name);
+      } else {        
+        $images['thumb'] = base_url("file/edition/" . $edition_slug . "/logo/" . $file_name);
+      }
     } else {
       $images['logo'] = base_url("assets/images/generated.webp");
       $images['thumb'] = base_url("assets/images/generated.webp");

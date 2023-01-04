@@ -159,6 +159,7 @@ abstract class BaseController extends Controller
 
         $email->setTo($to);
         $email->setCC('info@roadrunning.co.za');
+        $email->setBCC('tech@roadrunning.co.za');
         $email->setFrom('webmaster@roadrunning.co.za', $att['name']);
         $email->setReplyTo($att['email'], $att['name']);
         $email->setSubject($subject);

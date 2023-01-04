@@ -103,7 +103,9 @@ class Contact extends BaseController
                 // stuur email
                 $message = "<h3>Query from race listing on Roadrunning.co.za</h3><p>"
                     . "<b>Name:</b> " . $this->request->getVar('name') . "<br>"
-                    . "<b>Email:</b> " . $this->request->getVar('email') . "</p>"
+                    . "<b>Email:</b> " . $this->request->getVar('email') . "<br>"
+                    . "<b>Event Name:</b> " . $edition_data['edition_name'] . "<br>"
+                    . "<b>Event Date:</b> " . fdateHuman($edition_data['edition_date']) . "</p>"
                     . "<p style='padding-left: 15px; padding-bottom:0; margin: 20px 0; border-left: 4px solid #ccc;'><b>Message:</b><br>" . nl2br($this->request->getPost('comments')) . "</p>";
                 $att = [
                     "to" => $this->data_to_views['edition_data']['user_email'],
