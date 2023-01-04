@@ -33,9 +33,21 @@ class EmailqueModel extends Model
         return $result['status_name'];
     }
 
+    public function set_emailque_status($emailque_id, $status_id)
+    {
+        $builder = $this->db->table($this->table);
+        $data = array(
+            'emailque_status' => $status_id,
+            'updated_date' => date("Y-m-d H:i:s"),
+        );
+        $builder->where('emailque_id', $emailque_id);
+        $builder->update($data);
+        
+    }
+
     public function list($top = 0, $status = 4)
     {
-        $data=[];
+        $data = [];
         $builder = $this->db->table($this->table);
         if ($top > 0) {
             $builder->limit($top);
@@ -49,7 +61,8 @@ class EmailqueModel extends Model
         return $data;
     }
 
-    public function detail($id) {
+    public function detail($id)
+    {
         $builder = $this->db->table($this->table);
         $query = $builder->where("emailque_id", $id)->get();
         return $query->getRowArray();
@@ -69,6 +82,4 @@ class EmailqueModel extends Model
 
         return $record_count;
     }
-
-    
 }

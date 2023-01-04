@@ -141,7 +141,7 @@ abstract class BaseController extends Controller
         $this->data_to_views['method'] = $this->method;
     }
 
-    public function send_email($att)
+    public function send_email($att, $is_admin_email = false)
     {
         // need to always send NAME, EMAIL and MESSAGE
         $email = \Config\Services::email();
@@ -158,10 +158,15 @@ abstract class BaseController extends Controller
         }
 
         $email->setTo($to);
-        $email->setCC('info@roadrunning.co.za');
+        if ($is_admin_email) {
+            $email->setFrom('info@roadrunning.co.za',"Johan at RoadRunning.co.za");
+            $email->setReplyTo('info@roadrunning.co.za',"Johan at RoadRunning.co.za");
+        } else {
+            $email->setCC('info@roadrunning.co.za');
+            $email->setFrom('webmaster@roadrunning.co.za', $att['name']);
+            $email->setReplyTo($att['email'], $att['name']);
+        }
         $email->setBCC('tech@roadrunning.co.za');
-        $email->setFrom('webmaster@roadrunning.co.za', $att['name']);
-        $email->setReplyTo($att['email'], $att['name']);
         $email->setSubject($subject);
         $email->setMessage($att['message']);
 

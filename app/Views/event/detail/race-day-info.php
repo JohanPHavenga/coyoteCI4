@@ -51,7 +51,7 @@ if (
 
         // HEADPHONES
         if ($edition_data['edition_info_headphones']) {
-            echo "<li><b>MUSIC:</b> No earphones allowed during the race</li>";
+            echo "<li><b>MUSIC:</b> The use of music players with headphones or 'buds' is not allowed and may result in disqualification</li>";
         }
         ?>
     </ul>

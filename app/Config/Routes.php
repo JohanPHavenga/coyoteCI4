@@ -78,6 +78,7 @@ $routes->post('result/add/(:any)', 'User::result_add/$1', ['filter' => 'role:use
 
 $routes->get('cron/daily', 'Cron::daily');
 $routes->get('cron/intra_day', 'Cron::intra_day');
+$routes->get('cron/process_mail_que', 'Cron::process_mail_que');
 
 $routes->get('file/(:any)', 'File::handler/$1');
 

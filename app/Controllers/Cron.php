@@ -200,7 +200,7 @@ class Cron extends BaseController
     private function have_mail_in_mailque()
     {
         // if anything is returned, return true
-        return $this->emailque_model->list(1, 5);
+        return $this->emailque_model->list(20, 5);
     }
 
     public function process_mail_que()
@@ -210,11 +210,18 @@ class Cron extends BaseController
         $log_data['start'] = $this->get_date();
 
         $mail_que = [];
-        $mail_que = $this->emailque_model->list($this->ini_array['emailque']['que_size'], 5);
+        $mail_que = $this->emailque_model->list(20, 5);
+
         if ($mail_que) {
             $log_data['runtime_count'] = count($mail_que);
             foreach ($mail_que as $mail_id => $mail_data) {
-                $mail_sent = $this->send_mail($mail_data);
+                $att = [
+                    "to" => $mail_data['emailque_to_address'],
+                    "name" => $mail_data['emailque_to_name'],
+                    "subject" => $mail_data['emailque_subject'],
+                    "message" => $mail_data['emailque_body'],
+                ];
+                $mail_sent = $this->send_email($att, 1);
                 if ($mail_sent) {
                     $status_id = 6;
                 } else {
