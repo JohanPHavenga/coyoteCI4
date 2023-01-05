@@ -18,6 +18,7 @@ ALTER TABLE `users`
 	ADD COLUMN `profile_link` VARCHAR(255) NULL DEFAULT NULL AFTER `picture`;
 
 7. Run port users script
+missing to ad groups
 8. rename favourite table to favourites
 9. Remove button text from filetype table that does not need to show on Documents section
 10. Alter users table, adding province column

@@ -179,14 +179,15 @@ class Event extends BaseController
         ($edition_data['edition_status'] == 9) ||
         ($edition_data['edition_info_status'] == 13)
       ) {
-        $page = "detail";
         // Cancelled 
         if ($edition_data['edition_status'] == 3) {
+          $page = "detail";
           $this->data_to_views['notice_banner']['msg'] = "This event has been <b>CANCELLED</b>";
           $this->data_to_views['notice_banner']['state'] = 'error';
         }
         // Postponed
         if ($edition_data['edition_status'] == 9) {
+          $page = "detail";
           $this->data_to_views['notice_banner']['msg'] = "This event has been <b>POSTPONED</b>";
           $this->data_to_views['notice_banner']['state'] = 'warning';
           $this->data_to_views['show_races'] = true;
@@ -329,7 +330,7 @@ class Event extends BaseController
       $images['logo'] = base_url("file/edition/" . $edition_slug . "/logo/" . $file_name);
       if (file_exists(base_url("file/edition/" . $edition_slug . "/logo/thumb_" . $file_name))) {
         $images['thumb'] = base_url("file/edition/" . $edition_slug . "/logo/thumb_" . $file_name);
-      } else {        
+      } else {
         $images['thumb'] = base_url("file/edition/" . $edition_slug . "/logo/" . $file_name);
       }
     } else {
