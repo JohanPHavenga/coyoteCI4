@@ -96,4 +96,24 @@ class UserModelExtended extends Model
         $builder = $this->db->table($this->table);
         $builder->insertBatch($data);
     }
+
+    public function empty_groups_table()
+    {
+        $builder = $this->db->table("auth_groups_users");
+        $query = $builder->emptyTable($this->table);
+        return $query;
+    }
+    public function set_default_groups()
+    {
+        $builder = $this->db->table($this->table);
+        $query = $builder->select('id')->get();
+
+        foreach ($query->getResultArray() as $row) {
+            $data[$row['id']]['user_id']=$row['id'];
+            $data[$row['id']]['group_id']=1;
+        }
+        $builder = $this->db->table("auth_groups_users");
+        $builder->insertBatch($data);
+    }
 }
+

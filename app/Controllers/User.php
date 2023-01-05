@@ -130,6 +130,12 @@ class User extends BaseController
         $this->user_model->bulk_update($user_list);
     }
 
+    public function set_groups()
+    {       
+        $this->user_model->empty_groups_table();
+        $this->user_model->set_default_groups();
+    }
+
     public function subscribe($type, $email = null, $id = null)
     {
         $allowed_types = ['edition', 'newsletter'];

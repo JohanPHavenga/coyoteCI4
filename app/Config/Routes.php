@@ -83,7 +83,8 @@ $routes->get('cron/process_mail_que', 'Cron::process_mail_que');
 $routes->get('file/(:any)', 'File::handler/$1');
 
 // temp route
-$routes->get('user/port_users', 'User::port_users');
+// $routes->get('user/port_users', 'User::port_users');
+$routes->get('user/set_groups', 'User::set_groups');
 
 $routes->get('region', 'Region::list');
 $routes->get('region/switch', 'Region::switch');
