@@ -74,11 +74,12 @@ class Race extends BaseController
         if (logged_in()) {
             $favourite_model = model(FavouriteModel::class);
             $fav_races_ids = $favourite_model->get_favourite_list(user()->id);
-            // $this->data_to_views['edition_list'] = $this->edition_model->from_id($fav_races_ids);
+            $this->data_to_views['edition_list'] = $this->search_model->from_edition_id($fav_races_ids, "edition_date");
+            krsort($this->data_to_views['edition_list']);
 
             $view = \Config\Services::renderer();
             $this->data_to_views['list'] = $view
-                ->setVar('edition_list',  $this->search_model->from_edition_id($fav_races_ids))
+                ->setVar('edition_list', $this->data_to_views['edition_list'])
                 ->setVar('status_notice_list', $this->data_to_views['status_notice_list'])
                 ->render("templates/list");
         } else {

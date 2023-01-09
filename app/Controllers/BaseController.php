@@ -605,12 +605,12 @@ abstract class BaseController extends Controller
             ],
             14 => [
                 "msg" => "<b>DATE CONFIRMED</b> - Waiting for race information from the organisers",
-                "short_msg" => "Dates Confirmed",
+                "short_msg" => "Awaiting Info",
                 "state" => "pending",
             ],
             15 => [
                 "msg" => "<b>EVENT CONFIRMED</b> - Information loaded has been confirmed as correct. Awaiting for complete information set from the organisers",
-                "short_msg" => "Awaiting Info",
+                "short_msg" => "Confirmed",
                 "state" => "confirmed",
             ],
             16 => [

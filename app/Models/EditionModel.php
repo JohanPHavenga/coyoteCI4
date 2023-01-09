@@ -114,7 +114,7 @@ class EditionModel extends Model
         }
     }
 
-    public function from_id($id_array = [])
+    public function from_id($id_array = [], $key_field="edition_id")
     {
         $data = [];
         if (empty($id_array)) {
@@ -130,7 +130,7 @@ class EditionModel extends Model
         $query = $builder->get();
 
         foreach ($query->getResultArray() as $row) {
-            $data[$row['edition_id']] = $row;
+            $data[$row[$key_field]] = $row;
         }
 
         return $data;

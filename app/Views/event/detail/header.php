@@ -24,7 +24,7 @@
                                 }
                                 ?>
                                 <li>
-                                    <div class="badge-with-title <?= $status_msg['state']; ?>"><?= $status_msg['short_msg']; ?></div>
+                                    <div class="badge-with-title <?= $status_msg['state']; ?>" title="<?= $status_msg['msg']; ?>" data-tippy-placement="top"><?= $status_msg['short_msg']; ?></div>
                                 </li>
                             </ul>
                         </div>

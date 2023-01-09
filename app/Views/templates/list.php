@@ -24,11 +24,6 @@
                 <!-- Job Listing Details -->
                 <div class="job-listing-details">
 
-                    <!-- Logo -->
-                    <!-- <div class="job-listing-company-logo">
-                        <img src="<?= $edition['thumb_url']; ?>" alt="">
-                    </div> -->
-
                     <!-- Details -->
                     <div class="job-listing-description">
                         <h3 class="job-listing-title"><?= $edition['edition_name']; ?>

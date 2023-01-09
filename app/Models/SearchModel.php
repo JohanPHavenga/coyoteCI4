@@ -309,7 +309,7 @@ class SearchModel extends Model
         return $data;
     }
 
-    public function from_edition_id($id_array = [])
+    public function from_edition_id($id_array = [], $key_field='edition_id')
     {
         $data = [];
         if (empty($id_array)) {
@@ -323,15 +323,15 @@ class SearchModel extends Model
         $query = $builder->get();
 
         foreach ($query->getResultArray() as $row) {
-            $data[$row['edition_id']] = $row;
-            if (!isset($data[$row['edition_id']])) {
-                $data[$row['edition_id']] = $row;
+            // $data[$row['edition_id']] = $row;
+            if (!isset($data[$row[$key_field]])) {
+                $data[$row[$key_field]] = $row;
             }
             if (isset($row['race_id'])) {
-                $data[$row['edition_id']]['races'][$row['race_id']] = $row;
+                $data[$row[$key_field]]['races'][$row['race_id']] = $row;
             }
         }
-
+        
         return $data;
     }
 
