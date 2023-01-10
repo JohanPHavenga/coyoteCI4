@@ -327,7 +327,7 @@ if (logged_in() && isset($edition_data)) {
 
 
 
-<script data-cfasync="false" type="text/javascript" id="clever-core">
+<!-- <script data-cfasync="false" type="text/javascript" id="clever-core">
     (function(document, window) {
         var a, c = document.createElement("script");
 
@@ -348,7 +348,7 @@ if (logged_in() && isset($edition_data)) {
         a || (a = document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]);
         a.parentNode.insertBefore(c, a);
     })(document, window);
-</script>
+</script> -->
 </body>
 
 </html>

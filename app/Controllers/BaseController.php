@@ -598,6 +598,11 @@ abstract class BaseController extends Controller
                 "short_msg" => "Postposed",
                 "state" => "unverified",
             ],
+            17 => [
+                "msg" => "<b>Virtual Race</b> - No physical address. Run from anywhere",
+                "short_msg" => "Virtual",
+                "state" => "confirmed",
+            ],
             13 => [
                 "msg" => "<strong>PLEASE NOTE</strong> - Dates and race times has <u>not yet been confirmed</u> by the race organisers",
                 "short_msg" => "Unconfimred",

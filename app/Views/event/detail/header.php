@@ -11,8 +11,15 @@
                             <h3><?= $edition_data['edition_name']; ?></h3>
                             <h5><?= $edition_data['town_name']; ?></h5>
                             <ul>
-                                <li><a href="https://www.google.com/maps/search/?api=1&query=<?= $edition_data['edition_gps']; ?>"><i class="icon-material-outline-location-on"></i> <?= $edition_data['edition_address_end']; ?></a></li>
                                 <?php
+                                // check if virtual
+                                if ($edition_data['edition_status'] == 17) {
+                                    echo "<li><i class='icon-material-outline-location-on'></i> Virtual Race</li>";
+                                } else {
+                                ?>
+                                    <li><a href="https://www.google.com/maps/search/?api=1&query=<?= $edition_data['edition_gps']; ?>"><i class="icon-material-outline-location-on"></i> <?= $edition_data['edition_address_end']; ?></a></li>
+                                <?php
+                                }
                                 // check if active
                                 if ($edition_data['edition_status'] == 1) {
                                 ?>
